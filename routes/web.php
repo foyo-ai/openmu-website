@@ -38,6 +38,9 @@ Route::group([
     Route::middleware('auth')->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('dashboard');
         Route::get('/account', [AccountController::class, 'edit'])->name('account.edit');
+        Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password');
+        Route::put('/account/email', [AccountController::class, 'updateEmail'])->name('account.email');
+        Route::put('/account/security-code', [AccountController::class, 'updateSecurityCode'])->name('account.security');
 
         Route::resource('character', CharacterController::class);
         Route::group(['prefix' => 'character-points'], function () {
