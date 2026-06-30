@@ -1,5 +1,6 @@
-// Fonts — Inter (body) + Cinzel (fantasy display headings), via the privacy-friendly Bunny mirror
-@import url('https://fonts.bunny.net/css?family=inter:400,500,600,700|cinzel:600,700,800');
+// Fonts — Inter (body, has Vietnamese) + Cinzel (fantasy display, Latin only) +
+// Playfair Display (display with full Vietnamese coverage), via the privacy-friendly Bunny mirror
+@import url('https://fonts.bunny.net/css?family=inter:400,500,600,700|cinzel:600,700,800|playfair-display:600,700,800');
 
 // Variables (Bootstrap overrides — must come before bootstrap)
 @import 'variables';
@@ -161,3 +162,17 @@ body {
 // --- Language switcher -----------------------------------------------------
 .mu-lang a { color: $mu-text-muted; font-weight: 600; padding: 0 0.25rem; }
 .mu-lang a.active { color: $mu-gold-bright; }
+
+// --- Vietnamese typography -------------------------------------------------
+// Cinzel has no Vietnamese glyphs, so on vi pages we use Playfair Display
+// (full Vietnamese coverage) for every heading-font element. Avoids the ugly
+// mixed-font rendering of Vietnamese diacritics.
+html[lang="vi"] {
+    h1, h2, h3, h4, h5, h6,
+    .navbar-brand,
+    .mu-hero-title,
+    .mu-section-title,
+    .mu-stat-value {
+        font-family: 'Playfair Display', 'Times New Roman', serif;
+    }
+}

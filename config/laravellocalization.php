@@ -14,11 +14,11 @@ return [
     // Default (vi) has no URL prefix; only /en is prefixed.
     'hideDefaultLocaleInURL' => true,
 
-    // Detect the visitor's preferred language on first visit.
-    'useAcceptLanguageHeader' => true,
-
-    // Keep the chosen locale in the session.
-    'useSessionLocale' => true,
+    // URL is the single source of truth. Do NOT auto-detect/redirect by browser
+    // language or session — otherwise an English browser can't switch back to the
+    // hidden default locale (vi at "/"), because it keeps getting bounced to /en.
+    'useAcceptLanguageHeader' => false,
+    'useSessionLocale' => false,
     'useCookieLocale'  => false,
 
     'localesOrder'  => ['vi', 'en'],

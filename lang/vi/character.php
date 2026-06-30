@@ -36,6 +36,7 @@ return [
     'security_code'  => 'Mã bảo mật',
 
     'offline_note'   => 'Nhân vật phải đang offline để thực hiện thao tác.',
+    'stale_note'     => 'Số liệu được cập nhật khi bạn đăng xuất khỏi game. Khi đang online, dữ liệu có thể bị trễ.',
 
     // success
     'renamed'    => 'Đã đổi tên nhân vật.',

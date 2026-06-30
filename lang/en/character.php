@@ -36,6 +36,7 @@ return [
     'security_code'  => 'Security code',
 
     'offline_note'   => 'The character must be offline to perform actions.',
+    'stale_note'     => 'Stats update when you log out of the game. While online, the data may be delayed.',
 
     // success
     'renamed'    => 'Character renamed.',

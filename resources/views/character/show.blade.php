@@ -7,6 +7,11 @@
         <a href="{{ route('character.index') }}" class="small text-muted">← {{ __('character.back') }}</a>
         <h1 class="mu-section-title mt-3 mb-4">{{ $character->Name }}</h1>
 
+        <div class="alert alert-info d-flex align-items-center gap-2 py-2">
+            <i class="fa-solid fa-circle-info"></i>
+            <span class="small mb-0">{{ __('character.stale_note') }}</span>
+        </div>
+
         <div class="card p-4 mb-4">
             <div class="row g-3 text-center">
                 @foreach([

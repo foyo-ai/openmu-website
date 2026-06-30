@@ -4,7 +4,8 @@
 
 @section('content')
     <div class="container py-5">
-        <h1 class="mu-section-title mb-4">{{ __('character.list_title') }}</h1>
+        <h1 class="mu-section-title mb-3">{{ __('character.list_title') }}</h1>
+        <p class="text-muted small"><i class="fa-solid fa-circle-info me-1"></i>{{ __('character.stale_note') }}</p>
 
         @php($characters = auth()->user()->characters->load('statAttribute')->where('CharacterStatus', '!=', 1))
 
