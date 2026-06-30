@@ -27,6 +27,10 @@ return [
     // and the is-online safety check. In production e.g. http://openmu-startup:8080
     'openmu_api'   => env('OPENMU_API_URL', ''),
 
+    // Shared secret for the authenticated game-server api/v1 (must match the game server's
+    // OpenMU:WebApiKey / WEB_API_KEY). The website is a trusted service that calls api/v1.
+    'api_key'      => env('OPENMU_API_KEY', ''),
+
     // --- Character actions (Phase 4) -------------------------------------
     'reset' => [
         'min_level'     => (int) env('RESET_MIN_LEVEL', 400),   // level required to reset

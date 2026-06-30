@@ -5,9 +5,6 @@
 @section('content')
     <div class="container py-5">
         <h1 class="mu-section-title mb-3">{{ __('character.list_title') }}</h1>
-        <p class="text-muted small"><i class="fa-solid fa-circle-info me-1"></i>{{ __('character.stale_note') }}</p>
-
-        @php($characters = auth()->user()->characters->load('statAttribute')->where('CharacterStatus', '!=', 1))
 
         @if($characters->isEmpty())
             <div class="card p-4 text-muted">{{ __('character.empty') }}</div>
@@ -26,13 +23,18 @@
                         <tbody>
                         @foreach($characters as $character)
                             <tr>
-                                <td class="ps-3 fw-semibold">{{ $character->Name }}</td>
-                                <td class="text-muted">{{ $character->characterClass->Name }}</td>
-                                <td class="text-end">{{ number_format((int) $character->getReset()) }}</td>
-                                <td class="text-end">{{ number_format((int) $character->getLevel()) }}</td>
-                                <td class="text-end">{{ $character->LevelUpPoints }}</td>
+                                <td class="ps-3 fw-semibold">
+                                    {{ $character['name'] }}
+                                    @if($character['online'])
+                                        <span class="mu-online-dot ms-1" title="online"></span>
+                                    @endif
+                                </td>
+                                <td class="text-muted">{{ $character['className'] }}</td>
+                                <td class="text-end">{{ number_format((int) $character['resets']) }}</td>
+                                <td class="text-end">{{ number_format((int) $character['level']) }}</td>
+                                <td class="text-end">{{ (int) $character['points'] }}</td>
                                 <td class="text-end pe-3">
-                                    <a href="{{ route('character.show', $character->Id) }}" class="btn btn-sm btn-outline-light">
+                                    <a href="{{ route('character.show', $character['id']) }}" class="btn btn-sm btn-outline-light">
                                         {{ __('character.view') }}
                                     </a>
                                 </td>

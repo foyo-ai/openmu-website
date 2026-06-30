@@ -1,26 +1,26 @@
 @extends('layouts.app')
 
-@section('title', $character->Name)
+@section('title', $character['name'])
 
 @section('content')
     <div class="container py-5" style="max-width: 820px">
         <a href="{{ route('character.index') }}" class="small text-muted">← {{ __('character.back') }}</a>
-        <h1 class="mu-section-title mt-3 mb-4">{{ $character->Name }}</h1>
-
-        <div class="alert alert-info d-flex align-items-center gap-2 py-2">
-            <i class="fa-solid fa-circle-info"></i>
-            <span class="small mb-0">{{ __('character.stale_note') }}</span>
-        </div>
+        <h1 class="mu-section-title mt-3 mb-4">
+            {{ $character['name'] }}
+            @if($character['online'])
+                <span class="badge bg-success align-middle ms-2" style="font-size:.5em">● ONLINE</span>
+            @endif
+        </h1>
 
         <div class="card p-4 mb-4">
             <div class="row g-3 text-center">
                 @foreach([
-                    'class'  => $character->characterClass->Name,
-                    'level'  => number_format((int) $character->getLevel()),
-                    'resets' => number_format((int) $character->getReset()),
-                    'points' => $character->LevelUpPoints,
-                    'master_points' => $character->MasterLevelUpPoints,
-                    'kills'  => $character->PlayerKillCount,
+                    'class'  => $character['className'],
+                    'level'  => number_format((int) $character['level']),
+                    'resets' => number_format((int) $character['resets']),
+                    'points' => (int) $character['points'],
+                    'master_points' => (int) $character['masterPoints'],
+                    'kills'  => (int) $character['kills'],
                 ] as $key => $val)
                     <div class="col-6 col-md-4">
                         <div class="mu-stat">
@@ -36,29 +36,27 @@
 
         <div class="card p-4">
             <div class="d-flex flex-wrap gap-2">
-                <a href="{{ route('character-points.edit', $character->Id) }}" class="btn btn-primary">
+                <a href="{{ route('character-points.edit', $character['id']) }}" class="btn btn-primary">
                     <i class="fa-solid fa-plus me-1"></i>{{ __('character.add_points') }}
                 </a>
                 <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#renameModal">
                     <i class="fa-solid fa-pen me-1"></i>{{ __('character.rename') }}
                 </button>
-
-                <form method="POST" action="{{ route('character.reset', $character->Id) }}"
+                <form method="POST" action="{{ route('character.reset', $character['id']) }}"
                       onsubmit="return confirm('{{ __('character.reset_confirm') }}')">
                     @csrf
                     <button class="btn btn-outline-light"><i class="fa-solid fa-rotate me-1"></i>{{ __('character.reset') }}</button>
                 </form>
-                <form method="POST" action="{{ route('character.clearpk', $character->Id) }}"
+                <form method="POST" action="{{ route('character.clearpk', $character['id']) }}"
                       onsubmit="return confirm('{{ __('character.clearpk_confirm') }}')">
                     @csrf
                     <button class="btn btn-outline-light"><i class="fa-solid fa-skull me-1"></i>{{ __('character.clear_pk') }}</button>
                 </form>
-                <form method="POST" action="{{ route('character.unstick', $character->Id) }}"
+                <form method="POST" action="{{ route('character.unstick', $character['id']) }}"
                       onsubmit="return confirm('{{ __('character.unstick_confirm') }}')">
                     @csrf
                     <button class="btn btn-outline-light"><i class="fa-solid fa-house me-1"></i>{{ __('character.unstick') }}</button>
                 </form>
-
                 <button class="btn btn-outline-danger ms-auto" data-bs-toggle="modal" data-bs-target="#deleteModal">
                     <i class="fa-solid fa-trash me-1"></i>{{ __('character.delete') }}
                 </button>
@@ -69,14 +67,14 @@
     {{-- Rename modal --}}
     <div class="modal fade" id="renameModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('character.rename', $character->Id) }}" class="modal-content">
+            <form method="POST" action="{{ route('character.rename', $character['id']) }}" class="modal-content">
                 @csrf @method('PATCH')
                 <div class="modal-header"><h5 class="modal-title">{{ __('character.rename') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <label class="form-label">{{ __('character.rename_label') }}</label>
                     <input type="text" name="name" class="form-control" maxlength="10" pattern="[A-Za-z0-9]+" required
-                           value="{{ $character->Name }}">
+                           value="{{ $character['name'] }}">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">{{ __('character.cancel') }}</button>
@@ -86,10 +84,10 @@
         </div>
     </div>
 
-    {{-- Delete modal (security code required) --}}
+    {{-- Delete modal --}}
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('character.destroy', $character->Id) }}" class="modal-content">
+            <form method="POST" action="{{ route('character.destroy', $character['id']) }}" class="modal-content">
                 @csrf @method('DELETE')
                 <div class="modal-header"><h5 class="modal-title">{{ __('character.delete_title') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
