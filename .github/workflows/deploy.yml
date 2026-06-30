@@ -1,0 +1,72 @@
+name: Deploy website to VPS
+
+# Builds the muss6.org website image on GitHub's runners, pushes it to GHCR,
+# then SSHes into the VPS to pull + restart the web container and run migrations.
+on:
+  push:
+    branches:
+      - production
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-website
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}   # -> ghcr.io/<owner>/openmu-website
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.prod
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:production
+            ${{ env.IMAGE }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Pull & restart on the VPS over SSH
+        uses: appleboy/ssh-action@v1
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: GHCR_TOKEN,GHCR_USER
+          script: |
+            set -e
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            cd /opt/openmu/deploy/vps
+            docker compose --profile https pull web
+            # Apply any new app-owned migrations (only creates public.* tables).
+            docker compose --profile https run --rm web php artisan migrate --force
+            docker compose --profile https up -d web
+            docker image prune -f
+            docker logout ghcr.io

@@ -1,0 +1,43 @@
+# syntax=docker/dockerfile:1
+# Production image for the muss6.org player website.
+# Self-contained: php-fpm + nginx in one container, serving Laravel on port 80.
+# The front-of-server nginx (deploy/vps) terminates TLS and reverse-proxies to this.
+
+# --- Stage 1: build front-end assets (Vite) ---
+FROM node:20-alpine AS assets
+WORKDIR /app
+COPY package.json package-lock.json vite.config.js ./
+RUN npm ci
+COPY resources ./resources
+RUN npm run build
+
+# --- Stage 2: PHP runtime (php-fpm + nginx) ---
+FROM php:8.2-fpm AS app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git unzip libpq-dev libzip-dev nginx \
+    && docker-php-ext-install pdo pdo_pgsql zip opcache \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+
+# Install PHP dependencies (production only). Copy composer files first for layer caching.
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction
+
+# Application source + built assets
+COPY . .
+COPY --from=assets /app/public/build ./public/build
+
+RUN composer dump-autoload --optimize --no-dev \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+# nginx site config + container entrypoint
+COPY deploy/nginx-default.conf /etc/nginx/sites-available/default
+COPY deploy/entrypoint.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
+
+EXPOSE 80
+ENTRYPOINT ["entrypoint"]
