@@ -1,7 +1,97 @@
-// Body
-$body-bg: #f8fafc;
+// =============================================================================
+// muss6.org — dark fantasy MU theme (Bootstrap 5 variable overrides)
+// These must be defined BEFORE `@import 'bootstrap'` in app.scss.
+// =============================================================================
 
-// Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+// --- Brand palette --------------------------------------------------------
+$mu-gold:        #c9a227;   // primary accent (MU gold)
+$mu-gold-bright: #f0cf57;
+$mu-crimson:     #b3201f;   // danger / war accent
+$mu-bg:          #0b0d12;   // page background (near-black slate)
+$mu-bg-2:        #11141c;   // raised background
+$mu-surface:     #161a24;   // cards / panels
+$mu-surface-2:   #1d2230;   // hovered surface
+$mu-border:      #2a3142;   // hairline borders
+$mu-text:        #d8dde6;   // body text
+$mu-text-muted:  #8a93a6;   // muted text
+$mu-heading:     #f4ecd6;   // parchment heading
+
+// --- Bootstrap theme colors -----------------------------------------------
+$primary:   $mu-gold;
+$secondary: #5a6377;
+$success:   #3fa34d;
+$info:      #3d7fb3;
+$warning:   #d99000;
+$danger:    $mu-crimson;
+$light:     #e9edf4;
+$dark:      $mu-bg-2;
+
+// --- Body / surfaces ------------------------------------------------------
+$body-bg:        $mu-bg;
+$body-color:     $mu-text;
+$border-color:   $mu-border;
+
+// --- Typography -----------------------------------------------------------
+$font-family-sans-serif: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+$headings-font-family:   'Cinzel', 'Inter', serif;
+$font-size-base:         0.95rem;
+$line-height-base:       1.65;
+$headings-font-weight:   700;
+$headings-color:         $mu-heading;
+
+// --- Links ----------------------------------------------------------------
+$link-color:            $mu-gold-bright;
+$link-hover-color:      $mu-gold;
+$link-decoration:       none;
+$link-hover-decoration: underline;
+
+// --- Components -----------------------------------------------------------
+$border-radius:    0.4rem;
+$border-radius-sm: 0.25rem;
+$border-radius-lg: 0.6rem;
+
+$card-bg:             $mu-surface;
+$card-border-color:   $mu-border;
+$card-cap-bg:         rgba(white, 0.02);
+$card-color:          $mu-text;
+
+$navbar-dark-color:        rgba($mu-text, 0.75);
+$navbar-dark-hover-color:  $mu-gold-bright;
+$navbar-dark-active-color: $mu-gold-bright;
+
+$dropdown-bg:            $mu-surface-2;
+$dropdown-border-color:  $mu-border;
+$dropdown-link-color:    $mu-text;
+$dropdown-link-hover-bg: $mu-surface;
+$dropdown-link-hover-color: $mu-gold-bright;
+
+$table-bg:           transparent;
+$table-color:        $mu-text;
+$table-border-color: $mu-border;
+$table-striped-bg:   rgba(white, 0.025);
+$table-hover-bg:     rgba($mu-gold, 0.06);
+
+$input-bg:                $mu-bg-2;
+$input-disabled-bg:       darken($mu-bg-2, 2%);
+$input-color:             $mu-text;
+$input-border-color:      $mu-border;
+$input-focus-bg:          $mu-bg-2;
+$input-focus-border-color: $mu-gold;
+$input-focus-color:       $mu-text;
+$input-placeholder-color: $mu-text-muted;
+
+$form-label-color: $mu-text;
+
+$modal-content-bg:           $mu-surface;
+$modal-content-border-color: $mu-border;
+
+$alert-bg-scale:     -75%;
+$alert-border-scale: -60%;
+$alert-color-scale:  30%;
+
+$pagination-bg:           $mu-surface;
+$pagination-color:        $mu-text;
+$pagination-border-color: $mu-border;
+$pagination-hover-bg:     $mu-surface-2;
+$pagination-active-bg:    $mu-gold;
+$pagination-active-border-color: $mu-gold;

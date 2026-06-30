@@ -1,2 +1,14 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /home
+Disallow: /account
+Disallow: /character
+Disallow: /character-points
+Disallow: /admin
+Disallow: /en/home
+Disallow: /en/account
+Disallow: /en/character
+Disallow: /en/character-points
+Disallow: /en/admin
+
+Sitemap: https://muss6.org/sitemap.xml

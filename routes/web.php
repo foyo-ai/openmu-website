@@ -1,32 +1,56 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\CharacterPointsController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\RankingController;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
+| All routes live inside the localized group so URLs are locale-aware:
+| Vietnamese (default) at the root (/...), English under /en/...
 */
 
-Auth::routes();
+// Non-localized utility routes
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
+], function () {
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('character', CharacterController::class);
+    Auth::routes();
 
-Route::group(['prefix' => 'character-points'], function() {
-    Route::get('{character}/edit', [CharacterPointsController::class, 'edit'])
-        ->name('character-points.edit');
-    Route::PATCH('{character}/update', [CharacterPointsController::class, 'update'])
-        ->name('character-points.update');
+    // --- Public ---
+    Route::get('/', [PageController::class, 'home'])->name('home');
+    Route::get('/rankings', [RankingController::class, 'index'])->name('rankings.index');
+    Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+    Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
+
+    // --- Authenticated players ---
+    Route::middleware('auth')->group(function () {
+        Route::get('/home', [HomeController::class, 'index'])->name('dashboard');
+        Route::get('/account', [AccountController::class, 'edit'])->name('account.edit');
+
+        Route::resource('character', CharacterController::class);
+        Route::group(['prefix' => 'character-points'], function () {
+            Route::get('{character}/edit', [CharacterPointsController::class, 'edit'])
+                ->name('character-points.edit');
+            Route::patch('{character}/update', [CharacterPointsController::class, 'update'])
+                ->name('character-points.update');
+        });
+    });
+
+    // --- GM-only admin (data.Account.State in {2,3}) ---
+    Route::middleware(['auth', 'isGameMaster'])
+        ->prefix('admin')->name('admin.')->group(function () {
+            Route::resource('news', \App\Http\Controllers\Admin\NewsController::class)->except('show');
+        });
 });

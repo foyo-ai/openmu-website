@@ -30,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
 	}
 
         URL::forceRootUrl(config('app.url'));
-	Paginator::useBootstrap();
+	Paginator::useBootstrapFive();
     }
 }

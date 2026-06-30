@@ -1,8 +1,163 @@
-// Fonts
-@import url('https://fonts.bunny.net/css?family=Nunito');
+// Fonts — Inter (body) + Cinzel (fantasy display headings), via the privacy-friendly Bunny mirror
+@import url('https://fonts.bunny.net/css?family=inter:400,500,600,700|cinzel:600,700,800');
 
-// Variables
+// Variables (Bootstrap overrides — must come before bootstrap)
 @import 'variables';
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+// =============================================================================
+// muss6.org custom components
+// =============================================================================
+
+body {
+    background-color: $mu-bg;
+    background-image:
+        radial-gradient(1200px 600px at 50% -10%, rgba($mu-gold, 0.06), transparent 60%),
+        linear-gradient(180deg, $mu-bg 0%, #07090d 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+// Subtle gold gradient text utility for big headings
+.text-gradient-gold {
+    background: linear-gradient(90deg, $mu-gold-bright, $mu-gold 60%, #8a6f15);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+// --- Navbar ----------------------------------------------------------------
+.navbar.mu-navbar {
+    background: rgba(7, 9, 13, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid $mu-border;
+
+    .navbar-brand {
+        font-family: $headings-font-family;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        color: $mu-heading;
+        .brand-accent { color: $mu-gold; }
+    }
+    .nav-link { font-weight: 500; }
+}
+
+// --- Hero ------------------------------------------------------------------
+.mu-hero {
+    position: relative;
+    padding: 6rem 0 4.5rem;
+    text-align: center;
+    border-bottom: 1px solid $mu-border;
+    overflow: hidden;
+
+    .mu-hero-title {
+        font-size: clamp(2.4rem, 6vw, 4.5rem);
+        line-height: 1.05;
+        letter-spacing: 0.04em;
+        text-shadow: 0 4px 30px rgba($mu-gold, 0.25);
+    }
+    .mu-hero-sub {
+        color: $mu-text-muted;
+        font-size: 1.1rem;
+        max-width: 40rem;
+        margin: 1rem auto 0;
+    }
+}
+
+// --- Stat / rate badges ----------------------------------------------------
+.mu-stat {
+    background: $mu-surface;
+    border: 1px solid $mu-border;
+    border-radius: $border-radius-lg;
+    padding: 1.1rem 1rem;
+    text-align: center;
+
+    .mu-stat-value {
+        font-family: $headings-font-family;
+        font-size: 1.6rem;
+        color: $mu-gold-bright;
+        line-height: 1;
+    }
+    .mu-stat-label {
+        color: $mu-text-muted;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        margin-top: 0.4rem;
+    }
+}
+
+// --- Feature cards ---------------------------------------------------------
+.mu-feature {
+    height: 100%;
+    border: 1px solid $mu-border;
+    background: linear-gradient(180deg, $mu-surface, $mu-bg-2);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+
+    &:hover { transform: translateY(-3px); border-color: rgba($mu-gold, 0.5); }
+    .mu-feature-icon { color: $mu-gold; font-size: 1.6rem; }
+}
+
+// --- Section heading -------------------------------------------------------
+.mu-section-title {
+    font-family: $headings-font-family;
+    letter-spacing: 0.05em;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0; bottom: 0;
+        width: 3rem; height: 3px;
+        background: linear-gradient(90deg, $mu-gold, transparent);
+    }
+}
+
+// --- Online indicator ------------------------------------------------------
+.mu-online-dot {
+    display: inline-block;
+    width: 0.55rem; height: 0.55rem;
+    border-radius: 50%;
+    background: $success;
+    box-shadow: 0 0 0 0 rgba($success, 0.6);
+    animation: mu-pulse 2s infinite;
+    &.is-off { background: $mu-text-muted; animation: none; }
+}
+@keyframes mu-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba($success, 0.5); }
+    70%  { box-shadow: 0 0 0 8px rgba($success, 0); }
+    100% { box-shadow: 0 0 0 0 rgba($success, 0); }
+}
+
+// --- Rankings table --------------------------------------------------------
+.mu-rank-table {
+    th { color: $mu-text-muted; text-transform: uppercase; font-size: 0.74rem; letter-spacing: 0.08em; }
+    .mu-rank-pos { font-family: $headings-font-family; color: $mu-gold-bright; width: 3rem; }
+    tr:nth-child(1) .mu-rank-pos { color: #ffd966; }
+}
+
+// --- Buttons ---------------------------------------------------------------
+.btn-primary {
+    --bs-btn-color: #1a1406;
+    --bs-btn-hover-color: #1a1406;
+    --bs-btn-active-color: #1a1406;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+// --- Footer ----------------------------------------------------------------
+.mu-footer {
+    border-top: 1px solid $mu-border;
+    background: #07090d;
+    color: $mu-text-muted;
+    padding: 2.5rem 0 2rem;
+    a { color: $mu-text-muted; &:hover { color: $mu-gold-bright; } }
+}
+
+// --- Language switcher -----------------------------------------------------
+.mu-lang a { color: $mu-text-muted; font-weight: 600; padding: 0 0.25rem; }
+.mu-lang a.active { color: $mu-gold-bright; }

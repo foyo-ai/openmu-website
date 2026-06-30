@@ -1,80 +1,134 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <title>Laravel</title>
+@section('title', __('home.hero_title'))
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+@section('content')
+    {{-- Hero --}}
+    <section class="mu-hero">
+        <div class="container position-relative">
+            <div class="d-inline-flex align-items-center gap-2 mb-3 small text-uppercase" style="letter-spacing:.12em">
+                <span class="mu-online-dot {{ $serverStatus['online'] ? '' : 'is-off' }}"></span>
+                <span class="text-muted">
+                    {{ $serverStatus['online'] ? __('home.server_online') : __('home.server_offline') }}
+                    @if(!is_null($serverStatus['players']))
+                        · {{ $serverStatus['players'] }} {{ __('home.players_online') }}
+                    @endif
+                </span>
+            </div>
 
-        <!-- Styles -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="{{ asset('style.css') }}">
-    </head>
-    <body>
-        <div class="min-vh-100 d-flex flex-column
-                justify-content-between">
-        <div>
-            <header class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-                @if (Route::has('login'))
-                    <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
-                        @auth
-                            <a href="{{ url('/home') }}" class="ml-3 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Home</a>
-                            <a href="{{ route('character.index') }}" class="ml-3 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Characters</a>
-                            <a class="ml-3 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
+            <h1 class="mu-hero-title text-gradient-gold">{{ __('home.hero_title') }}</h1>
+            <p class="mu-hero-sub">
+                {{ __('home.hero_subtitle', ['season' => config('server.season'), 'version' => config('server.version')]) }}
+            </p>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}" class="ml-3 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
+            <div class="d-flex gap-2 justify-content-center mt-4 flex-wrap">
+                @guest
+                    <a href="{{ route('register') }}" class="btn btn-primary btn-lg px-4">{{ __('home.create_account') }}</a>
+                @else
+                    <a href="{{ route('character.index') }}" class="btn btn-primary btn-lg px-4">{{ __('nav.characters') }}</a>
+                @endguest
+                <a href="#download" class="btn btn-outline-light btn-lg px-4">{{ __('home.play_now') }}</a>
+            </div>
 
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="ml-3 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
-                            @endif
-                        @endauth
+            {{-- Rates --}}
+            <div class="row g-3 justify-content-center mt-5">
+                @foreach([
+                    'exp' => config('server.exp_rate'),
+                    'master_exp' => config('server.master_exp_rate'),
+                    'drop' => config('server.drop_rate'),
+                    'max_reset' => config('server.max_reset'),
+                ] as $key => $val)
+                    <div class="col-6 col-md-3">
+                        <div class="mu-stat">
+                            <div class="mu-stat-value">{{ $val }}</div>
+                            <div class="mu-stat-label">{{ __('home.' . $key) }}</div>
+                        </div>
                     </div>
-                @endif
-            </header>
+                @endforeach
+            </div>
+        </div>
+    </section>
 
-            <div class="container mt-5">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-info text-center"><h3>Home content</h3></div>
+    {{-- Features --}}
+    <section class="container py-5">
+        <h2 class="mu-section-title mb-4">{{ __('home.features_title') }}</h2>
+        <div class="row g-4">
+            @foreach([
+                ['icon' => 'shield-halved', 'k' => 'balanced'],
+                ['icon' => 'calendar-day', 'k' => 'events'],
+                ['icon' => 'users', 'k' => 'community'],
+            ] as $f)
+                <div class="col-md-4">
+                    <div class="card mu-feature p-4">
+                        <div class="mu-feature-icon mb-3"><i class="fa-solid fa-{{ $f['icon'] }}"></i></div>
+                        <h3 class="h5">{{ __('home.feature_' . $f['k']) }}</h3>
+                        <p class="text-muted mb-0">{{ __('home.feature_' . $f['k'] . '_desc') }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
+
+    {{-- Download --}}
+    <section id="download" class="container py-5">
+        <div class="card p-4 p-md-5">
+            <div class="row align-items-center g-4">
+                <div class="col-md-7">
+                    <h2 class="mu-section-title mb-3">{{ __('home.download_title') }}</h2>
+                    <p class="text-muted">
+                        {{ __('home.download_intro', ['host' => config('server.connect_host'), 'port' => config('server.connect_port')]) }}
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        @foreach(config('server.downloads') as $label => $url)
+                            <a href="{{ $url }}" class="btn btn-primary" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-download me-1"></i> {{ $label }}
+                            </a>
+                        @endforeach
+                        @if(config('server.discord_url'))
+                            <a href="{{ config('server.discord_url') }}" class="btn btn-outline-light" target="_blank" rel="noopener">
+                                <i class="fa-brands fa-discord me-1"></i> {{ __('home.join_discord') }}
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="mu-stat text-md-start">
+                        <div class="mu-stat-label mb-1">{{ __('home.connect_info') }}</div>
+                        <div class="mu-stat-value" style="font-size:1.15rem">
+                            {{ config('server.connect_host') }}:{{ config('server.connect_port') }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <footer class="bg-dark text-center text-white">
-          <div class="container p-4 pb-0">
-            <section class="mb-4">
-                <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/antonioanerao/openmu-website" role="button">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                    <i class="fab fa-facebook"></i>
-                </a>
-                <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                    <i class="fab fa-twitter"></i>
-                </a>
-            </section>
-          </div>
+    {{-- Latest news --}}
+    <section class="container pb-5">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <h2 class="mu-section-title mb-0">{{ __('home.news_title') }}</h2>
+            <a href="{{ route('news.index') }}" class="small">{{ __('home.news_more') }} →</a>
+        </div>
 
-          <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-              © {{ date('Y') }} Copyright:
-              <a class="text-white" href="{{ config('app.url') }}">{{ config('app.name') }}</a>
-          </div>
-        </footer>
-    </body>
-</html>
+        @if($latestNews->isEmpty())
+            <p class="text-muted">{{ __('home.news_empty') }}</p>
+        @else
+            <div class="row g-4">
+                @foreach($latestNews as $post)
+                    <div class="col-md-4">
+                        <a href="{{ route('news.show', $post) }}" class="card mu-feature h-100 text-decoration-none">
+                            @if($post->cover_image)
+                                <img src="{{ $post->cover_image }}" class="card-img-top" alt="" style="height:160px;object-fit:cover">
+                            @endif
+                            <div class="card-body">
+                                <div class="small text-muted mb-1">{{ optional($post->published_at)->format('d/m/Y') }}</div>
+                                <h3 class="h6">{{ $post->title() }}</h3>
+                                <p class="text-muted small mb-0">{{ $post->excerpt() }}</p>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </section>
+@endsection
