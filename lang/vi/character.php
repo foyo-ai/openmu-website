@@ -39,6 +39,8 @@ return [
     'stale_note'     => 'Số liệu được cập nhật khi bạn đăng xuất khỏi game. Khi đang online, dữ liệu có thể bị trễ.',
 
     // success
+    'nothing_to_add' => 'Không có điểm nào để cộng.',
+    'points_added'   => 'Đã cộng điểm.',
     'renamed'    => 'Đã đổi tên nhân vật.',
     'reset_done' => 'Đã reset nhân vật.',
     'pk_cleared' => 'Đã xoá trạng thái PK.',
@@ -53,4 +55,6 @@ return [
     'err_safezone'    => 'Không tìm thấy bản đồ an toàn.',
     'err_online'      => 'Nhân vật đang online. Hãy đăng xuất khỏi game trước.',
     'err_security_code' => 'Mã bảo mật không đúng.',
+    'err_not_enough_points' => 'Không đủ điểm cộng.',
+    'err_unreachable' => 'Không kết nối được tới máy chủ game. Vui lòng thử lại.',
 ];

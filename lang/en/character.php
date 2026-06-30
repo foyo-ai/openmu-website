@@ -39,6 +39,8 @@ return [
     'stale_note'     => 'Stats update when you log out of the game. While online, the data may be delayed.',
 
     // success
+    'nothing_to_add' => 'No points to add.',
+    'points_added'   => 'Points added.',
     'renamed'    => 'Character renamed.',
     'reset_done' => 'Character reset.',
     'pk_cleared' => 'PK status cleared.',
@@ -53,4 +55,6 @@ return [
     'err_safezone'    => 'Safe map not found.',
     'err_online'      => 'The character is online. Log out of the game first.',
     'err_security_code' => 'Incorrect security code.',
+    'err_not_enough_points' => 'Not enough level-up points.',
+    'err_unreachable' => 'The game server is unreachable. Please try again.',
 ];

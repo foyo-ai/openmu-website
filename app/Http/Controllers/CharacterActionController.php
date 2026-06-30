@@ -2,74 +2,95 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Character;
-use App\Services\CharacterActionService;
-use App\Services\OnlineCheckService;
+use App\Services\OpenMuApiClient;
+use App\Services\OpenMuApiException;
 use Illuminate\Http\Request;
-use RuntimeException;
 
+/**
+ * Character actions — all executed by the game server via api/v1 (no direct DB writes).
+ * The server enforces ownership, the offline requirement (409 if online), validation,
+ * and performs a real cascade delete.
+ */
 class CharacterActionController extends Controller
 {
-    public function __construct(
-        private readonly CharacterActionService $actions,
-        private readonly OnlineCheckService $online,
-    ) {
+    public function __construct()
+    {
         $this->middleware('auth');
-        $this->middleware('verifyCharacterAccountOwner');
     }
 
-    public function rename(Request $request, Character $character)
+    public function reset(string $character)
+    {
+        return $this->call($character, fn ($api, $login, $name) => $api->reset($login, $name), 'character.reset_done');
+    }
+
+    public function clearPk(string $character)
+    {
+        return $this->call($character, fn ($api, $login, $name) => $api->clearPk($login, $name), 'character.pk_cleared');
+    }
+
+    public function unstick(string $character)
+    {
+        return $this->call($character, fn ($api, $login, $name) => $api->unstick($login, $name), 'character.unstuck');
+    }
+
+    public function rename(Request $request, string $character)
     {
         $request->validate(['name' => ['required', 'string', 'max:10']]);
-        return $this->guarded($character, fn () => $this->actions->rename($character, $request->input('name')), 'character.renamed');
+
+        return $this->call($character, fn ($api, $login, $name) => $api->rename($login, $name, $request->input('name')), 'character.renamed');
     }
 
-    public function reset(Character $character)
+    public function destroy(Request $request, string $character)
     {
-        return $this->guarded($character, fn () => $this->actions->reset($character), 'character.reset_done');
-    }
-
-    public function clearPk(Character $character)
-    {
-        return $this->guarded($character, fn () => $this->actions->clearPk($character), 'character.pk_cleared');
-    }
-
-    public function unstick(Character $character)
-    {
-        return $this->guarded($character, fn () => $this->actions->unstick($character), 'character.unstuck');
-    }
-
-    public function destroy(Request $request, Character $character)
-    {
-        // Destructive: require the account security code as confirmation.
         $request->validate(['security_code' => ['required', 'string']]);
-        if ($request->input('security_code') !== $request->user()->SecurityCode) {
-            return back()->with('alert-danger', __('character.err_security_code'));
-        }
 
-        $result = $this->guarded($character, fn () => $this->actions->softDelete($character), 'character.deleted');
-        // After deletion send the user back to the character list, not the (gone) character page.
-        return $result instanceof \Illuminate\Http\RedirectResponse && session('alert-success')
-            ? redirect()->route('character.index')->with('alert-success', __('character.deleted'))
-            : $result;
+        return $this->call(
+            $character,
+            fn ($api, $login, $name) => $api->deleteCharacter($login, $name, $request->input('security_code')),
+            'character.deleted',
+            toIndex: true,
+        );
     }
 
     /**
-     * Shared guard: block if the account is online, run the action, translate
-     * any domain error into a flashed message.
+     * Resolve the character (by id, from the owner's API list) then run the API call,
+     * mapping API errors to localized flash messages.
      */
-    private function guarded(Character $character, callable $action, string $successKey)
+    private function call(string $id, callable $apiCall, string $successKey, bool $toIndex = false)
     {
-        if ($this->online->isOnline(auth()->user()->LoginName)) {
-            return back()->with('alert-danger', __('character.err_online'));
-        }
+        $api = OpenMuApiClient::fromConfig();
+        $login = auth()->user()->LoginName;
 
         try {
-            $action();
-        } catch (RuntimeException $e) {
-            return back()->with('alert-danger', $e->getMessage());
+            $characters = collect($api->characters($login));
+        } catch (OpenMuApiException $e) {
+            return back()->with('alert-danger', __('character.err_unreachable'));
         }
 
-        return back()->with('alert-success', __($successKey));
+        $char = $characters->firstWhere('id', $id);
+        abort_if($char === null, 404);
+
+        try {
+            $apiCall($api, $login, $char['name']);
+        } catch (OpenMuApiException $e) {
+            return back()->with('alert-danger', $this->mapError($e));
+        }
+
+        $redirect = $toIndex ? redirect()->route('character.index') : back();
+
+        return $redirect->with('alert-success', __($successKey));
+    }
+
+    private function mapError(OpenMuApiException $e): string
+    {
+        return match ($e->errorCode) {
+            'character_online'    => __('character.err_online'),
+            'name_taken'          => __('character.err_name_taken'),
+            'invalid_name'        => __('character.err_name_chars'),
+            'wrong_security_code' => __('character.err_security_code'),
+            'not_enough_points'   => __('character.err_not_enough_points'),
+            'unreachable'         => __('character.err_unreachable'),
+            default               => $e->getMessage(),
+        };
     }
 }
