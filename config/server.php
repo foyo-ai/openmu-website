@@ -23,7 +23,20 @@ return [
         'Full Client (Mega)'         => env('SERVER_DOWNLOAD_MEGA', '#'),
     ],
 
-    // OpenMU admin API base, reachable container-to-container for the live online count.
-    // In production this is the game container, e.g. http://openmu-startup:8080
+    // OpenMU admin API base, reachable container-to-container for the live online count
+    // and the is-online safety check. In production e.g. http://openmu-startup:8080
     'openmu_api'   => env('OPENMU_API_URL', ''),
+
+    // --- Character actions (Phase 4) -------------------------------------
+    'reset' => [
+        'min_level'     => (int) env('RESET_MIN_LEVEL', 400),   // level required to reset
+        'reward_points' => (int) env('RESET_REWARD_POINTS', 0), // LevelUpPoints granted per reset
+        'clear_stats'   => (bool) env('RESET_CLEAR_STATS', false), // keep added base stats by default
+    ],
+    // "Unstick" / move-to-safezone destination (Lorencia town by default).
+    'safezone' => [
+        'map_number' => (int) env('SAFEZONE_MAP_NUMBER', 0),
+        'x'          => (int) env('SAFEZONE_X', 125),
+        'y'          => (int) env('SAFEZONE_Y', 125),
+    ],
 ];

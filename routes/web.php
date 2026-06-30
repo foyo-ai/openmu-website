@@ -42,7 +42,15 @@ Route::group([
         Route::put('/account/email', [AccountController::class, 'updateEmail'])->name('account.email');
         Route::put('/account/security-code', [AccountController::class, 'updateSecurityCode'])->name('account.security');
 
-        Route::resource('character', CharacterController::class);
+        Route::resource('character', CharacterController::class)->only(['index', 'show']);
+
+        // Character actions (offline-only, ownership-checked in the controller)
+        Route::patch('character/{character}/rename', [\App\Http\Controllers\CharacterActionController::class, 'rename'])->name('character.rename');
+        Route::post('character/{character}/reset', [\App\Http\Controllers\CharacterActionController::class, 'reset'])->name('character.reset');
+        Route::post('character/{character}/clear-pk', [\App\Http\Controllers\CharacterActionController::class, 'clearPk'])->name('character.clearpk');
+        Route::post('character/{character}/unstick', [\App\Http\Controllers\CharacterActionController::class, 'unstick'])->name('character.unstick');
+        Route::delete('character/{character}', [\App\Http\Controllers\CharacterActionController::class, 'destroy'])->name('character.destroy');
+
         Route::group(['prefix' => 'character-points'], function () {
             Route::get('{character}/edit', [CharacterPointsController::class, 'edit'])
                 ->name('character-points.edit');
