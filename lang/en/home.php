@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'hero_title'    => 'MU Online Season 6 — community-run, no Pay-to-Win',
+    'hero_title'    => 'MU Online Season 6',
     'hero_subtitle' => 'A community-run server sustained by voluntary donations. High rates, relaxed grind. Download once, install and play — no extra config.',
     'play_now'      => 'Play now',
     'download_game' => 'Download game',

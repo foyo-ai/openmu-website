@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'hero_title'    => 'MU Online Season 6 — cộng đồng, không Pay-to-Win',
+    'hero_title'    => 'MU Online Season 6',
     'hero_subtitle' => 'Server do cộng đồng vận hành, duy trì bằng donate tự nguyện. Rate cao, chơi thoải mái. Tải một lần, cài là chơi — không cấu hình gì thêm.',
     'play_now'      => 'Chơi ngay',
     'download_game' => 'Tải game',
