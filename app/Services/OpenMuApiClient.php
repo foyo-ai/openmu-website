@@ -87,6 +87,12 @@ class OpenMuApiClient
         return $this->request('GET', '/server-info');
     }
 
+    /** Scheduled in-game events (name, daily UTC start times, duration) from the game config. */
+    public function events(): array
+    {
+        return $this->request('GET', '/events');
+    }
+
     // --- Account writes (Component 4) ---
 
     public function register(array $data): array
