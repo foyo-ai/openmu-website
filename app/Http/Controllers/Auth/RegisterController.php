@@ -2,83 +2,54 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Auth\AccountIdentity;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\Models\User;
-use App\Services\ItemStorageService;
+use App\Services\OpenMuApiClient;
+use App\Services\OpenMuApiException;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
 
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
     protected $redirectTo = RouteServiceProvider::HOME;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest');
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * Register a new account via the game-server API (creates a real game account).
      */
-    protected function validator(array $data)
+    public function register(Request $request): RedirectResponse
     {
-        return Validator::make($data, [
-            'LoginName' => ['required', 'string', 'max:10', 'unique:pgsql.data.Account'],
-            'EMail' => ['required', 'string', 'email', 'max:255', 'unique:pgsql.data.Account'],
-            'SecurityCode' => ['required', 'string', 'min:6', 'max:6'],
+        $data = $request->validate([
+            'LoginName'    => ['required', 'string', 'min:3', 'max:10'],
+            'EMail'        => ['required', 'string', 'email', 'max:255'],
+            'SecurityCode' => ['required', 'string', 'size:6'],
             'PasswordHash' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
-    }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
-     */
-    protected function create(array $data)
-    {
-        return User::create([
-            'Id' => Str::uuid(),
-            'VaultId' => (new ItemStorageService())->store(config('app.vault_money'))->Id,
-            'LoginName' => $data['LoginName'],
-            'EMail' => $data['EMail'],
-            'PasswordHash' => Hash::make($data['PasswordHash']),
-            'SecurityCode' => $data['SecurityCode'],
-            'RegistrationDate' => now(),
-            'State' => 0,
-            'TimeZone' => 0,
-            'VaultPassword' => '',
-            'IsVaultExtended' => false
-        ]);
+        try {
+            $account = OpenMuApiClient::fromConfig()->register([
+                'login'        => $data['LoginName'],
+                'password'     => $data['PasswordHash'],
+                'email'        => $data['EMail'],
+                'securityCode' => $data['SecurityCode'],
+            ]);
+        } catch (OpenMuApiException $e) {
+            $field = $e->errorCode === 'login_taken' ? 'LoginName' : 'PasswordHash';
+
+            return back()->withErrors([$field => $e->getMessage()])->withInput();
+        }
+
+        Auth::login(AccountIdentity::fromApi($account));
+
+        return redirect(RouteServiceProvider::HOME);
     }
 }

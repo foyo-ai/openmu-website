@@ -61,8 +61,8 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            // Accounts are authenticated + loaded via the game-server API (not the DB).
+            'driver' => 'api',
         ],
 
         // 'users' => [
