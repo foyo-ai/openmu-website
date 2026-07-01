@@ -2,7 +2,7 @@
 
 return [
     'hero_title'    => 'Begin your journey at muss6',
-    'hero_subtitle' => 'MU Online :season — :version private server. Register free and conquer Lorencia today.',
+    'hero_subtitle' => 'MU Online :season private server, patch :version. Register free and conquer Lorencia today.',
     'play_now'      => 'Play now',
     'create_account' => 'Create account',
 
@@ -25,8 +25,8 @@ return [
     'feature_community_desc' => 'Join our Discord, get support and play with friends.',
 
     'download_title'   => 'Download the game client',
-    'download_intro'   => 'Download, install and play right away — the server is pre-configured, no setup required.',
-    'download_note'    => 'After installing, open MUSS6 to play — it keeps the client updated to the latest version automatically.',
+    'download_intro'   => 'Download, install and play right away. The server is pre-configured, no setup required.',
+    'download_note'    => 'After installing, open MUSS6 to play. It keeps the client updated to the latest version automatically.',
     'connect_info'     => 'Connect server',
     'join_discord'     => 'Join Discord',
 

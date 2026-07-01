@@ -2,7 +2,7 @@
 
 return [
     'hero_title'    => 'Bắt đầu hành trình tại muss6',
-    'hero_subtitle' => 'Máy chủ MU Online :season — :version. Đăng ký miễn phí và chinh phục Lorencia ngay hôm nay.',
+    'hero_subtitle' => 'Máy chủ MU Online :season, phiên bản :version. Đăng ký miễn phí và chinh phục Lorencia ngay hôm nay.',
     'play_now'      => 'Chơi ngay',
     'create_account' => 'Tạo tài khoản',
 
@@ -25,8 +25,8 @@ return [
     'feature_community_desc' => 'Tham gia Discord, nhận hỗ trợ và chơi cùng bạn bè.',
 
     'download_title'   => 'Tải game client',
-    'download_intro'   => 'Tải về, cài đặt và chơi ngay — server đã được thiết lập sẵn, không cần cấu hình gì thêm.',
-    'download_note'    => 'Sau khi cài, mở MUSS6 để chơi — game sẽ tự động cập nhật lên phiên bản mới nhất.',
+    'download_intro'   => 'Tải về, cài đặt và chơi ngay. Server đã được thiết lập sẵn, không cần cấu hình gì thêm.',
+    'download_note'    => 'Sau khi cài, mở MUSS6 để chơi. Game sẽ tự động cập nhật lên phiên bản mới nhất.',
     'connect_info'     => 'Máy chủ kết nối',
     'join_discord'     => 'Tham gia Discord',
 

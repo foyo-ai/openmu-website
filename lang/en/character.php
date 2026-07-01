@@ -48,7 +48,7 @@ return [
     'deleted'    => 'Character deleted.',
 
     // errors
-    'err_name_length' => 'Name must be 1–10 characters.',
+    'err_name_length' => 'Name must be 1 to 10 characters.',
     'err_name_chars'  => 'Name may only contain letters and numbers.',
     'err_name_taken'  => 'That name is already taken.',
     'err_reset_level' => 'Level :level is required to reset.',

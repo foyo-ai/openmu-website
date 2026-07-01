@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- SEO --}}
-    <title>@yield('title', config('app.name')) — muss6.org</title>
+    <title>@yield('title', config('app.name')) | muss6.org</title>
     <meta name="description" content="@yield('meta_description', __('seo.default_description'))">
     <link rel="canonical" href="{{ url()->current() }}">
 
