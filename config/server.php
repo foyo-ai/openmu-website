@@ -11,16 +11,15 @@ return [
     'max_reset'   => env('SERVER_MAX_RESET', 'Unlimited'),
 
     // Where the game client connects first (shown on the landing page).
-    'connect_host' => env('SERVER_CONNECT_HOST', 'connect.muss6.org'),
-    'connect_port' => env('SERVER_CONNECT_PORT', '44405'),
+    'connect_host' => env('SERVER_CONNECT_HOST', 'muss6.org'),
+    'connect_port' => env('SERVER_CONNECT_PORT', '44406'),
 
     // Community + downloads
     'discord_url'  => env('SERVER_DISCORD_URL', 'https://discord.gg/'),
     'facebook_url' => env('SERVER_FACEBOOK_URL', ''),
     'downloads'    => [
-        // label => url
-        'Full Client (Google Drive)' => env('SERVER_DOWNLOAD_FULL', '#'),
-        'Full Client (Mega)'         => env('SERVER_DOWNLOAD_MEGA', '#'),
+        // label => url — the one-click installer (server pre-configured, no setup needed).
+        'Full Client (muss6.org)' => env('SERVER_DOWNLOAD_FULL', 'https://muss6.org/download/muss6-setup.exe'),
     ],
 
     // OpenMU admin API base, reachable container-to-container for the live online count
