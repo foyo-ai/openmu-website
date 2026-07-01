@@ -31,7 +31,7 @@
                             <tr>
                                 <td class="ps-3 mu-rank-pos">{{ $row['rank'] }}</td>
                                 <td class="fw-semibold">{{ $row['name'] }}</td>
-                                <td class="text-muted">{{ $row['class_name'] }}</td>
+                                <td class="text-muted">{{ $row['className'] }}</td>
                                 <td class="text-end">{{ number_format($row['resets']) }}</td>
                                 <td class="text-end pe-3">{{ number_format($row['level']) }}</td>
                             </tr>
@@ -49,7 +49,7 @@
                             <tr>
                                 <td class="ps-3 mu-rank-pos">{{ $row['rank'] }}</td>
                                 <td class="fw-semibold">{{ $row['name'] }}</td>
-                                <td class="text-muted">{{ $row['class_name'] }}</td>
+                                <td class="text-muted">{{ $row['className'] }}</td>
                                 <td class="text-end pe-3">{{ number_format($row['kills']) }}</td>
                             </tr>
                         @empty
