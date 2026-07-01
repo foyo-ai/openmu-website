@@ -25,7 +25,8 @@ return [
     'feature_community_desc' => 'Tham gia Discord, nhận hỗ trợ và chơi cùng bạn bè.',
 
     'download_title'   => 'Tải game client',
-    'download_intro'   => 'Tải client, cài đặt và kết nối tới :host:::port.',
+    'download_intro'   => 'Tải về, cài đặt và chơi ngay — server đã được thiết lập sẵn, không cần cấu hình gì thêm.',
+    'download_note'    => 'Sau khi cài, mở MUSS6 để chơi — game sẽ tự động cập nhật lên phiên bản mới nhất.',
     'connect_info'     => 'Máy chủ kết nối',
     'join_discord'     => 'Tham gia Discord',
 

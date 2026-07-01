@@ -25,7 +25,8 @@ return [
     'feature_community_desc' => 'Join our Discord, get support and play with friends.',
 
     'download_title'   => 'Download the game client',
-    'download_intro'   => 'Download the client, install it and connect to :host:::port.',
+    'download_intro'   => 'Download, install and play right away — the server is pre-configured, no setup required.',
+    'download_note'    => 'After installing, open MUSS6 to play — it keeps the client updated to the latest version automatically.',
     'connect_info'     => 'Connect server',
     'join_discord'     => 'Join Discord',
 

@@ -72,34 +72,23 @@
     {{-- Download --}}
     <section id="download" class="container py-5">
         <div class="card p-4 p-md-5">
-            <div class="row align-items-center g-4">
-                <div class="col-md-7">
-                    <h2 class="mu-section-title mb-3">{{ __('home.download_title') }}</h2>
-                    <p class="text-muted">
-                        {{ __('home.download_intro', ['host' => config('server.connect_host'), 'port' => config('server.connect_port')]) }}
-                    </p>
-                    <div class="d-flex flex-wrap gap-2 mt-3">
-                        @foreach(config('server.downloads') as $label => $url)
-                            <a href="{{ $url }}" class="btn btn-primary" target="_blank" rel="noopener">
-                                <i class="fa-solid fa-download me-1"></i> {{ $label }}
-                            </a>
-                        @endforeach
-                        @if(config('server.discord_url'))
-                            <a href="{{ config('server.discord_url') }}" class="btn btn-outline-light" target="_blank" rel="noopener">
-                                <i class="fa-brands fa-discord me-1"></i> {{ __('home.join_discord') }}
-                            </a>
-                        @endif
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="mu-stat text-md-start">
-                        <div class="mu-stat-label mb-1">{{ __('home.connect_info') }}</div>
-                        <div class="mu-stat-value" style="font-size:1.15rem">
-                            {{ config('server.connect_host') }}:{{ config('server.connect_port') }}
-                        </div>
-                    </div>
-                </div>
+            <h2 class="mu-section-title mb-3">{{ __('home.download_title') }}</h2>
+            <p class="text-muted mb-0">{{ __('home.download_intro') }}</p>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                @foreach(config('server.downloads') as $label => $url)
+                    <a href="{{ $url }}" class="btn btn-primary" target="_blank" rel="noopener">
+                        <i class="fa-solid fa-download me-1"></i> {{ $label }}
+                    </a>
+                @endforeach
+                @if(config('server.discord_url'))
+                    <a href="{{ config('server.discord_url') }}" class="btn btn-outline-light" target="_blank" rel="noopener">
+                        <i class="fa-brands fa-discord me-1"></i> {{ __('home.join_discord') }}
+                    </a>
+                @endif
             </div>
+            <p class="text-muted small mt-3 mb-0">
+                <i class="fa-solid fa-circle-info me-1"></i> {{ __('home.download_note') }}
+            </p>
         </div>
     </section>
 
