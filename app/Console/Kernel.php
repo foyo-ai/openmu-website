@@ -12,7 +12,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Keep the leaderboard snapshot fresh so page views read a precomputed table.
+        $schedule->command('rankings:refresh')
+            ->everyMinute()
+            ->withoutOverlapping()
+            ->runInBackground();
     }
 
     /**

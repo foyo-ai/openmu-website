@@ -19,7 +19,15 @@
     </style>
     <div class="container py-5">
         <h1 class="mu-section-title mb-2">{{ __('ranking.title') }}</h1>
-        <p class="text-muted">{{ __('ranking.subtitle') }} <span class="badge bg-secondary align-middle">{{ __('ranking.top10') }}</span></p>
+        <p class="text-muted mb-1">{{ __('ranking.subtitle') }} <span class="badge bg-secondary align-middle">{{ __('ranking.top10') }}</span></p>
+        @if($generatedAt)
+            <p class="text-muted small">
+                <i class="fa-regular fa-clock"></i>
+                {{ __('ranking.updated_at') }}
+                <strong>{{ $generatedAt->copy()->setTimezone(config('server.timezone'))->format('H:i:s') }}</strong>
+                ({{ __('clock.server') }}) · {{ __('ranking.updates_note') }}
+            </p>
+        @endif
 
         <ul class="nav nav-pills gap-2 my-4">
             @foreach(['players', 'killers', 'guilds'] as $t)

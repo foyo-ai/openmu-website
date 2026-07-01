@@ -21,4 +21,7 @@ return [
     'top10'     => 'Top 10',
     'your_rank' => 'Your ranking',
     'you'       => 'You',
+
+    'updated_at'   => 'Updated at',
+    'updates_note' => 'Leaderboard refreshes every minute',
 ];

@@ -14,6 +14,10 @@ return [
     'connect_host' => env('SERVER_CONNECT_HOST', 'muss6.org'),
     'connect_port' => env('SERVER_CONNECT_PORT', '44406'),
 
+    // Timezone the server "operates" in (shown by the footer clock; used for event
+    // scheduling). Players see this plus their own auto-detected local time.
+    'timezone' => env('SERVER_TIMEZONE', 'Asia/Ho_Chi_Minh'),
+
     // Community + downloads
     'discord_url'  => env('SERVER_DISCORD_URL', 'https://discord.gg/'),
     'facebook_url' => env('SERVER_FACEBOOK_URL', ''),

@@ -113,7 +113,8 @@
                 <div class="row gy-3">
                     <div class="col-md-6">
                         <div class="navbar-brand fs-4">MUSS<span class="brand-accent">6</span></div>
-                        <p class="mb-0 small">{{ __('footer.tagline') }}</p>
+                        <p class="mb-2 small">{{ __('footer.tagline') }}</p>
+                        @include('partials.clock')
                     </div>
                     <div class="col-md-6 text-md-end small">
                         <a class="me-3" href="{{ route('rankings.index') }}">{{ __('nav.rankings') }}</a>

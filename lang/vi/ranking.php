@@ -21,4 +21,7 @@ return [
     'top10'     => 'Top 10',
     'your_rank' => 'Hạng của bạn',
     'you'       => 'Bạn',
+
+    'updated_at'   => 'Cập nhật lúc',
+    'updates_note' => 'BXH cập nhật mỗi phút',
 ];

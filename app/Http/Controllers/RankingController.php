@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RankingSnapshot;
 use App\Services\OpenMuApiClient;
 use App\Services\OpenMuApiException;
 use Illuminate\Http\Request;
@@ -18,38 +19,45 @@ class RankingController extends Controller
             ? $request->query('tab')
             : 'players';
 
-        // Fetch the full ordered leaderboard once (the game server ranks all characters
-        // regardless of the limit), cache it, then slice locally. Cached 5 min because
-        // ranks change slowly and the server-side scan is the expensive part.
-        $all = Cache::remember('rank.' . $tab, 300, function () use ($tab) {
+        // Read the precomputed snapshot (written every minute by rankings:refresh).
+        // The page never calls the game server directly, so it stays fast under load.
+        $snap        = RankingSnapshot::find($tab);
+        $all         = $snap?->payload ?? [];
+        $generatedAt = $snap?->generated_at;
+
+        // Cold start (no snapshot row yet, e.g. right after a fresh deploy): fetch once
+        // live so the board is never empty. The scheduler fills the table within a minute.
+        if ($snap === null) {
             try {
-                return OpenMuApiClient::fromConfig()->rankings($tab, 200);
+                $all         = OpenMuApiClient::fromConfig()->rankings($tab, 100);
+                $generatedAt = now();
             } catch (OpenMuApiException $e) {
-                return [];
+                $all = [];
             }
-        });
+        }
 
         $top = array_slice($all, 0, self::TOP);
 
-        // The logged-in player's own rows for this leaderboard (players/killers only,
-        // matched by character name), so they can see their standing even outside the top.
+        // The logged-in player's own rows for this board (players/killers only),
+        // resolved within the snapshot's top rows (matched by character name).
         $mine = ($tab !== 'guilds' && auth()->check())
             ? $this->ownRows($all)
             : [];
 
         return view('ranking.index', [
-            'tab'     => $tab,
-            'players' => $tab === 'players' ? $top : [],
-            'killers' => $tab === 'killers' ? $top : [],
-            'guilds'  => $tab === 'guilds' ? $top : [],
-            'mine'    => $mine,
-            'top'     => self::TOP,
+            'tab'         => $tab,
+            'players'     => $tab === 'players' ? $top : [],
+            'killers'     => $tab === 'killers' ? $top : [],
+            'guilds'      => $tab === 'guilds' ? $top : [],
+            'mine'        => $mine,
+            'top'         => self::TOP,
+            'generatedAt' => $generatedAt,
         ]);
     }
 
     /**
-     * Rows in the full leaderboard that belong to the authenticated account,
-     * matched by (case-insensitive) character name. Cached briefly per user.
+     * Rows in the snapshot that belong to the authenticated account, matched by
+     * (case-insensitive) character name. Character names are cached briefly per user.
      */
     private function ownRows(array $all): array
     {
