@@ -33,7 +33,7 @@
 
                                 <div class="small text-muted">
                                     <div><i class="fa-regular fa-clock me-1"></i>{{ __('events.duration') }}: {{ $ev['duration'] }} {{ __('events.minutes') }}</div>
-                                    <div class="mt-1"><i class="fa-solid fa-calendar-day me-1"></i>{{ __('events.times') }}: {{ implode(' · ', $ev['times']) }} <span class="text-uppercase">(GMT+0)</span></div>
+                                    <div class="mt-1"><i class="fa-solid fa-calendar-day me-1"></i>{{ __('events.times') }}: <span class="event-times">{{ implode(' · ', $ev['times']) }}</span> <span class="event-tz text-uppercase"></span></div>
                                 </div>
 
                                 @if($ev['reward'] || $ev['rate'])
@@ -73,6 +73,29 @@
             return (h > 0 ? pad(h) + ':' : '') + pad(m) + ':' + pad(ss);
         }
 
+        // Render each event's daily start times in the visitor's chosen timezone (the UTC
+        // "HH:mm" from the game, converted via the shared MU_TZ helper). Re-runs on tz change.
+        function renderTimes() {
+            if (!window.MU_TZ) return;
+            var tz = window.MU_TZ.get();
+            var now = anchor + (Date.now() - pageLoad);
+            var d = new Date(now);
+            var offset = window.MU_TZ.offset(now, tz);
+            cards.forEach(function (card) {
+                var times = (card.getAttribute('data-times') || '').split(',').filter(Boolean);
+                var el = card.querySelector('.event-times');
+                var tzEl = card.querySelector('.event-tz');
+                if (!el || !times.length) return;
+                var local = times.map(function (t) {
+                    var p = t.split(':');
+                    var ms = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), parseInt(p[0], 10), parseInt(p[1], 10), 0);
+                    return window.MU_TZ.time(ms, tz).slice(0, 5);   // HH:mm in the chosen tz
+                }).sort();
+                el.textContent = local.join(' · ');
+                if (tzEl) tzEl.textContent = offset ? '(' + offset + ')' : '';
+            });
+        }
+
         function tick() {
             var now = anchor + (Date.now() - pageLoad);     // current server time (UTC ms)
             var d = new Date(now);
@@ -104,6 +127,8 @@
             });
         }
 
+        renderTimes();
+        document.addEventListener('mu-tz-change', renderTimes);
         tick();
         setInterval(tick, 1000);
     })();

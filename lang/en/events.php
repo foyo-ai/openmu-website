@@ -2,7 +2,7 @@
 
 return [
     'title'     => 'Events',
-    'subtitle'  => 'In-game event schedule and the time left until each one starts (server time, GMT+0).',
+    'subtitle'  => 'In-game event schedule and the time left until each one starts. Start times shown in your timezone.',
     'empty'     => 'No scheduled events yet.',
     'duration'  => 'Duration',
     'minutes'   => 'min',

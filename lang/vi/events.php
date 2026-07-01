@@ -2,7 +2,7 @@
 
 return [
     'title'     => 'Sự kiện',
-    'subtitle'  => 'Lịch các sự kiện trong game và thời gian còn lại tới lần kế tiếp (giờ máy chủ GMT+0).',
+    'subtitle'  => 'Lịch các sự kiện trong game và thời gian còn lại tới lần kế tiếp. Giờ chạy hiển thị theo múi giờ của bạn.',
     'empty'     => 'Chưa có sự kiện nào được lên lịch.',
     'duration'  => 'Thời lượng',
     'minutes'   => 'phút',
