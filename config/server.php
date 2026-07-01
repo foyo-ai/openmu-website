@@ -5,8 +5,8 @@
 return [
     'season'      => env('SERVER_SEASON', 'Season 6'),
     'version'     => env('SERVER_VERSION', 'Episode 3'),
-    'exp_rate'    => env('SERVER_EXP_RATE', '50x'),
-    'master_exp_rate' => env('SERVER_MASTER_EXP_RATE', '20x'),
+    'exp_rate'    => env('SERVER_EXP_RATE', 'x50'),
+    'master_exp_rate' => env('SERVER_MASTER_EXP_RATE', 'x20'),
     'drop_rate'   => env('SERVER_DROP_RATE', '30%'),
     'max_reset'   => env('SERVER_MAX_RESET', 'Unlimited'),
 

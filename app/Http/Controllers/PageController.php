@@ -55,10 +55,10 @@ class PageController extends Controller
         ];
     }
 
-    /** Formats a rate float as e.g. "50x" / "1.5x". */
+    /** Formats a rate float as e.g. "x50" / "x1.5". */
     private function asMultiplier($value): string
     {
         $n = rtrim(rtrim(number_format((float) $value, 1, '.', ''), '0'), '.');
-        return $n . 'x';
+        return 'x' . $n;
     }
 }
