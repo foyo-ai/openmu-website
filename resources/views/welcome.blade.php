@@ -6,14 +6,17 @@
     {{-- Hero --}}
     <section class="mu-hero">
         <div class="container position-relative">
-            <div class="d-inline-flex align-items-center gap-2 mb-3 small text-uppercase" style="letter-spacing:.12em">
-                <span class="mu-online-dot {{ $serverStatus['online'] ? '' : 'is-off' }}"></span>
-                <span class="text-muted">
-                    {{ $serverStatus['online'] ? __('home.server_online') : __('home.server_offline') }}
-                    @if(!is_null($serverStatus['players']))
-                        · {{ $serverStatus['players'] }} {{ __('home.players_online') }}
-                    @endif
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
+                <span class="d-inline-flex align-items-center gap-2 small text-uppercase" style="letter-spacing:.12em">
+                    <span class="mu-online-dot {{ $serverStatus['online'] ? '' : 'is-off' }}"></span>
+                    <span class="text-muted">
+                        {{ $serverStatus['online'] ? __('home.server_online') : __('home.server_offline') }}
+                        @if(!is_null($serverStatus['players']))
+                            · {{ $serverStatus['players'] }} {{ __('home.players_online') }}
+                        @endif
+                    </span>
                 </span>
+                @include('partials.clock')
             </div>
 
             <h1 class="mu-hero-title text-gradient-gold">{{ __('home.hero_title') }}</h1>

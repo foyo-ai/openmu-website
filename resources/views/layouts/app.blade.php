@@ -113,8 +113,7 @@
                 <div class="row gy-3">
                     <div class="col-md-6">
                         <div class="navbar-brand fs-4">MUSS<span class="brand-accent">6</span></div>
-                        <p class="mb-2 small">{{ __('footer.tagline') }}</p>
-                        @include('partials.clock')
+                        <p class="mb-0 small">{{ __('footer.tagline') }}</p>
                     </div>
                     <div class="col-md-6 text-md-end small">
                         <a class="me-3" href="{{ route('rankings.index') }}">{{ __('nav.rankings') }}</a>
@@ -126,6 +125,51 @@
             </div>
         </footer>
     </div>
+
+    {{-- Shared clock/timezone helper: renders the server instant (data-servertime = epoch ms)
+         into the visitor's chosen timezone. One source of truth for the hero clock and any
+         server-time labels; the picker (in the hero clock) persists the choice in localStorage. --}}
+    <script>
+    window.MU_TZ = {
+        get: function () {
+            try { return localStorage.getItem('muss6_tz') || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; }
+            catch (e) { return 'UTC'; }
+        },
+        set: function (tz) {
+            try { localStorage.setItem('muss6_tz', tz); } catch (e) {}
+            document.dispatchEvent(new Event('mu-tz-change'));
+        },
+        time: function (ms, tz) {
+            try { return new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date(ms)); }
+            catch (e) { return ''; }
+        },
+        offset: function (ms, tz) {
+            try {
+                var p = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(new Date(ms));
+                for (var i = 0; i < p.length; i++) { if (p[i].type === 'timeZoneName') return p[i].value; }
+            } catch (e) {}
+            return '';
+        }
+    };
+    (function () {
+        var pageLoad = Date.now();
+        function render() {
+            var tz = window.MU_TZ.get();
+            document.querySelectorAll('[data-servertime]').forEach(function (el) {
+                var base = parseInt(el.getAttribute('data-servertime'), 10);
+                if (isNaN(base)) return;
+                var ms = el.hasAttribute('data-live') ? base + (Date.now() - pageLoad) : base;
+                var text = window.MU_TZ.time(ms, tz);
+                if (el.hasAttribute('data-offset')) { text += ' (' + window.MU_TZ.offset(ms, tz) + ')'; }
+                el.textContent = text;
+            });
+        }
+        document.addEventListener('mu-tz-change', render);
+        render();
+        setInterval(render, 1000);
+    })();
+    </script>
+
     @stack('scripts')
 </body>
 </html>

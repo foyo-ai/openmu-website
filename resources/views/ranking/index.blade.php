@@ -24,8 +24,8 @@
             <p class="text-muted small">
                 <i class="fa-regular fa-clock"></i>
                 {{ __('ranking.updated_at') }}
-                <strong>{{ $generatedAt->copy()->setTimezone(config('server.timezone'))->format('H:i:s') }}</strong>
-                ({{ __('clock.server') }}) · {{ __('ranking.updates_note') }}
+                <strong data-servertime="{{ $generatedAt->getTimestampMs() }}" data-offset>{{ $generatedAt->format('H:i:s') }}</strong>
+                · {{ __('ranking.updates_note') }}
             </p>
         @endif
 
