@@ -119,7 +119,7 @@
                     <div class="col-md-6 text-md-end small">
                         <a class="me-3" href="{{ route('rankings.index') }}">{{ __('nav.rankings') }}</a>
                         <a class="me-3" href="{{ route('news.index') }}">{{ __('nav.news') }}</a>
-                        <a href="{{ route('home') }}#download">{{ __('nav.download') }}</a>
+                        <a href="{{ collect(config('server.downloads'))->first() ?? '#' }}" target="_blank" rel="noopener">{{ __('nav.download') }}</a>
                         <div class="mt-2 text-muted">© {{ date('Y') }} muss6.org</div>
                     </div>
                 </div>
