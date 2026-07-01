@@ -1,11 +1,15 @@
 <?php
 
 return [
-    'hero_title'    => 'Bắt đầu hành trình tại muss6',
-    'hero_subtitle' => 'Máy chủ MU Online :season, phiên bản :version. Đăng ký miễn phí và chinh phục Lorencia ngay hôm nay.',
+    'hero_title'    => 'MU Online Season 6 — cộng đồng, không Pay-to-Win',
+    'hero_subtitle' => 'Server do cộng đồng vận hành, duy trì bằng donate tự nguyện. Rate cao, chơi thoải mái. Tải một lần, cài là chơi — không cấu hình gì thêm.',
     'play_now'      => 'Chơi ngay',
     'download_game' => 'Tải game',
     'create_account' => 'Tạo tài khoản',
+
+    'badge_nop2w'     => 'Không Pay-to-Win',
+    'badge_install'   => 'Cài 1-click',
+    'badge_community' => 'Cộng đồng vận hành',
 
     'players_online' => 'Người chơi online',
     'server_online'  => 'Máy chủ hoạt động',
@@ -18,12 +22,20 @@ return [
     'max_reset'     => 'Reset tối đa',
 
     'features_title' => 'Vì sao chọn muss6?',
-    'feature_balanced'      => 'Cân bằng & ổn định',
-    'feature_balanced_desc' => 'Cấu hình kỹ lưỡng, không pay-to-win, máy chủ chạy 24/7.',
-    'feature_events'        => 'Sự kiện mỗi tuần',
-    'feature_events_desc'   => 'Blood Castle, Devil Square, Chaos Castle và sự kiện riêng.',
-    'feature_community'      => 'Cộng đồng thân thiện',
-    'feature_community_desc' => 'Tham gia Discord, nhận hỗ trợ và chơi cùng bạn bè.',
+    'feature_nop2w'      => 'Không Pay-to-Win',
+    'feature_nop2w_desc' => 'Donate chỉ để ủng hộ duy trì server, không bán sức mạnh. Ai cũng chơi công bằng.',
+    'feature_install'      => 'Cài đặt 1-click',
+    'feature_install_desc' => 'Tải bộ cài, chạy là chơi — không giải nén, không sửa config. Launcher tự cập nhật phiên bản.',
+    'feature_rates'      => 'Rate cao, chơi thoải mái',
+    'feature_rates_desc' => 'Tỉ lệ kinh nghiệm & rớt đồ cao, lên đồ nhanh, tập trung vào PvP và sự kiện.',
+    'feature_community'      => 'Cộng đồng & minh bạch',
+    'feature_community_desc' => 'Server duy trì bằng donate tự nguyện, thông tin công khai, hỗ trợ qua Discord.',
+
+    'classes_title'    => 'Các lớp nhân vật',
+    'classes_subtitle' => '7 lớp nhân vật cổ điển của MU Season 6.',
+    'ranking_preview_title' => 'Top người chơi',
+    'ranking_preview_more'  => 'Xem bảng xếp hạng',
+    'ranking_empty'         => 'Chưa có dữ liệu xếp hạng.',
 
     'download_title'   => 'Tải game client',
     'download_intro'   => 'Tải về, cài đặt và chơi ngay. Server đã được thiết lập sẵn, không cần cấu hình gì thêm.',

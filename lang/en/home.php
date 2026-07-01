@@ -1,11 +1,15 @@
 <?php
 
 return [
-    'hero_title'    => 'Begin your journey at muss6',
-    'hero_subtitle' => 'MU Online :season private server, patch :version. Register free and conquer Lorencia today.',
+    'hero_title'    => 'MU Online Season 6 — community-run, no Pay-to-Win',
+    'hero_subtitle' => 'A community-run server sustained by voluntary donations. High rates, relaxed grind. Download once, install and play — no extra config.',
     'play_now'      => 'Play now',
     'download_game' => 'Download game',
     'create_account' => 'Create account',
+
+    'badge_nop2w'     => 'No Pay-to-Win',
+    'badge_install'   => '1-Click Install',
+    'badge_community' => 'Community-run',
 
     'players_online' => 'Players online',
     'server_online'  => 'Server online',
@@ -18,12 +22,20 @@ return [
     'max_reset'     => 'Max reset',
 
     'features_title' => 'Why play on muss6?',
-    'feature_balanced'      => 'Balanced & stable',
-    'feature_balanced_desc' => 'Carefully tuned, no pay-to-win, server runs 24/7.',
-    'feature_events'        => 'Weekly events',
-    'feature_events_desc'   => 'Blood Castle, Devil Square, Chaos Castle and custom events.',
-    'feature_community'      => 'Friendly community',
-    'feature_community_desc' => 'Join our Discord, get support and play with friends.',
+    'feature_nop2w'      => 'No Pay-to-Win',
+    'feature_nop2w_desc' => 'Donations only help keep the server running — power is never for sale. Everyone plays on a level field.',
+    'feature_install'      => '1-Click install',
+    'feature_install_desc' => 'Download the installer, run it and play — no unzipping, no editing config. The launcher auto-updates.',
+    'feature_rates'      => 'High rates, relaxed grind',
+    'feature_rates_desc' => 'High experience & drop rates, fast gearing, focused on PvP and events.',
+    'feature_community'      => 'Community & transparency',
+    'feature_community_desc' => 'Sustained by voluntary donations, open information, support via Discord.',
+
+    'classes_title'    => 'Character classes',
+    'classes_subtitle' => 'The 7 classic classes of MU Season 6.',
+    'ranking_preview_title' => 'Top players',
+    'ranking_preview_more'  => 'View rankings',
+    'ranking_empty'         => 'No ranking data yet.',
 
     'download_title'   => 'Download the game client',
     'download_intro'   => 'Download, install and play right away. The server is pre-configured, no setup required.',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\RankingSnapshot;
 use App\Services\OpenMuApiClient;
 use App\Services\OpenMuApiException;
 use App\Services\OpenMuStatusService;
@@ -23,10 +24,16 @@ class PageController extends Controller
             ->limit(3)
             ->get();
 
+        // Top players preview (from the precomputed leaderboard snapshot).
+        $topPlayers = collect(optional(RankingSnapshot::find('players'))->payload ?? [])
+            ->take(5)
+            ->all();
+
         return view('welcome', [
             'serverStatus' => $serverStatus,
             'latestNews'   => $latestNews,
             'rates'        => $this->rates(),
+            'topPlayers'   => $topPlayers,
         ]);
     }
 
