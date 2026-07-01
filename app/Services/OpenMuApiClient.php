@@ -81,6 +81,12 @@ class OpenMuApiClient
         return $this->request('GET', '/rankings', ['query' => ['type' => $type, 'limit' => $limit]]);
     }
 
+    /** Live server rates/config (experience, master, level cap, reset) read from GameConfiguration. */
+    public function serverInfo(): array
+    {
+        return $this->request('GET', '/server-info');
+    }
+
     // --- Account writes (Component 4) ---
 
     public function register(array $data): array

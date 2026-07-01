@@ -38,10 +38,10 @@
             {{-- Rates --}}
             <div class="row g-3 justify-content-center mt-5">
                 @foreach([
-                    'exp' => config('server.exp_rate'),
-                    'master_exp' => config('server.master_exp_rate'),
-                    'drop' => config('server.drop_rate'),
-                    'max_reset' => config('server.max_reset'),
+                    'exp' => $rates['exp'],
+                    'master_exp' => $rates['master_exp'],
+                    'drop' => $rates['drop'],
+                    'max_reset' => $rates['max_reset'],
                 ] as $key => $val)
                     <div class="col-6 col-md-3">
                         <div class="mu-stat">
