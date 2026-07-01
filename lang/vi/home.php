@@ -4,6 +4,7 @@ return [
     'hero_title'    => 'Bắt đầu hành trình tại muss6',
     'hero_subtitle' => 'Máy chủ MU Online :season, phiên bản :version. Đăng ký miễn phí và chinh phục Lorencia ngay hôm nay.',
     'play_now'      => 'Chơi ngay',
+    'download_game' => 'Tải game',
     'create_account' => 'Tạo tài khoản',
 
     'players_online' => 'Người chơi online',

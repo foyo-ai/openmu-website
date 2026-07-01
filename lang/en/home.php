@@ -4,6 +4,7 @@ return [
     'hero_title'    => 'Begin your journey at muss6',
     'hero_subtitle' => 'MU Online :season private server, patch :version. Register free and conquer Lorencia today.',
     'play_now'      => 'Play now',
+    'download_game' => 'Download game',
     'create_account' => 'Create account',
 
     'players_online' => 'Players online',

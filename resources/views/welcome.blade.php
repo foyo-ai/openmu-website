@@ -27,7 +27,9 @@
                 @else
                     <a href="{{ route('character.index') }}" class="btn btn-primary btn-lg px-4">{{ __('nav.characters') }}</a>
                 @endguest
-                <a href="#download" class="btn btn-outline-light btn-lg px-4">{{ __('home.play_now') }}</a>
+                <a href="{{ collect(config('server.downloads'))->first() ?? '#' }}" class="btn btn-outline-light btn-lg px-4" target="_blank" rel="noopener">
+                    <i class="fa-solid fa-download me-2"></i>{{ __('home.download_game') }}
+                </a>
             </div>
 
             {{-- Rates --}}
@@ -66,29 +68,6 @@
                     </div>
                 </div>
             @endforeach
-        </div>
-    </section>
-
-    {{-- Download --}}
-    <section id="download" class="container py-5">
-        <div class="card p-4 p-md-5">
-            <h2 class="mu-section-title mb-3">{{ __('home.download_title') }}</h2>
-            <p class="text-muted mb-0">{{ __('home.download_intro') }}</p>
-            <div class="d-flex flex-wrap gap-2 mt-3">
-                @foreach(config('server.downloads') as $label => $url)
-                    <a href="{{ $url }}" class="btn btn-primary" target="_blank" rel="noopener">
-                        <i class="fa-solid fa-download me-1"></i> {{ $label }}
-                    </a>
-                @endforeach
-                @if(config('server.discord_url'))
-                    <a href="{{ config('server.discord_url') }}" class="btn btn-outline-light" target="_blank" rel="noopener">
-                        <i class="fa-brands fa-discord me-1"></i> {{ __('home.join_discord') }}
-                    </a>
-                @endif
-            </div>
-            <p class="text-muted small mt-3 mb-0">
-                <i class="fa-solid fa-circle-info me-1"></i> {{ __('home.download_note') }}
-            </p>
         </div>
     </section>
 
