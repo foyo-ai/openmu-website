@@ -17,4 +17,8 @@ return [
     'score'  => 'Điểm',
     'members' => 'Thành viên',
     'empty'  => 'Chưa có dữ liệu xếp hạng.',
+
+    'top10'     => 'Top 10',
+    'your_rank' => 'Hạng của bạn',
+    'you'       => 'Bạn',
 ];

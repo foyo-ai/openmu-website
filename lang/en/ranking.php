@@ -17,4 +17,8 @@ return [
     'score'  => 'Score',
     'members' => 'Members',
     'empty'  => 'No ranking data yet.',
+
+    'top10'     => 'Top 10',
+    'your_rank' => 'Your ranking',
+    'you'       => 'You',
 ];
