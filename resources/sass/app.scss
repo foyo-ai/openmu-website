@@ -159,10 +159,10 @@ body {
     ul, ol { padding-left: 1.25rem; }
     li { margin-bottom: 0.3rem; }
     a { color: $mu-gold-bright; }
-    // Default: item art is inline in text/lists — render it as a small icon that
-    // sits on the text baseline, never the full 120px source size (which blew up
-    // line spacing on mobile). Tables and the wing list override with their own size.
-    img { height: 1.6em; width: auto; max-width: 100%; vertical-align: -0.4em; }
+    // Item art is presented inside tables / wing cards (see below), never inline in
+    // sentence text — so it can be large and clear without breaking line spacing.
+    // This fallback keeps any stray inline image sane.
+    img { max-width: 100%; height: auto; }
     code { color: $mu-gold-bright; background: rgba($mu-gold, 0.08); padding: 0.1rem 0.35rem; border-radius: 4px; }
 
     // Item / recipe tables
@@ -178,15 +178,25 @@ body {
         th, td { padding: 0.55rem 0.75rem; border-bottom: 1px solid $mu-border; text-align: left; vertical-align: middle; }
         thead th { background: rgba($mu-gold, 0.08); color: $mu-text-muted; text-transform: uppercase; font-size: 0.74rem; letter-spacing: 0.06em; }
         tbody tr:last-child td { border-bottom: 0; }
-        img { height: 30px; width: auto; vertical-align: middle; }
+        img { height: 56px; width: auto; vertical-align: middle; }
+    }
+    // Icon cell: centered, hugs its image column.
+    .mu-ic { text-align: center; width: 1%; white-space: nowrap; }
+
+    // Wing overview: image on top, name below, centered inside the table cell.
+    .mu-wing-cell {
+        display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center;
+        img { height: 56px; width: auto; }
+        span { font-size: 0.9rem; }
     }
 
-    // Wing list (class guides): item art + label, no bullets
+    // Wing list (class guides): item art card + label
     .mu-wing-list {
         list-style: none;
         padding-left: 0;
-        li { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
-        img { height: 46px; width: auto; vertical-align: middle; flex: 0 0 auto; }
+        li { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.75rem;
+             background: $mu-surface; border: 1px solid $mu-border; border-radius: $border-radius; padding: 0.6rem 0.9rem; }
+        img { height: 68px; width: auto; flex: 0 0 auto; }
     }
 
     // Callout / note box (author uses <div class="guide-note">...</div>)

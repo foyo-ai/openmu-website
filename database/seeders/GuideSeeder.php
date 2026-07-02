@@ -35,6 +35,28 @@ class GuideSeeder extends Seeder
         return '<img src="/images/items/item_' . $code . '_0.png" alt="' . $alt . '" title="' . $alt . '">';
     }
 
+    /** A wing "cell" (large art on top, name below) for the overview table. */
+    private function wingCell(string $code, string $name): string
+    {
+        return '<div class="mu-wing-cell">' . $this->img($code, $name) . '<span>' . $name . '</span></div>';
+    }
+
+    /**
+     * A materials table: each row is [imgCode|null, name, qty/note]. Item art lives in
+     * a centered icon column so it can be large without breaking text flow.
+     */
+    private function matTable(array $rows): string
+    {
+        $body = '';
+        foreach ($rows as $r) {
+            $icon = $r[0] ? $this->img($r[0], $r[1]) : '';
+            $body .= '<tr><td class="mu-ic">' . $icon . '</td><td>' . $r[1] . '</td><td>' . $r[2] . '</td></tr>';
+        }
+
+        return '<div class="table-responsive"><table><thead><tr><th></th><th>Nguyên liệu</th><th>Số lượng / ghi chú</th></tr></thead><tbody>'
+            . $body . '</tbody></table></div>';
+    }
+
     private function guides(): array
     {
         return array_merge(
@@ -47,8 +69,8 @@ class GuideSeeder extends Seeder
 
     private function wingsOverview(): array
     {
-        // wing code map for inline art
-        $w = fn (string $code, string $name) => $this->img($code, $name);
+        // wing cell = large art on top, name below (renders nicely in a table cell)
+        $w = fn (string $code, string $name) => $this->wingCell($code, $name);
         $body = <<<HTML
 <p>Wings (cánh) là trang bị quan trọng bậc nhất ở muss6: tăng sát thương, tăng khả năng hấp thụ sát thương (giảm damage nhận vào) và cho phép bay/di chuyển. Mỗi class có dòng wing riêng, chia làm <strong>3 cấp</strong>.</p>
 
@@ -58,13 +80,13 @@ class GuideSeeder extends Seeder
 <table>
 <thead><tr><th>Class</th><th>Cấp 1</th><th>Cấp 2</th><th>Cấp 3</th></tr></thead>
 <tbody>
-<tr><td>Dark Knight</td><td>{$w('12_2', 'Wings of Satan')} Satan</td><td>{$w('12_5', 'Wings of Dragon')} Dragon</td><td>{$w('12_36', 'Wing of Storm')} Storm</td></tr>
-<tr><td>Dark Wizard</td><td>{$w('12_1', 'Wings of Heaven')} Heaven</td><td>{$w('12_4', 'Wings of Soul')} Soul</td><td>{$w('12_37', 'Wing of Eternal')} Eternal</td></tr>
-<tr><td>Fairy Elf</td><td>{$w('12_0', 'Wings of Elf')} Elf</td><td>{$w('12_3', 'Wings of Spirits')} Spirits</td><td>{$w('12_38', 'Wing of Illusion')} Illusion</td></tr>
-<tr><td>Magic Gladiator</td><td>{$w('12_2', 'Wings of Satan')} Heaven/Satan</td><td>{$w('12_6', 'Wings of Darkness')} Darkness</td><td>{$w('12_39', 'Wing of Ruin')} Ruin</td></tr>
-<tr><td>Dark Lord</td><td>—</td><td>{$w('13_30', 'Cape of Lord')} Cape of Lord</td><td>{$w('12_40', 'Cape of Emperor')} Cape of Emperor</td></tr>
-<tr><td>Summoner</td><td>{$w('12_41', 'Wings of Curse')} Curse</td><td>{$w('12_42', 'Wings of Despair')} Despair</td><td>{$w('12_43', 'Wing of Dimension')} Dimension</td></tr>
-<tr><td>Rage Fighter</td><td>—</td><td>{$w('12_49', 'Cape of Fighter')} Cape of Fighter</td><td>{$w('12_50', 'Cape of Overrule')} Cape of Overrule</td></tr>
+<tr><td>Dark Knight</td><td>{$w('12_2', 'Satan')}</td><td>{$w('12_5', 'Dragon')}</td><td>{$w('12_36', 'Storm')}</td></tr>
+<tr><td>Dark Wizard</td><td>{$w('12_1', 'Heaven')}</td><td>{$w('12_4', 'Soul')}</td><td>{$w('12_37', 'Eternal')}</td></tr>
+<tr><td>Fairy Elf</td><td>{$w('12_0', 'Elf')}</td><td>{$w('12_3', 'Spirits')}</td><td>{$w('12_38', 'Illusion')}</td></tr>
+<tr><td>Magic Gladiator</td><td>{$w('12_2', 'Heaven/Satan')}</td><td>{$w('12_6', 'Darkness')}</td><td>{$w('12_39', 'Ruin')}</td></tr>
+<tr><td>Dark Lord</td><td>—</td><td>{$w('13_30', 'Cape of Lord')}</td><td>{$w('12_40', 'Cape of Emperor')}</td></tr>
+<tr><td>Summoner</td><td>{$w('12_41', 'Curse')}</td><td>{$w('12_42', 'Despair')}</td><td>{$w('12_43', 'Dimension')}</td></tr>
+<tr><td>Rage Fighter</td><td>—</td><td>{$w('12_49', 'Cape of Fighter')}</td><td>{$w('12_50', 'Cape of Overrule')}</td></tr>
 </tbody>
 </table>
 </div>
@@ -104,6 +126,29 @@ HTML;
         $flame = $this->img('13_52', 'Flame of Condor');
         $condor = $this->img('13_53', 'Feather of Condor');
 
+        $tbl1 = $this->matTable([
+            ['12_15', 'Jewel of Chaos', '1 — bắt buộc'],
+            ['14_13', 'Jewel of Bless', 'tuỳ chọn — tăng % thành công'],
+            ['14_14', 'Jewel of Soul', 'tuỳ chọn — tăng % thành công'],
+        ]);
+        $tbl2 = $this->matTable([
+            ['12_15', 'Jewel of Chaos', '1'],
+            ['13_14', "Loch's Feather", '1'],
+        ]);
+        $tbl3a = $this->matTable([
+            ['12_15', 'Jewel of Chaos', '1'],
+            ['14_22', 'Jewel of Creation', '1'],
+            [null, 'Packed Jewel of Soul', '1'],
+        ]);
+        $tbl3b = $this->matTable([
+            ['13_53', 'Feather of Condor', '1'],
+            ['13_52', 'Flame of Condor', '1'],
+            ['12_15', 'Jewel of Chaos', '1'],
+            ['14_22', 'Jewel of Creation', '1'],
+            [null, 'Packed Jewel of Soul', '1'],
+            [null, 'Packed Jewel of Bless', '1'],
+        ]);
+
         $body = <<<HTML
 <p>Wings được chế tạo tại <strong>Chaos Goblin Machine</strong> (NPC ở thành Noria). Bỏ đủ nguyên liệu vào máy, trả phí zen rồi bấm "Combine". Nếu thất bại, vật phẩm chính có thể tụt cấp hoặc biến mất — nên đọc kỹ trước khi làm.</p>
 
@@ -112,55 +157,39 @@ Các con số dưới đây (nguyên liệu, số ngọc, tỉ lệ, zen) và ng
 </div>
 
 <h2>Wing cấp 1</h2>
-<ul>
-<li><strong>Vật phẩm chính:</strong> 1 vũ khí Chaos (Chaos Dragon Axe / Chaos Nature Bow / Chaos Lightning Staff) +4 trở lên, có option.</li>
-<li><strong>Tuỳ chọn:</strong> thêm 1 vật phẩm bất kỳ +4 trở lên (có option) để tăng tỉ lệ.</li>
-<li><strong>Ngọc:</strong> 1 {$chaos} Jewel of Chaos (bắt buộc) + thêm {$bless} Bless / {$soul} Soul để tăng % thành công.</li>
-<li><strong>Phí:</strong> ~10.000 zen cho mỗi 1% tỉ lệ.</li>
-<li><strong>Kết quả (ngẫu nhiên):</strong> Wings of Elf / Heaven / Satan / Curse.</li>
-</ul>
+<p><strong>Vật phẩm chính:</strong> 1 vũ khí Chaos (Chaos Dragon Axe / Chaos Nature Bow / Chaos Lightning Staff) +4 trở lên, có option. Có thể thêm 1 vật phẩm +4 nữa (có option) để tăng tỉ lệ.</p>
+{$tbl1}
+<p><strong>Phí:</strong> ~10.000 zen cho mỗi 1% tỉ lệ. <strong>Kết quả (ngẫu nhiên):</strong> Wings of Elf / Heaven / Satan / Curse.</p>
 
 <h2>Wing cấp 2</h2>
-<ul>
-<li><strong>Vật phẩm chính:</strong> 1 wing cấp 1 bất kỳ (+0 → +15).</li>
-<li><strong>Tuỳ chọn:</strong> thêm 1 vật phẩm <em>excellent</em> +4 trở lên để tăng tỉ lệ.</li>
-<li><strong>Ngọc:</strong> 1 {$chaos} Jewel of Chaos + 1 {$loch} Loch's Feather (Lông vũ).</li>
-<li><strong>Phí:</strong> 5.000.000 zen. <strong>Tỉ lệ tối đa 90%.</strong></li>
-<li><strong>Kết quả (ngẫu nhiên):</strong> Wings of Spirits / Soul / Dragon / Darkness / Despair. Có 20% cơ hội ra kèm dòng Luck và 20% cơ hội kèm 1 dòng Excellent.</li>
-</ul>
+<p><strong>Vật phẩm chính:</strong> 1 wing cấp 1 bất kỳ (+0 → +15). Có thể thêm 1 vật phẩm <em>excellent</em> +4 trở lên để tăng tỉ lệ. Phí <strong>5.000.000 zen</strong>, <strong>tỉ lệ tối đa 90%</strong>.</p>
+{$tbl2}
+<p><strong>Kết quả (ngẫu nhiên):</strong> Wings of Spirits / Soul / Dragon / Darkness / Despair. Có 20% cơ hội kèm dòng Luck và 20% cơ hội kèm 1 dòng Excellent.</p>
 
 <h2>Wing cấp 3</h2>
 <p>Wing cấp 3 làm qua <strong>2 bước</strong>.</p>
+
 <h3>Bước 1 — Chế Feather of Condor</h3>
-<ul>
-<li>1 wing cấp 2 (hoặc Cape) +9 → +15, có option.</li>
-<li>1 vật phẩm <strong>Ancient (đồ thần)</strong> +7 → +15, có ancient bonus + option.</li>
-<li>1 {$chaos} Chaos + 1 {$creation} Creation + 1 Packed Jewel of Soul.</li>
-<li>Phí ~200.000 zen mỗi 1%. Tỉ lệ 1% → <strong>tối đa 60%</strong>.</li>
-<li>Thành công nhận {$condor} <strong>Feather of Condor</strong>.</li>
-</ul>
+<p>Cần 1 wing cấp 2 (hoặc Cape) +9 → +15 có option, và 1 vật phẩm <strong>Ancient (đồ thần)</strong> +7 → +15. Phí ~200.000 zen mỗi 1%, tỉ lệ 1% → <strong>tối đa 60%</strong>. Thành công nhận Feather of Condor.</p>
+{$tbl3a}
+
 <h3>Bước 2 — Chế Wing cấp 3</h3>
-<ul>
-<li>1 vật phẩm <em>excellent</em> +9 → +15.</li>
-<li>1 {$condor} Feather of Condor + 1 {$flame} Flame of Condor.</li>
-<li>1 {$chaos} Chaos + 1 {$creation} Creation + 1 Packed Jewel of Soul + 1 Packed Jewel of Bless.</li>
-<li>Tỉ lệ <strong>tối đa 40%</strong>.</li>
-<li>Kết quả: wing cấp 3 tương ứng class (hoặc Cape of Emperor / Cape of Overrule).</li>
-</ul>
+<p>Cần thêm 1 vật phẩm <em>excellent</em> +9 → +15. <strong>Tỉ lệ tối đa 40%.</strong> Kết quả: wing cấp 3 tương ứng class (hoặc Cape of Emperor / Cape of Overrule).</p>
+{$tbl3b}
 
 <h2>Nguyên liệu & nơi tìm</h2>
 <div class="table-responsive">
 <table>
 <thead><tr><th></th><th>Nguyên liệu</th><th>Dùng cho</th><th>Nguồn rơi (theo config muss6)</th></tr></thead>
 <tbody>
-<tr><td>{$chaos}</td><td>Jewel of Chaos</td><td>Cả 3 cấp</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle thưởng 90%; Red Dragon rơi 100%</td></tr>
-<tr><td>{$bless}</td><td>Jewel of Bless</td><td>Cấp 1 (tăng %)</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle; Red Dragon</td></tr>
-<tr><td>{$soul}</td><td>Jewel of Soul</td><td>Cấp 1 (tăng %)</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle; Red Dragon</td></tr>
-<tr><td>{$creation}</td><td>Jewel of Creation</td><td>Cấp 3</td><td>Rơi từ mọi quái (~0.1%, quái lvl 72+); Chaos Castle</td></tr>
-<tr><td>{$life}</td><td>Jewel of Life</td><td>Nâng cấp option</td><td>Rơi từ mọi quái (~0.1%, quái lvl 72+)</td></tr>
-<tr><td>{$loch}</td><td>Loch's Feather</td><td>Cấp 2</td><td><strong>Chỉ map Icarus</strong> (~0.1%, quái lvl 82+)</td></tr>
-<tr><td>{$flame}</td><td>Flame of Condor</td><td>Cấp 3 (bước 2)</td><td><strong>Chỉ map Barracks of Balgass</strong> (~0.1%)</td></tr>
-<tr><td>{$condor}</td><td>Feather of Condor</td><td>Cấp 3</td><td>Không rơi — chỉ chế được ở bước 1</td></tr>
+<tr><td class="mu-ic">{$chaos}</td><td>Jewel of Chaos</td><td>Cả 3 cấp</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle thưởng 90%; Red Dragon rơi 100%</td></tr>
+<tr><td class="mu-ic">{$bless}</td><td>Jewel of Bless</td><td>Cấp 1 (tăng %)</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle; Red Dragon</td></tr>
+<tr><td class="mu-ic">{$soul}</td><td>Jewel of Soul</td><td>Cấp 1 (tăng %)</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle; Red Dragon</td></tr>
+<tr><td class="mu-ic">{$creation}</td><td>Jewel of Creation</td><td>Cấp 3</td><td>Rơi từ mọi quái (~0.1%, quái lvl 72+); Chaos Castle</td></tr>
+<tr><td class="mu-ic">{$life}</td><td>Jewel of Life</td><td>Nâng cấp option</td><td>Rơi từ mọi quái (~0.1%, quái lvl 72+)</td></tr>
+<tr><td class="mu-ic">{$loch}</td><td>Loch's Feather</td><td>Cấp 2</td><td><strong>Chỉ map Icarus</strong> (~0.1%, quái lvl 82+)</td></tr>
+<tr><td class="mu-ic">{$flame}</td><td>Flame of Condor</td><td>Cấp 3 (bước 2)</td><td><strong>Chỉ map Barracks of Balgass</strong> (~0.1%)</td></tr>
+<tr><td class="mu-ic">{$condor}</td><td>Feather of Condor</td><td>Cấp 3</td><td>Không rơi — chỉ chế được ở bước 1</td></tr>
 </tbody>
 </table>
 </div>
