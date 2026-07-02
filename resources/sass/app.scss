@@ -229,6 +229,8 @@ body {
         .mu-set-imgs img { height: 66px; width: auto; max-width: none;
             background: rgba(0, 0, 0, 0.25); border: 1px solid $mu-border; border-radius: 6px; padding: 3px; }
         .mu-set-stats { color: $mu-text-muted; font-size: 0.9rem; }
+        .mu-set-farm { color: $mu-gold-bright; font-size: 0.86rem; margin-top: 0.35rem;
+            i { color: $mu-gold; } }
     }
 
     // Callout / note box (author uses <div class="guide-note">...</div>)

@@ -78,7 +78,6 @@ class GuideSeeder extends Seeder
         );
     }
 
-    /** A set showcase card: the 5 piece images (helm/armor/pants/gloves/boots) + attributes. */
     /**
      * A set card from a DB-sourced row: [number, name, dropLevel, defense, strReq, agiReq, levelReq, classes].
      * Armor item groups are 7=helm, 8=armor, 9=pants, 10=gloves, 11=boots (NOT the equip slot 2-6).
@@ -105,7 +104,28 @@ class GuideSeeder extends Seeder
         return '<div class="mu-set"><div class="mu-set-head"><span class="mu-set-name">' . $name . '</span>'
             . '<span class="mu-set-class">' . $classes . '</span></div>'
             . '<div class="mu-set-imgs">' . $imgs . '</div>'
-            . '<div class="mu-set-stats">' . $stats . '</div></div>';
+            . '<div class="mu-set-stats">' . $stats . '</div>'
+            . '<div class="mu-set-farm"><i class="fa-solid fa-location-dot me-1"></i>Farm ở: ' . $this->farmMapFor($drop) . '</div></div>';
+    }
+
+    /**
+     * Suggested hunting maps for an item of the given drop level. Armor drops via the
+     * generic level-based mechanic (any monster at/above the item's drop level can drop
+     * it), so this maps drop level to maps whose monster levels reach that band. Ranges
+     * are from the muss6 map config (monster spawn levels).
+     */
+    private function farmMapFor(int $drop): string
+    {
+        return match (true) {
+            $drop <= 30  => 'Lorencia, Noria, Devias, Dungeon (quái cấp 10 tới 55)',
+            $drop <= 50  => 'Dungeon, Devias, Atlans, Lost Tower (quái cấp 25 tới 74)',
+            $drop <= 66  => 'Lost Tower, Atlans, Tarkan (quái cấp 47 tới 93)',
+            $drop <= 80  => 'Tarkan, Atlans, Aida, Icarus (quái cấp 72 tới 108)',
+            $drop <= 100 => 'Aida, Icarus, Land of Trials, Vulcanus (quái cấp 75 tới 124)',
+            $drop <= 120 => 'Vulcanus, Swamp of Calmness, Aida (quái Bloody), Raklion (quái cấp 90 tới 148)',
+            $drop <= 135 => 'Raklion, Swamp of Calmness, Aida (quái Bloody cấp 114 tới 120)',
+            default      => 'Raklion (quái cấp 140+ như Dark Giant, Dark Iron Knight)',
+        };
     }
 
     // ---------------------------------------------------------------- Wings --
@@ -419,7 +439,10 @@ HTML;
 Cùng một bộ đồ có 3 "hạng": <strong>Thường</strong> (chỉ có phòng thủ), <strong>Excellent</strong> (thêm dòng option xịn như hồi HP/MP khi đánh, tăng % sát thương), và <strong>Đồ thần / Ancient</strong> (thêm chỉ số cổ và set bonus mạnh). Cả ba <strong>dùng chung một hình ảnh/model</strong> trong game, chỉ khác hào quang và dòng option, nên ảnh dưới là mẫu chung cho cả bản thường lẫn đồ thần của bộ đó.
 </div>
 
-<p>Danh sách đầy đủ các bộ giáp với ảnh 5 món (Mũ · Áo · Quần · Găng · Giày), class phù hợp, phòng thủ và chỉ số yêu cầu, lấy trực tiếp từ dữ liệu máy chủ muss6. Bộ nào thiếu 1 món (vd Magic Gladiator không đội Mũ) là do class đó không dùng món ấy.</p>
+<h2>Cách kiếm (farm) set đồ</h2>
+<p>Giáp <strong>rơi ngẫu nhiên từ quái</strong>: quái có cấp bằng hoặc cao hơn "cấp độ rơi" của bộ mới rơi ra bộ đó, và quái càng cao cấp thì càng dễ ra đồ xịn (kèm dòng Excellent / đồ thần). Không có map riêng cho từng bộ, nên chỉ cần chọn map có quái cấp phù hợp. Mỗi thẻ bên dưới đã kèm gợi ý map theo cấp độ rơi.</p>
+
+<p>Danh sách đầy đủ các bộ giáp với ảnh 5 món (Mũ · Áo · Quần · Găng · Giày), class phù hợp, phòng thủ, chỉ số yêu cầu và nơi farm, lấy trực tiếp từ dữ liệu máy chủ muss6. Bộ nào thiếu 1 món (vd Magic Gladiator không đội Mũ) là do class đó không dùng món ấy.</p>
 {$sections}
 HTML;
 
