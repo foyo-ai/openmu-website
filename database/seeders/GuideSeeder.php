@@ -78,34 +78,47 @@ class GuideSeeder extends Seeder
         );
     }
 
+    /** Class filter chips (multi-select, OR logic) bound to a table id via data-target. */
+    private function filterBar(string $targetId): string
+    {
+        $classes = ['Dark Knight', 'Dark Wizard', 'Fairy Elf', 'Magic Gladiator', 'Dark Lord', 'Summoner', 'Rage Fighter'];
+        $chips = '';
+        foreach ($classes as $c) {
+            $chips .= '<button type="button" class="mu-chip" data-class="' . $c . '">' . $c . '</button>';
+        }
+
+        return '<div class="mu-filter" data-target="#' . $targetId . '">'
+            . '<span class="mu-filter-label">Lọc theo class (chọn nhiều):</span>' . $chips . '</div>';
+    }
+
     /**
-     * A set card from a DB-sourced row: [number, name, dropLevel, defense, strReq, agiReq, levelReq, classes].
-     * Armor item groups are 7=helm, 8=armor, 9=pants, 10=gloves, 11=boots (NOT the equip slot 2-6).
-     * Some sets legitimately lack a piece (e.g. Magic Gladiator has no helm); onerror hides the gap.
+     * One set as a table row: [number, name, dropLevel, defense, strReq, agiReq, levelReq, classes].
+     * Armor item groups are 7=helm, 8=armor, 9=pants, 10=gloves, 11=boots. data-classes drives filtering.
      */
-    private function setCard(array $s): string
+    private function setRow(array $s): string
     {
         [$num, $name, $drop, $def, $str, $agi, $lvl, $classes] = $s;
 
-        $imgs = '';
+        $pieces = '';
         foreach ([7, 8, 9, 10, 11] as $g) {
-            $imgs .= '<img src="/images/items/item_' . $g . '_' . $num . '_0.png" alt="' . $name
+            $pieces .= '<img src="/images/items/item_' . $g . '_' . $num . '_0.png" alt="' . $name
                 . '" title="' . $name . '" onerror="this.style.display=\'none\'">';
         }
 
-        $stats = 'Cấp độ rơi: ' . $drop . ' · Phòng thủ (áo): ' . $def . ' · Sức mạnh: ' . $str;
+        $req = 'Sức mạnh ' . $str;
         if ($agi > 0) {
-            $stats .= ' · Nhanh nhẹn: ' . $agi;
+            $req .= ', Nhanh nhẹn ' . $agi;
         }
         if ($lvl > 0) {
-            $stats .= ' · Cấp nhân vật: ' . $lvl;
+            $req .= ', Cấp NV ' . $lvl;
         }
 
-        return '<div class="mu-set"><div class="mu-set-head"><span class="mu-set-name">' . $name . '</span>'
-            . '<span class="mu-set-class">' . $classes . '</span></div>'
-            . '<div class="mu-set-imgs">' . $imgs . '</div>'
-            . '<div class="mu-set-stats">' . $stats . '</div>'
-            . '<div class="mu-set-farm"><i class="fa-solid fa-location-dot me-1"></i>Farm ở: ' . $this->farmMapFor($drop) . '</div></div>';
+        return '<tr data-classes="' . str_replace(', ', '|', $classes) . '">'
+            . '<td><div class="mu-set-pieces">' . $pieces . '</div></td>'
+            . '<td><div class="it-name">' . $name . '</div><div class="it-sub">' . $classes . '</div></td>'
+            . '<td>Cấp rơi ' . $drop . '<br>Phòng thủ ' . $def . '</td>'
+            . '<td>' . $req . '</td>'
+            . '<td>' . $this->farmMapFor($drop) . '</td></tr>';
     }
 
     /**
@@ -424,28 +437,32 @@ HTML;
             ]],
         ];
 
-        $sections = '';
-        foreach ($tiers as [$title, $rows]) {
-            $cards = '';
+        $rowsHtml = '';
+        foreach ($tiers as [, $rows]) {
             foreach ($rows as $r) {
-                $cards .= $this->setCard($r);
+                $rowsHtml .= $this->setRow($r);
             }
-            $sections .= '<h2>' . $title . '</h2>' . $cards;
         }
+        $filter = $this->filterBar('tbl-sets');
 
         $body = <<<HTML
 <p>Set đồ (bộ giáp) gồm 5 món: <strong>Mũ, Áo, Quần, Găng, Giày</strong>. Mặc đủ các món cùng bộ sẽ kích hoạt <strong>set bonus</strong> (cộng thêm chỉ số). Chọn bộ hợp class và đủ chỉ số yêu cầu (Sức mạnh, đôi khi cả Nhanh nhẹn và cấp nhân vật) để mặc.</p>
 
 <h2>Đồ thường, Excellent và Đồ thần</h2>
 <div class="guide-note">
-Cùng một bộ đồ có 3 "hạng": <strong>Thường</strong> (chỉ có phòng thủ), <strong>Excellent</strong> (thêm dòng option xịn như hồi HP/MP khi đánh, tăng % sát thương), và <strong>Đồ thần / Ancient</strong> (thêm chỉ số cổ và set bonus mạnh). Cả ba <strong>dùng chung một hình ảnh/model</strong> trong game, chỉ khác hào quang và dòng option, nên ảnh dưới là mẫu chung cho cả bản thường lẫn đồ thần của bộ đó.
+Cùng một bộ đồ có 3 "hạng": <strong>Thường</strong> (chỉ có phòng thủ), <strong>Excellent</strong> (thêm dòng option xịn như hồi HP/MP khi đánh, tăng % sát thương), và <strong>Đồ thần / Ancient</strong> (thêm chỉ số cổ và set bonus mạnh). Cả ba <strong>dùng chung một hình ảnh/model</strong> trong game, chỉ khác hào quang và dòng option, nên ảnh là mẫu chung cho cả bản thường lẫn đồ thần của bộ đó.
 </div>
 
 <h2>Cách kiếm (farm) set đồ</h2>
-<p>Giáp <strong>rơi ngẫu nhiên từ quái</strong>: quái có cấp bằng hoặc cao hơn "cấp độ rơi" của bộ mới rơi ra bộ đó, và quái càng cao cấp thì càng dễ ra đồ xịn (kèm dòng Excellent / đồ thần). Không có map riêng cho từng bộ, nên chỉ cần chọn map có quái cấp phù hợp. Mỗi thẻ bên dưới đã kèm gợi ý map theo cấp độ rơi.</p>
+<p>Giáp <strong>rơi ngẫu nhiên từ quái</strong>: quái có cấp bằng hoặc cao hơn "cấp độ rơi" của bộ mới rơi ra bộ đó, và quái càng cao cấp thì càng dễ ra đồ xịn (kèm dòng Excellent / đồ thần). Không có map riêng cho từng bộ, chỉ cần chọn map có quái cấp phù hợp.</p>
 
-<p>Danh sách đầy đủ các bộ giáp với ảnh 5 món (Mũ · Áo · Quần · Găng · Giày), class phù hợp, phòng thủ, chỉ số yêu cầu và nơi farm, lấy trực tiếp từ dữ liệu máy chủ muss6. Bộ nào thiếu 1 món (vd Magic Gladiator không đội Mũ) là do class đó không dùng món ấy.</p>
-{$sections}
+<h2>Bảng đầy đủ các bộ giáp</h2>
+<p>Bấm chip class để lọc (chọn nhiều được). Dữ liệu lấy trực tiếp từ máy chủ muss6. Bộ nào thiếu 1 món (vd Magic Gladiator không đội Mũ) là do class đó không dùng món ấy.</p>
+{$filter}
+<div class="table-responsive"><table class="mu-itemtable" id="tbl-sets">
+<thead><tr><th>Bộ (5 món)</th><th>Tên & class</th><th>Chỉ số</th><th>Yêu cầu</th><th>Farm ở</th></tr></thead>
+<tbody>{$rowsHtml}</tbody>
+</table></div>
 HTML;
 
         return [
@@ -457,8 +474,8 @@ HTML;
         ];
     }
 
-    /** A single weapon card: [number, name, dropLevel, minDmg, maxDmg, staffRise%, strReq, agiReq, levelReq, classes]. */
-    private function weaponCard(int $group, array $w): string
+    /** One weapon as a table row: [number, name, dropLevel, minDmg, maxDmg, staffRise%, strReq, agiReq, levelReq, classes]. */
+    private function weaponRow(string $typeLabel, int $group, array $w): string
     {
         [$num, $name, $drop, $mind, $maxd, $rise, $str, $agi, $lvl, $classes] = $w;
 
@@ -470,32 +487,31 @@ HTML;
         } else {
             $parts = [];
             if ($maxd > 0) {
-                $parts[] = 'Sát thương: ' . $mind . ' tới ' . $maxd;
+                $parts[] = 'Sát thương ' . $mind . ' tới ' . $maxd;
             }
             if ($rise > 0) {
-                $parts[] = 'Sức mạnh phép: +' . $rise . '%';
+                $parts[] = 'Sức mạnh phép +' . $rise . '%';
             }
-            $dmg = implode(' · ', $parts);
+            $dmg = implode('<br>', $parts);
         }
 
-        $req = 'Cấp độ rơi: ' . $drop;
+        $req = 'Cấp rơi ' . $drop;
         if ($str > 0) {
-            $req .= ' · Sức mạnh: ' . $str;
+            $req .= ', Sức mạnh ' . $str;
         }
         if ($agi > 0) {
-            $req .= ' · Nhanh nhẹn: ' . $agi;
+            $req .= ', Nhanh nhẹn ' . $agi;
         }
         if ($lvl > 0) {
-            $req .= ' · Cấp NV: ' . $lvl;
+            $req .= ', Cấp NV ' . $lvl;
         }
 
-        return '<div class="mu-wpn">' . $img . '<div class="mu-wpn-info">'
-            . '<div class="mu-wpn-name">' . $name . '</div>'
-            . '<div class="mu-wpn-class">' . $classes . '</div>'
-            . '<div class="mu-wpn-stats">' . $dmg . '</div>'
-            . '<div class="mu-wpn-stats">' . $req . '</div>'
-            . '<div class="mu-wpn-farm"><i class="fa-solid fa-location-dot me-1"></i>Farm ở: ' . $this->farmMapFor($drop) . '</div>'
-            . '</div></div>';
+        return '<tr data-classes="' . str_replace(', ', '|', $classes) . '">'
+            . '<td class="mu-ic">' . $img . '</td>'
+            . '<td><div class="it-name">' . $name . '</div><div class="it-sub">' . $typeLabel . ' · ' . $classes . '</div></td>'
+            . '<td>' . $dmg . '</td>'
+            . '<td>' . $req . '</td>'
+            . '<td>' . $this->farmMapFor($drop) . '</td></tr>';
     }
 
     private function weaponsPage(): array
@@ -643,23 +659,30 @@ HTML;
             ]],
         ];
 
-        $sections = '';
-        foreach ($groups as [$g, $label, $rows]) {
-            $cards = '';
+        // short type label per weapon group for the row's sub-line
+        $short = [0 => 'Kiếm/Găng', 1 => 'Rìu', 2 => 'Chuỳ/Gậy quyền', 3 => 'Giáo', 4 => 'Cung/Nỏ', 5 => 'Gậy/Sách'];
+        $rowsHtml = '';
+        foreach ($groups as [$g, , $rows]) {
             foreach ($rows as $w) {
-                $cards .= $this->weaponCard($g, $w);
+                $rowsHtml .= $this->weaponRow($short[$g], $g, $w);
             }
-            $sections .= '<h2>' . $label . '</h2><div class="mu-wpn-grid">' . $cards . '</div>';
         }
+        $filter = $this->filterBar('tbl-weapons');
 
         $body = <<<HTML
 <p>Vũ khí quyết định sát thương chính của nhân vật. Mỗi class dùng loại vũ khí riêng: Dark Knight và Magic Gladiator dùng Kiếm / Rìu / Chuỳ / Giáo; Fairy Elf dùng Cung / Nỏ; Dark Wizard dùng Gậy phép; Dark Lord dùng Gậy quyền (Scepter); Summoner dùng Gậy và Sách; Rage Fighter dùng Găng đấm.</p>
 
 <div class="guide-note">
-Số "Sát thương" là sát thương gốc của vũ khí (chưa cộng chỉ số nhân vật, dòng Excellent hay nâng cấp +). Gậy phép ghi thêm "Sức mạnh phép" là % tăng sát thương phép của cây gậy. Vũ khí rơi từ quái theo cấp giống như giáp (xem gợi ý map ở mỗi món). Tất cả lấy trực tiếp từ dữ liệu máy chủ muss6.
+Số "Sát thương" là sát thương gốc của vũ khí (chưa cộng chỉ số nhân vật, dòng Excellent hay nâng cấp +). Gậy phép ghi thêm "Sức mạnh phép" là % tăng sát thương phép của cây gậy. Vũ khí rơi từ quái theo cấp giống như giáp. Tất cả lấy trực tiếp từ dữ liệu máy chủ muss6.
 </div>
 
-{$sections}
+<h2>Bảng đầy đủ vũ khí</h2>
+<p>Bấm chip class để lọc (chọn nhiều được), ví dụ chọn Dark Knight để chỉ xem vũ khí của Dark Knight.</p>
+{$filter}
+<div class="table-responsive"><table class="mu-itemtable" id="tbl-weapons">
+<thead><tr><th>Ảnh</th><th>Tên & loại</th><th>Sát thương</th><th>Yêu cầu</th><th>Farm ở</th></tr></thead>
+<tbody>{$rowsHtml}</tbody>
+</table></div>
 HTML;
 
         return [

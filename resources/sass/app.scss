@@ -247,6 +247,28 @@ body {
     }
     @media (min-width: 768px) { .mu-wpn-grid { grid-template-columns: 1fr 1fr; } }
 
+    // Class filter chips (multi-select) above item tables.
+    .mu-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1rem 0 1.25rem; }
+    .mu-filter-label { color: $mu-text-muted; font-size: 0.85rem; margin-right: 0.25rem; }
+    .mu-chip {
+        background: $mu-surface; border: 1px solid $mu-border; color: $mu-heading;
+        border-radius: 999px; padding: 0.4rem 1rem; font-size: 0.85rem; cursor: pointer;
+        transition: border-color 0.12s, background 0.12s;
+        &:hover { border-color: rgba($mu-gold, 0.55); }
+        &.active { background: rgba($mu-gold, 0.16); border-color: $mu-gold; color: $mu-gold-bright; font-weight: 600; }
+    }
+
+    // Item tables (sets & weapons) with big art. Overrides the base 72px table img.
+    .mu-itemtable {
+        td { vertical-align: middle; }
+        img { height: 116px; width: auto; max-width: none; }
+        .mu-set-pieces { display: flex; gap: 0.35rem; flex-wrap: nowrap; }
+        .mu-set-pieces img { height: 80px; background: rgba(0, 0, 0, 0.25);
+            border: 1px solid $mu-border; border-radius: 6px; padding: 3px; }
+        .it-name { font-weight: 600; color: $mu-heading; }
+        .it-sub { color: $mu-gold-bright; font-size: 0.8rem; }
+    }
+
     // Callout / note box (author uses <div class="guide-note">...</div>)
     .guide-note {
         border-left: 3px solid $mu-gold;

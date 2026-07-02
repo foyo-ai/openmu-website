@@ -49,4 +49,29 @@
             @endif
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+    // Class filter chips: toggle rows of the target table by their data-classes (OR logic).
+    document.querySelectorAll('.mu-filter').forEach(function (bar) {
+        var table = document.querySelector(bar.getAttribute('data-target'));
+        if (!table) return;
+        var selected = new Set();
+        bar.querySelectorAll('.mu-chip').forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                var c = chip.getAttribute('data-class');
+                if (selected.has(c)) { selected.delete(c); chip.classList.remove('active'); }
+                else { selected.add(c); chip.classList.add('active'); }
+                table.querySelectorAll('tbody tr[data-classes]').forEach(function (row) {
+                    if (selected.size === 0) { row.style.display = ''; return; }
+                    var cs = (row.getAttribute('data-classes') || '').split('|');
+                    var show = false;
+                    selected.forEach(function (s) { if (cs.indexOf(s) >= 0) show = true; });
+                    row.style.display = show ? '' : 'none';
+                });
+            });
+        });
+    });
+    </script>
+    @endpush
 @endsection
