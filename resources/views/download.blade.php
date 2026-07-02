@@ -42,27 +42,13 @@
             <li>{{ __('download.step4') }}</li>
         </ol>
 
-        <div class="row g-4 mb-4">
-            <div class="col-md-6">
-                <div class="card mu-feature h-100 p-4">
-                    <h2 class="h5 mb-3"><i class="fa-solid fa-desktop text-warning me-2"></i>{{ __('download.req_title') }}</h2>
-                    <ul class="mb-0 text-muted">
-                        <li>{{ __('download.req_os') }}</li>
-                        <li>{{ __('download.req_space') }}</li>
-                        <li>{{ __('download.req_net') }}</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mu-feature h-100 p-4">
-                    <h2 class="h5 mb-3"><i class="fa-solid fa-server text-warning me-2"></i>{{ __('download.connect_title') }}</h2>
-                    <p class="text-muted small mb-2">{{ __('download.connect_desc') }}</p>
-                    <div class="mu-stat">
-                        <div class="mu-stat-value" style="font-size:1.15rem">{{ $connectHost }}<span class="text-muted">:{{ $connectPort }}</span></div>
-                        <div class="mu-stat-label">Server</div>
-                    </div>
-                </div>
-            </div>
+        <div class="card mu-feature p-4 mb-4">
+            <h2 class="h5 mb-3"><i class="fa-solid fa-desktop text-warning me-2"></i>{{ __('download.req_title') }}</h2>
+            <ul class="mb-0 text-muted">
+                <li>{{ __('download.req_os') }}</li>
+                <li>{{ __('download.req_space') }}</li>
+                <li>{{ __('download.req_net') }}</li>
+            </ul>
         </div>
 
         @if($discordUrl && $discordUrl !== 'https://discord.gg/')
