@@ -178,6 +178,14 @@ body {
         img { width: 32px; height: 32px; vertical-align: middle; }
     }
 
+    // Wing list (class guides): item art + label, no bullets
+    .mu-wing-list {
+        list-style: none;
+        padding-left: 0;
+        li { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+        img { width: 52px; height: 52px; flex: 0 0 auto; }
+    }
+
     // Callout / note box (author uses <div class="guide-note">...</div>)
     .guide-note {
         border-left: 3px solid $mu-gold;
