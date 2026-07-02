@@ -11,6 +11,7 @@ return [
 
     // categories (index sections)
     'cat_class'   => 'Class guides',
+    'cat_gear'    => 'Gear & sets',
     'cat_wings'   => 'Wings & crafting',
     'cat_stats'   => 'Stat builds',
     'cat_general' => 'Overview',

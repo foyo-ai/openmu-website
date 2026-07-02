@@ -15,7 +15,7 @@ class Guide extends Model
     protected $table = 'guides';
 
     /** Categories used to group guides on the index and in nav. */
-    public const CATEGORIES = ['class', 'wings', 'stats', 'general'];
+    public const CATEGORIES = ['class', 'gear', 'wings', 'stats', 'general'];
 
     protected $fillable = [
         'slug', 'category', 'class_key', 'icon',

@@ -73,9 +73,27 @@ class GuideSeeder extends Seeder
     private function guides(): array
     {
         return array_merge(
-            [$this->wingsOverview(), $this->wingsCrafting(), $this->statBuilds()],
+            [$this->wingsOverview(), $this->wingsCrafting(), $this->setDetails(), $this->statBuilds()],
             $this->classGuides(),
         );
+    }
+
+    /** A set showcase card: the 5 piece images (helm/armor/pants/gloves/boots) + attributes. */
+    private function setCard(int $num, string $name, string $classes, int $drop, int $str, int $agi): string
+    {
+        $imgs = '';
+        foreach ([2, 3, 4, 5, 6] as $g) {
+            $imgs .= $this->img($g . '_' . $num, $name);
+        }
+        $stats = 'Cấp độ rơi: ' . $drop . ' · Yêu cầu Sức mạnh: ' . $str;
+        if ($agi > 0) {
+            $stats .= ' · Nhanh nhẹn: ' . $agi;
+        }
+
+        return '<div class="mu-set"><div class="mu-set-head"><span class="mu-set-name">' . $name . '</span>'
+            . '<span class="mu-set-class">' . $classes . '</span></div>'
+            . '<div class="mu-set-imgs">' . $imgs . '</div>'
+            . '<div class="mu-set-stats">' . $stats . '</div></div>';
     }
 
     // ---------------------------------------------------------------- Wings --
@@ -97,9 +115,9 @@ class GuideSeeder extends Seeder
 <tr><td>Dark Wizard</td><td>{$w('12_1', 'Heaven')}</td><td>{$w('12_4', 'Soul')}</td><td>{$w('12_37', 'Eternal')}</td></tr>
 <tr><td>Fairy Elf</td><td>{$w('12_0', 'Elf')}</td><td>{$w('12_3', 'Spirits')}</td><td>{$w('12_38', 'Illusion')}</td></tr>
 <tr><td>Magic Gladiator</td><td>{$w('12_2', 'Heaven/Satan')}</td><td>{$w('12_6', 'Darkness')}</td><td>{$w('12_39', 'Ruin')}</td></tr>
-<tr><td>Dark Lord</td><td>—</td><td>{$w('13_30', 'Cape of Lord')}</td><td>{$w('12_40', 'Cape of Emperor')}</td></tr>
+<tr><td>Dark Lord</td><td>Không có</td><td>{$w('13_30', 'Cape of Lord')}</td><td>{$w('12_40', 'Cape of Emperor')}</td></tr>
 <tr><td>Summoner</td><td>{$w('12_41', 'Curse')}</td><td>{$w('12_42', 'Despair')}</td><td>{$w('12_43', 'Dimension')}</td></tr>
-<tr><td>Rage Fighter</td><td>—</td><td>{$w('12_49', 'Cape of Fighter')}</td><td>{$w('12_50', 'Cape of Overrule')}</td></tr>
+<tr><td>Rage Fighter</td><td>Không có</td><td>{$w('12_49', 'Cape of Fighter')}</td><td>{$w('12_50', 'Cape of Overrule')}</td></tr>
 </tbody>
 </table>
 </div>
@@ -110,9 +128,9 @@ class GuideSeeder extends Seeder
 
 <h2>Sự khác biệt giữa các cấp</h2>
 <ul>
-<li><strong>Wing cấp 1</strong> — mở khoá sớm, tăng sát thương cơ bản.</li>
-<li><strong>Wing cấp 2</strong> — mạnh hơn hẳn, có thể kèm dòng Luck / Excellent khi chế tạo. Mốc "đủ dùng" để đi Blood Castle, Devil Square, farm.</li>
-<li><strong>Wing cấp 3</strong> — cao cấp nhất, phòng thủ và sát thương vượt trội, có 3 dòng option ngẫu nhiên. Mục tiêu cày cuốc lâu dài.</li>
+<li><strong>Wing cấp 1</strong>: mở khoá sớm, tăng sát thương cơ bản.</li>
+<li><strong>Wing cấp 2</strong>: mạnh hơn hẳn, có thể kèm dòng Luck / Excellent khi chế tạo. Mốc "đủ dùng" để đi Blood Castle, Devil Square, farm.</li>
+<li><strong>Wing cấp 3</strong>: cao cấp nhất, phòng thủ và sát thương vượt trội, có 3 dòng option ngẫu nhiên. Mục tiêu cày cuốc lâu dài.</li>
 <li><strong>Dark Lord & Rage Fighter</strong> không có wing cấp 1; hai class này bắt đầu bằng <em>Cape</em> (tương đương wing cấp 2) rồi lên thẳng Cape cấp 3.</li>
 </ul>
 
@@ -134,35 +152,35 @@ HTML;
         // all taken from the muss6 config (global jewel drop; Icarus / Barracks of Balgass).
         $matGrid = '<div class="mu-mat-grid">'
             . $this->matCard('12_15', 'Jewel of Chaos', 'Dùng: cả 3 cấp wing', [
-                'Rơi từ <strong>mọi quái, mọi map</strong> — ~0.1%',
+                'Rơi từ <strong>mọi quái, mọi map</strong> (~0.1%)',
                 'Thưởng <strong>Chaos Castle</strong>: 90% cho người thắng',
                 'Sự kiện <strong>Red Dragon</strong>: rơi 100%',
             ])
             . $this->matCard('14_13', 'Jewel of Bless', 'Dùng: wing cấp 1 (tăng %)', [
-                'Rơi từ mọi quái — ~0.1%',
+                'Rơi từ mọi quái (~0.1%)',
                 'Chaos Castle; sự kiện Red Dragon',
             ])
             . $this->matCard('14_14', 'Jewel of Soul', 'Dùng: wing cấp 1 (tăng %)', [
-                'Rơi từ mọi quái — ~0.1%',
+                'Rơi từ mọi quái (~0.1%)',
                 'Chaos Castle; sự kiện Red Dragon',
             ])
             . $this->matCard('14_22', 'Jewel of Creation', 'Dùng: wing cấp 3', [
-                'Rơi từ quái <strong>level 72+</strong> — ~0.1%',
+                'Rơi từ quái <strong>level 72+</strong> (~0.1%)',
                 'Chaos Castle',
             ])
             . $this->matCard('14_16', 'Jewel of Life', 'Dùng: nâng cấp option đồ', [
-                'Rơi từ quái <strong>level 72+</strong> — ~0.1%',
+                'Rơi từ quái <strong>level 72+</strong> (~0.1%)',
             ])
             . $this->matCard('13_14', "Loch's Feather", 'Dùng: wing cấp 2', [
-                '<strong>Chỉ có ở map Icarus</strong>, quái level 82+ — ~0.1%',
+                '<strong>Chỉ có ở map Icarus</strong>, quái level 82+ (~0.1%)',
                 'Quái rơi: Queen Rainer (82), Drakan (86), Alpha Crust (92), Phantom Knight (96), Great Drakan (100), Dark Phoenix (108)',
             ])
             . $this->matCard('13_52', 'Flame of Condor', 'Dùng: wing cấp 3 (bước 2)', [
-                '<strong>Chỉ có ở map Barracks of Balgass</strong> — ~0.1%',
-                'Quái rơi: Balram (117), Death Spirit (119), Soram (119) — cả 3 đều rơi',
+                '<strong>Chỉ có ở map Barracks of Balgass</strong> (~0.1%)',
+                'Quái rơi: Balram (117), Death Spirit (119), Soram (119), cả 3 đều rơi',
             ])
             . $this->matCard('13_53', 'Feather of Condor', 'Dùng: wing cấp 3', [
-                'Không rơi từ quái — chỉ <strong>chế được</strong> ở bước 1',
+                'Không rơi từ quái, chỉ <strong>chế được</strong> ở bước 1',
             ])
             . '</div>';
 
@@ -172,25 +190,25 @@ HTML;
 <div class="table-responsive"><table>
 <thead><tr><th>Map</th><th>Level quái</th><th>Quái tiêu biểu</th></tr></thead>
 <tbody>
-<tr><td>Lorencia / Noria / Devias</td><td>~10–50</td><td>Khởi đầu, quái yếu</td></tr>
-<tr><td>Dungeon</td><td>25–55</td><td>Poison Bull, Gorgon</td></tr>
-<tr><td>Lost Tower</td><td>47–66</td><td>Death Knight, Devil, Balrog</td></tr>
-<tr><td>Atlans</td><td>43–74</td><td>Lizard King, Hydra, Sea Worm</td></tr>
-<tr><td>Tarkan</td><td>72–93</td><td>Iron Wheel, Beam Knight, Death Beam Knight</td></tr>
-<tr><td>Aida</td><td>72–120</td><td>Witch Queen, Hell Maine, Bloody Witch Queen</td></tr>
-<tr><td>Icarus</td><td>75–108</td><td>Great Drakan, Phantom Knight, Dark Phoenix</td></tr>
-<tr><td>Land of Trials (Kanturu)</td><td>75–128</td><td>Fire Golem, Erohim</td></tr>
-<tr><td>Swamp of Calmness</td><td>95–137</td><td>Shadow Knight, Sapi Queen, Shadow Master</td></tr>
-<tr><td>Vulcanus</td><td>90–124</td><td>Blood Assassin, Burning Lava Giant</td></tr>
-<tr><td>Raklion</td><td>102–148</td><td>Ice Giant, Iron Knight, Dark Iron Knight</td></tr>
+<tr><td>Lorencia / Noria / Devias</td><td>~10-50</td><td>Khởi đầu, quái yếu</td></tr>
+<tr><td>Dungeon</td><td>25-55</td><td>Poison Bull, Gorgon</td></tr>
+<tr><td>Lost Tower</td><td>47-66</td><td>Death Knight, Devil, Balrog</td></tr>
+<tr><td>Atlans</td><td>43-74</td><td>Lizard King, Hydra, Sea Worm</td></tr>
+<tr><td>Tarkan</td><td>72-93</td><td>Iron Wheel, Beam Knight, Death Beam Knight</td></tr>
+<tr><td>Aida</td><td>72-120</td><td>Witch Queen, Hell Maine, Bloody Witch Queen</td></tr>
+<tr><td>Icarus</td><td>75-108</td><td>Great Drakan, Phantom Knight, Dark Phoenix</td></tr>
+<tr><td>Land of Trials (Kanturu)</td><td>75-128</td><td>Fire Golem, Erohim</td></tr>
+<tr><td>Swamp of Calmness</td><td>95-137</td><td>Shadow Knight, Sapi Queen, Shadow Master</td></tr>
+<tr><td>Vulcanus</td><td>90-124</td><td>Blood Assassin, Burning Lava Giant</td></tr>
+<tr><td>Raklion</td><td>102-148</td><td>Ice Giant, Iron Knight, Dark Iron Knight</td></tr>
 </tbody>
 </table></div>
 HTML;
 
         $tbl1 = $this->matTable([
-            ['12_15', 'Jewel of Chaos', '1 — bắt buộc'],
-            ['14_13', 'Jewel of Bless', 'tuỳ chọn — tăng % thành công'],
-            ['14_14', 'Jewel of Soul', 'tuỳ chọn — tăng % thành công'],
+            ['12_15', 'Jewel of Chaos', '1, bắt buộc'],
+            ['14_13', 'Jewel of Bless', 'tuỳ chọn, tăng % thành công'],
+            ['14_14', 'Jewel of Soul', 'tuỳ chọn, tăng % thành công'],
         ]);
         $tbl2 = $this->matTable([
             ['12_15', 'Jewel of Chaos', '1'],
@@ -199,19 +217,19 @@ HTML;
         $tbl3a = $this->matTable([
             ['12_15', 'Jewel of Chaos', '1'],
             ['14_22', 'Jewel of Creation', '1'],
-            [null, 'Packed Jewel of Soul', '1'],
+            ['12_31', 'Packed Jewel of Soul', '1'],
         ]);
         $tbl3b = $this->matTable([
             ['13_53', 'Feather of Condor', '1'],
             ['13_52', 'Flame of Condor', '1'],
             ['12_15', 'Jewel of Chaos', '1'],
             ['14_22', 'Jewel of Creation', '1'],
-            [null, 'Packed Jewel of Soul', '1'],
-            [null, 'Packed Jewel of Bless', '1'],
+            ['12_31', 'Packed Jewel of Soul', '1'],
+            ['12_30', 'Packed Jewel of Bless', '1'],
         ]);
 
         $body = <<<HTML
-<p>Wings được chế tạo tại <strong>Chaos Goblin Machine</strong> (NPC ở thành Noria). Bỏ đủ nguyên liệu vào máy, trả phí zen rồi bấm "Combine". Nếu thất bại, vật phẩm chính có thể tụt cấp hoặc biến mất — nên đọc kỹ trước khi làm.</p>
+<p>Wings được chế tạo tại <strong>Chaos Goblin Machine</strong> (NPC ở thành Noria). Bỏ đủ nguyên liệu vào máy, trả phí zen rồi bấm "Combine". Nếu thất bại, vật phẩm chính có thể tụt cấp hoặc biến mất, nên đọc kỹ trước khi làm.</p>
 
 <div class="guide-note">
 Các con số dưới đây (nguyên liệu, số ngọc, tỉ lệ, zen) và nguồn rơi lấy trực tiếp từ cấu hình máy chủ muss6. Nếu GM chỉnh lại công thức/drop trong admin, hãy cập nhật bài này.
@@ -230,11 +248,11 @@ Các con số dưới đây (nguyên liệu, số ngọc, tỉ lệ, zen) và ng
 <h2>Wing cấp 3</h2>
 <p>Wing cấp 3 làm qua <strong>2 bước</strong>.</p>
 
-<h3>Bước 1 — Chế Feather of Condor</h3>
+<h3>Bước 1: Chế Feather of Condor</h3>
 <p>Cần 1 wing cấp 2 (hoặc Cape) +9 → +15 có option, và 1 vật phẩm <strong>Ancient (đồ thần)</strong> +7 → +15. Phí ~200.000 zen mỗi 1%, tỉ lệ 1% → <strong>tối đa 60%</strong>. Thành công nhận Feather of Condor.</p>
 {$tbl3a}
 
-<h3>Bước 2 — Chế Wing cấp 3</h3>
+<h3>Bước 2: Chế Wing cấp 3</h3>
 <p>Cần thêm 1 vật phẩm <em>excellent</em> +9 → +15. <strong>Tỉ lệ tối đa 40%.</strong> Kết quả: wing cấp 3 tương ứng class (hoặc Cape of Emperor / Cape of Overrule).</p>
 {$tbl3b}
 
@@ -246,7 +264,7 @@ Các con số dưới đây (nguyên liệu, số ngọc, tỉ lệ, zen) và ng
 <ul>
 <li>Luôn cộng thêm ngọc / vật phẩm phụ để đẩy tỉ lệ lên cao nhất trước khi bấm ghép.</li>
 <li>Packed Jewel = gộp 10 ngọc thường tại NPC đóng gói; wing cấp 3 cần các loại Packed.</li>
-<li>Wing cấp 3 tỉ lệ thấp (≤40%) — chuẩn bị dư nguyên liệu, đừng nản khi thất bại.</li>
+<li>Wing cấp 3 tỉ lệ thấp (≤40%), chuẩn bị dư nguyên liệu, đừng nản khi thất bại.</li>
 </ul>
 HTML;
 
@@ -266,11 +284,11 @@ HTML;
 
 <h2>4 chỉ số cơ bản</h2>
 <ul>
-<li><strong>Strength (Sức mạnh)</strong> — tăng sát thương vật lý và yêu cầu để mặc đồ nặng. Cốt lõi của Dark Knight, Rage Fighter, một phần Magic Gladiator.</li>
-<li><strong>Agility (Nhanh nhẹn)</strong> — tăng thủ, tốc đánh, sát thương cung. Cốt lõi của Fairy Elf; các class khác cộng đủ để mặc đồ.</li>
-<li><strong>Vitality (Thể lực)</strong> — tăng máu (HP). Cần cho PvP và trụ lâu khi farm.</li>
-<li><strong>Energy (Năng lượng)</strong> — tăng sát thương phép. Cốt lõi của Dark Wizard, Summoner, Magic Gladiator hệ phép.</li>
-<li><strong>Command (Mệnh lệnh)</strong> — chỉ Dark Lord có, tăng sát thương thú cưỡi và triệu hồi.</li>
+<li><strong>Strength (Sức mạnh)</strong>: tăng sát thương vật lý và yêu cầu để mặc đồ nặng. Cốt lõi của Dark Knight, Rage Fighter, một phần Magic Gladiator.</li>
+<li><strong>Agility (Nhanh nhẹn)</strong>: tăng thủ, tốc đánh, sát thương cung. Cốt lõi của Fairy Elf; các class khác cộng đủ để mặc đồ.</li>
+<li><strong>Vitality (Thể lực)</strong>: tăng máu (HP). Cần cho PvP và trụ lâu khi farm.</li>
+<li><strong>Energy (Năng lượng)</strong>: tăng sát thương phép. Cốt lõi của Dark Wizard, Summoner, Magic Gladiator hệ phép.</li>
+<li><strong>Command (Mệnh lệnh)</strong>: chỉ Dark Lord có, tăng sát thương thú cưỡi và triệu hồi.</li>
 </ul>
 
 <h2>Nguyên tắc cộng điểm hiệu quả</h2>
@@ -278,7 +296,7 @@ HTML;
 <li><strong>Cộng đủ chỉ số phụ để mặc được đồ mục tiêu</strong>, phần còn lại dồn vào chỉ số sát thương chính. Đừng cộng thừa Agility/Strength quá mức yêu cầu đồ.</li>
 <li><strong>Giai đoạn cày cấp</strong> (level thấp): ưu tiên chỉ số sát thương để giết quái nhanh.</li>
 <li><strong>Giai đoạn PvP</strong> (sau reset, đồ tốt): dồn thêm Vitality để đủ máu sống trong giao tranh.</li>
-<li>Ghi nhớ mốc chỉ số của bộ đồ bạn nhắm tới — xem trong hướng dẫn từng class.</li>
+<li>Ghi nhớ mốc chỉ số của bộ đồ bạn nhắm tới, xem trong hướng dẫn từng class.</li>
 </ol>
 
 <div class="guide-note">
@@ -297,6 +315,57 @@ HTML;
         ];
     }
 
+    // ----------------------------------------------------------------- Gear --
+
+    private function setDetails(): array
+    {
+        // Starter sets (numbers 0-11) are the only ones with full 5-piece art in the
+        // game files; ordered by drop level. [num, name, classes, dropLevel, strReq, agiReq]
+        $sets = [
+            [2, 'Pad', 'Dark Wizard, Magic Gladiator', 10, 30, 0],
+            [10, 'Vine', 'Fairy Elf', 10, 30, 60],
+            [5, 'Leather', 'Dark Knight, Magic Gladiator, Dark Lord, Rage Fighter', 10, 80, 0],
+            [0, 'Bronze', 'Dark Knight, Magic Gladiator, Dark Lord', 18, 80, 20],
+            [11, 'Silk', 'Fairy Elf', 20, 30, 70],
+            [4, 'Bone', 'Dark Wizard, Magic Gladiator', 22, 40, 0],
+            [6, 'Scale', 'Dark Knight, Magic Gladiator, Dark Lord, Rage Fighter', 28, 110, 0],
+            [8, 'Brass', 'Dark Knight, Magic Gladiator, Rage Fighter', 38, 100, 30],
+            [7, 'Sphinx', 'Dark Wizard, Magic Gladiator', 38, 40, 0],
+            [9, 'Plate', 'Dark Knight, Magic Gladiator, Rage Fighter', 48, 130, 0],
+            [3, 'Legendary', 'Dark Wizard, Magic Gladiator', 56, 40, 0],
+            [1, 'Dragon', 'Dark Knight, Magic Gladiator', 59, 120, 30],
+        ];
+        $cards = '';
+        foreach ($sets as $s) {
+            $cards .= $this->setCard($s[0], $s[1], $s[2], $s[3], $s[4], $s[5]);
+        }
+
+        $body = <<<HTML
+<p>Set đồ (bộ giáp) gồm 5 món: <strong>Mũ, Áo, Quần, Găng, Giày</strong>. Mặc đủ các món cùng bộ sẽ kích hoạt <strong>set bonus</strong> (cộng thêm chỉ số). Chọn bộ hợp class và đủ chỉ số yêu cầu (chủ yếu là Sức mạnh, có bộ cần thêm Nhanh nhẹn) để mặc.</p>
+
+<h2>Đồ thường, Excellent và Đồ thần</h2>
+<div class="guide-note">
+Cùng một bộ đồ có 3 "hạng": <strong>Thường</strong> (chỉ có phòng thủ), <strong>Excellent</strong> (thêm dòng option xịn như hồi HP/MP khi đánh, tăng % sát thương), và <strong>Đồ thần / Ancient</strong> (thêm chỉ số cổ và set bonus mạnh). Cả ba <strong>dùng chung một hình ảnh/model</strong> trong game, chỉ khác hào quang và dòng option. Vì vậy ảnh dưới đây là mẫu chung cho cả bản thường lẫn đồ thần của bộ đó.
+</div>
+
+<h2>Các bộ đồ khởi đầu (ảnh từng món)</h2>
+<p>Ảnh 5 món của mỗi bộ (Mũ · Áo · Quần · Găng · Giày) kèm cấp độ rơi và chỉ số yêu cầu, lấy từ cấu hình muss6:</p>
+{$cards}
+
+<div class="guide-note">
+File game chỉ có sẵn ảnh cho các bộ khởi đầu ở trên. Các bộ cao cấp và đồ thần (Dark Phoenix, Great Dragon, Dragon Knight, Sunlight, Aura...) chưa có ảnh trong file; xem danh sách và cấp độ của chúng ở phần <strong>Set đồ theo cấp độ</strong> trong hướng dẫn từng class.
+</div>
+HTML;
+
+        return [
+            'slug' => 'set-do-thuoc-tinh', 'category' => 'gear', 'class_key' => null, 'icon' => 'shirt',
+            'title_vi' => 'Set đồ & thuộc tính (kèm ảnh từng món)', 'title_en' => 'Armor sets & attributes',
+            'excerpt_vi' => 'Các bộ giáp: ảnh 5 món, class phù hợp, cấp độ rơi và chỉ số yêu cầu.',
+            'excerpt_en' => 'Armor sets: 5-piece art, class fit, drop level and requirements.',
+            'body_vi' => $body, 'body_en' => null, 'sort_order' => 1, 'is_published' => true,
+        ];
+    }
+
     // -------------------------------------------------------------- Classes --
 
     /** Builds a class-guide body from structured data (keeps all 7 consistent). */
@@ -311,12 +380,12 @@ HTML;
         // wings strip (each: [code, name, level-label])
         $wingCards = '';
         foreach ($d['wings'] as $wg) {
-            $wingCards .= '<li>' . $this->img($wg[0], $wg[1]) . ' <strong>' . $wg[1] . '</strong> — ' . $wg[2] . '</li>';
+            $wingCards .= '<li>' . $this->img($wg[0], $wg[1]) . ' <strong>' . $wg[1] . '</strong>: ' . $wg[2] . '</li>';
         }
 
         $ancient = <<<'HTML'
 <div class="guide-note">
-"Đồ thần" (Ancient) là <strong>hạng option</strong> của món đồ: cùng một bộ có thể tồn tại ở bản thường, Excellent, và Ancient (đồ thần) — bản Ancient có thêm chỉ số cổ và <strong>set bonus</strong> khi mặc đủ số món cùng bộ. Kiếm từ Kanturu, Land of Trials, hoặc chế qua Chaos Machine.
+"Đồ thần" (Ancient) là <strong>hạng option</strong> của món đồ: cùng một bộ có thể tồn tại ở bản thường, Excellent, và Ancient (đồ thần), bản Ancient có thêm chỉ số cổ và <strong>set bonus</strong> khi mặc đủ số món cùng bộ. Kiếm từ Kanturu, Land of Trials, hoặc chế qua Chaos Machine.
 </div>
 HTML;
 
@@ -324,7 +393,7 @@ HTML;
 <p>{$d['intro']}</p>
 
 <h2>Set đồ theo cấp độ</h2>
-<p>Các bộ đồ {$d['name']} có thể mặc, xếp theo cấp độ rơi (drop level) — lấy từ cấu hình muss6:</p>
+<p>Các bộ đồ {$d['name']} có thể mặc, xếp theo cấp độ rơi (drop level), lấy từ cấu hình muss6:</p>
 <div class="table-responsive">
 <table>
 <thead><tr><th>Giai đoạn</th><th>Bộ đồ (cấp độ rơi)</th></tr></thead>
@@ -334,9 +403,9 @@ HTML;
 
 <h3>Đồ thường, Excellent và Đồ thần</h3>
 <ul>
-<li><strong>Đồ thường</strong> — chỉ có phòng thủ cơ bản, dùng qua giai đoạn đầu.</li>
-<li><strong>Đồ Excellent (đồ hoàng kim)</strong> — có dòng option excellent (hồi HP/MP khi đánh, tăng % sát thương, giảm damage nhận...). Rơi từ Blood Castle, hộp Kundun, boss.</li>
-<li><strong>Đồ thần (Ancient)</strong> — thuộc một bộ Ancient, có chỉ số cổ + set bonus. "Đồ thần" người chơi hay nhắc tới chính là hạng này.</li>
+<li><strong>Đồ thường</strong>: chỉ có phòng thủ cơ bản, dùng qua giai đoạn đầu.</li>
+<li><strong>Đồ Excellent (đồ hoàng kim)</strong>: có dòng option excellent (hồi HP/MP khi đánh, tăng % sát thương, giảm damage nhận...). Rơi từ Blood Castle, hộp Kundun, boss.</li>
+<li><strong>Đồ thần (Ancient)</strong>: thuộc một bộ Ancient, có chỉ số cổ + set bonus. "Đồ thần" người chơi hay nhắc tới chính là hạng này.</li>
 </ul>
 {$ancient}
 
@@ -362,7 +431,7 @@ HTML;
                 'slug' => 'dark-knight', 'class_key' => 'dark-knight', 'icon' => 'khanda', 'order' => 1,
                 'title' => 'Dark Knight (Blade Knight)', 'name' => 'Dark Knight',
                 'excerpt' => 'Set đồ, wings và cách cộng điểm cho Dark Knight.',
-                'intro' => 'Dark Knight (chuyển sinh thành <strong>Blade Knight</strong>) là class cận chiến máu trâu, sát thương vật lý cao, dễ chơi — lựa chọn tốt cho người mới. Đánh gần, chịu đòn khoẻ, phù hợp cả cày cuốc lẫn PvP.',
+                'intro' => 'Dark Knight (chuyển sinh thành <strong>Blade Knight</strong>) là class cận chiến máu trâu, sát thương vật lý cao, dễ chơi, lựa chọn tốt cho người mới. Đánh gần, chịu đòn khoẻ, phù hợp cả cày cuốc lẫn PvP.',
                 'weapon' => 'Kiếm, Rìu, Chuỳ (sát thương vật lý). Ưu tiên vũ khí Excellent có dòng tăng % sát thương và hồi máu khi đánh.',
                 'tiers' => [
                     'Sơ cấp' => ['Leather (10)', 'Bronze (18)', 'Scale (28)'],
@@ -370,8 +439,8 @@ HTML;
                     'Cao cấp' => ['Ashcrow (75)', 'Black Dragon (90)', 'Dark Phoenix (100)'],
                     'Đỉnh cao' => ['Great Dragon (126)', 'Brave (128)', 'Titan (132)', 'Dragon Knight (140)'],
                 ],
-                'wings' => [['12_2', 'Wings of Satan', 'cấp 1'], ['12_5', 'Wings of Dragon', 'cấp 2 — mốc để farm hiệu quả'], ['12_36', 'Wing of Storm', 'cấp 3 — mục tiêu cuối']],
-                'build' => '<ul><li><strong>Strength</strong> — sát thương chính, dồn nhiều nhất.</li><li><strong>Agility</strong> — đủ để mặc bộ đồ mục tiêu và đạt tốc đánh.</li><li><strong>Vitality</strong> — tăng dần khi lên đồ tốt, nhất là khi thiên PvP.</li><li><strong>Energy</strong> — hầu như không cần.</li></ul><p><em>Cày PvE:</em> tối đa Str, Agi vừa đủ đồ. <em>PvP:</em> Str cao + Vit khá.</p>',
+                'wings' => [['12_2', 'Wings of Satan', 'cấp 1'], ['12_5', 'Wings of Dragon', 'cấp 2, mốc để farm hiệu quả'], ['12_36', 'Wing of Storm', 'cấp 3, mục tiêu cuối']],
+                'build' => '<ul><li><strong>Strength</strong>: sát thương chính, dồn nhiều nhất.</li><li><strong>Agility</strong>: đủ để mặc bộ đồ mục tiêu và đạt tốc đánh.</li><li><strong>Vitality</strong>: tăng dần khi lên đồ tốt, nhất là khi thiên PvP.</li><li><strong>Energy</strong>: hầu như không cần.</li></ul><p><em>Cày PvE:</em> tối đa Str, Agi vừa đủ đồ. <em>PvP:</em> Str cao + Vit khá.</p>',
             ],
             [
                 'slug' => 'dark-wizard', 'class_key' => 'dark-wizard', 'icon' => 'hat-wizard', 'order' => 2,
@@ -386,7 +455,7 @@ HTML;
                     'Đỉnh cao' => ['Hades (129)', 'Venom Mist (146)'],
                 ],
                 'wings' => [['12_1', 'Wings of Heaven', 'cấp 1'], ['12_4', 'Wings of Soul', 'cấp 2'], ['12_37', 'Wing of Eternal', 'cấp 3']],
-                'build' => '<ul><li><strong>Energy</strong> — sát thương phép, dồn nhiều nhất.</li><li><strong>Vitality</strong> — thêm để sống lâu (máu Wizard rất mỏng).</li><li><strong>Agility/Strength</strong> — chỉ cộng đủ để mặc đồ.</li></ul><p><em>PvE:</em> tối đa Energy. <em>PvP:</em> Energy cao + Vit nhiều để chịu đòn.</p>',
+                'build' => '<ul><li><strong>Energy</strong>: sát thương phép, dồn nhiều nhất.</li><li><strong>Vitality</strong>: thêm để sống lâu (máu Wizard rất mỏng).</li><li><strong>Agility/Strength</strong>: chỉ cộng đủ để mặc đồ.</li></ul><p><em>PvE:</em> tối đa Energy. <em>PvP:</em> Energy cao + Vit nhiều để chịu đòn.</p>',
             ],
             [
                 'slug' => 'fairy-elf', 'class_key' => 'fairy-elf', 'icon' => 'bullseye', 'order' => 3,
@@ -401,13 +470,13 @@ HTML;
                     'Đỉnh cao' => ['Faith (122)', 'Seraphim (129)', 'Sylphid Ray (146)'],
                 ],
                 'wings' => [['12_0', 'Wings of Elf', 'cấp 1'], ['12_3', 'Wings of Spirits', 'cấp 2'], ['12_38', 'Wing of Illusion', 'cấp 3']],
-                'build' => '<ul><li><strong>Agility</strong> — sát thương cung + thủ, chỉ số chính của build cung thủ.</li><li><strong>Energy</strong> — cốt lõi nếu build hỗ trợ (buff mạnh hơn).</li><li><strong>Vitality</strong> — vừa phải để không quá giòn.</li></ul><p><em>Cung thủ:</em> tối đa Agility. <em>Support:</em> nhiều Energy + Agi đủ đồ.</p>',
+                'build' => '<ul><li><strong>Agility</strong>: sát thương cung + thủ, chỉ số chính của build cung thủ.</li><li><strong>Energy</strong>: cốt lõi nếu build hỗ trợ (buff mạnh hơn).</li><li><strong>Vitality</strong>: vừa phải để không quá giòn.</li></ul><p><em>Cung thủ:</em> tối đa Agility. <em>Support:</em> nhiều Energy + Agi đủ đồ.</p>',
             ],
             [
                 'slug' => 'magic-gladiator', 'class_key' => 'magic-gladiator', 'icon' => 'meteor', 'order' => 4,
                 'title' => 'Magic Gladiator', 'name' => 'Magic Gladiator',
                 'excerpt' => 'Set đồ, wings và cách cộng điểm cho Magic Gladiator.',
-                'intro' => 'Magic Gladiator là class lai giữa chiến binh và pháp sư, <strong>không cần chuyển sinh</strong> (chỉ 1 nhân vật). Nhận nhiều điểm chỉ số hơn mỗi cấp, mạnh ở mọi giai đoạn — nhưng không đội được Helm.',
+                'intro' => 'Magic Gladiator là class lai giữa chiến binh và pháp sư, <strong>không cần chuyển sinh</strong> (chỉ 1 nhân vật). Nhận nhiều điểm chỉ số hơn mỗi cấp, mạnh ở mọi giai đoạn, nhưng không đội được Helm.',
                 'weapon' => 'Kiếm, Giáo (vật lý) hoặc Gậy (phép). Chọn theo hướng build: full vật lý, full phép, hoặc lai.',
                 'tiers' => [
                     'Sơ cấp' => ['Leather/Pad (10)', 'Bronze (18)', 'Scale (28)'],
@@ -416,7 +485,7 @@ HTML;
                     'Đỉnh cao' => ['Hurricane (128)', 'Destroy (131)', 'Volcano (147)'],
                 ],
                 'wings' => [['12_2', 'Wings of Heaven/Satan', 'cấp 1'], ['12_6', 'Wings of Darkness', 'cấp 2'], ['12_39', 'Wing of Ruin', 'cấp 3']],
-                'build' => '<ul><li><strong>Strength</strong> — hướng vật lý (phổ biến, dễ chơi).</li><li><strong>Energy</strong> — hướng phép, hoặc lai Str+Energy.</li><li><strong>Vitality</strong> — thêm để trụ khi PvP.</li></ul><p>Build vật lý dễ farm; build lai linh hoạt PvP nhưng cần nhiều đồ hơn.</p>',
+                'build' => '<ul><li><strong>Strength</strong>: hướng vật lý (phổ biến, dễ chơi).</li><li><strong>Energy</strong>: hướng phép, hoặc lai Str+Energy.</li><li><strong>Vitality</strong>: thêm để trụ khi PvP.</li></ul><p>Build vật lý dễ farm; build lai linh hoạt PvP nhưng cần nhiều đồ hơn.</p>',
             ],
             [
                 'slug' => 'dark-lord', 'class_key' => 'dark-lord', 'icon' => 'crown', 'order' => 5,
@@ -431,7 +500,7 @@ HTML;
                     'Đỉnh cao' => ['Sunlight (147)'],
                 ],
                 'wings' => [['13_30', 'Cape of Lord', 'cấp 2 (Dark Lord không có wing cấp 1)'], ['12_40', 'Cape of Emperor', 'cấp 3']],
-                'build' => '<ul><li><strong>Command (Mệnh lệnh)</strong> — chỉ số riêng của Dark Lord, tăng sát thương thú cưỡi/triệu hồi, dồn nhiều.</li><li><strong>Strength/Vitality</strong> — để trụ và sát thương bản thân.</li><li><strong>Energy</strong> — tuỳ kỹ năng buff.</li></ul>',
+                'build' => '<ul><li><strong>Command (Mệnh lệnh)</strong>: chỉ số riêng của Dark Lord, tăng sát thương thú cưỡi/triệu hồi, dồn nhiều.</li><li><strong>Strength/Vitality</strong>: để trụ và sát thương bản thân.</li><li><strong>Energy</strong>: tuỳ kỹ năng buff.</li></ul>',
             ],
             [
                 'slug' => 'summoner', 'class_key' => 'summoner', 'icon' => 'wand-sparkles', 'order' => 6,
@@ -446,7 +515,7 @@ HTML;
                     'Đỉnh cao' => ['Aura (122)'],
                 ],
                 'wings' => [['12_41', 'Wings of Curse', 'cấp 1'], ['12_42', 'Wings of Despair', 'cấp 2'], ['12_43', 'Wing of Dimension', 'cấp 3']],
-                'build' => '<ul><li><strong>Energy</strong> — sát thương phép/curse, dồn nhiều nhất.</li><li><strong>Vitality</strong> — để sống trong giao tranh.</li><li><strong>Agility/Strength</strong> — đủ mặc đồ.</li></ul>',
+                'build' => '<ul><li><strong>Energy</strong>: sát thương phép/curse, dồn nhiều nhất.</li><li><strong>Vitality</strong>: để sống trong giao tranh.</li><li><strong>Agility/Strength</strong>: đủ mặc đồ.</li></ul>',
             ],
             [
                 'slug' => 'rage-fighter', 'class_key' => 'rage-fighter', 'icon' => 'hand-fist', 'order' => 7,
@@ -461,7 +530,7 @@ HTML;
                     'Đỉnh cao' => ['Phoenix Soul (143)'],
                 ],
                 'wings' => [['12_49', 'Cape of Fighter', 'cấp 2 (Rage Fighter không có wing cấp 1)'], ['12_50', 'Cape of Overrule', 'cấp 3']],
-                'build' => '<ul><li><strong>Strength</strong> — sát thương chính.</li><li><strong>Vitality</strong> — cao, võ sĩ cần trụ và combo.</li><li><strong>Agility</strong> — đủ mặc đồ và tốc đánh.</li></ul>',
+                'build' => '<ul><li><strong>Strength</strong>: sát thương chính.</li><li><strong>Vitality</strong>: cao, võ sĩ cần trụ và combo.</li><li><strong>Agility</strong>: đủ mặc đồ và tốc đánh.</li></ul>',
             ],
         ];
 

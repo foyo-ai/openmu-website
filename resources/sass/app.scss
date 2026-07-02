@@ -178,7 +178,9 @@ body {
         th, td { padding: 0.55rem 0.75rem; border-bottom: 1px solid $mu-border; text-align: left; vertical-align: middle; }
         thead th { background: rgba($mu-gold, 0.08); color: $mu-text-muted; text-transform: uppercase; font-size: 0.74rem; letter-spacing: 0.06em; }
         tbody tr:last-child td { border-bottom: 0; }
-        img { height: 72px; width: auto; vertical-align: middle; }
+        // max-width:none so the fallback max-width:100% never clamps width while the
+        // fixed height stays put (that clamp is what distorted the aspect ratio).
+        img { height: 72px; width: auto; max-width: none; vertical-align: middle; }
     }
     // Icon cell: centered, hugs its image column.
     .mu-ic { text-align: center; width: 1%; white-space: nowrap; }
@@ -186,7 +188,7 @@ body {
     // Wing overview: image on top, name below, centered inside the table cell.
     .mu-wing-cell {
         display: flex; flex-direction: column; align-items: center; gap: 0.35rem; text-align: center;
-        img { height: 84px; width: auto; }
+        img { height: 84px; width: auto; max-width: none; }
         span { font-size: 0.92rem; }
     }
 
@@ -196,7 +198,7 @@ body {
         padding-left: 0;
         li { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;
              background: $mu-surface; border: 1px solid $mu-border; border-radius: $border-radius; padding: 0.7rem 1rem; }
-        img { height: 104px; width: auto; flex: 0 0 auto; }
+        img { height: 104px; width: auto; max-width: none; flex: 0 0 auto; }
     }
 
     // Material cards (nguyên liệu & nơi tìm): big art + where-to-farm details.
@@ -206,7 +208,7 @@ body {
     .mu-mat {
         display: flex; gap: 1rem; align-items: flex-start;
         background: $mu-surface; border: 1px solid $mu-border; border-radius: $border-radius; padding: 0.9rem 1rem;
-        img { height: 92px; width: auto; flex: 0 0 auto; }
+        img { height: 92px; width: auto; max-width: none; flex: 0 0 auto; }
         .mu-mat-name { font-weight: 700; color: $mu-heading; }
         .mu-mat-use { color: $mu-gold-bright; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
         ul { margin: 0; padding-left: 1.1rem; font-size: 0.92rem; }
@@ -214,6 +216,19 @@ body {
     }
     @media (min-width: 768px) {
         .mu-mat-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    // Set showcase cards (set-đồ page): the 5 piece images in a row + attributes.
+    .mu-set {
+        background: $mu-surface; border: 1px solid $mu-border; border-radius: $border-radius;
+        padding: 0.9rem 1rem; margin-bottom: 1rem;
+        .mu-set-head { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+        .mu-set-name { font-weight: 700; color: $mu-heading; font-size: 1.06rem; }
+        .mu-set-class { color: $mu-gold-bright; font-size: 0.82rem; }
+        .mu-set-imgs { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.6rem; }
+        .mu-set-imgs img { height: 66px; width: auto; max-width: none;
+            background: rgba(0, 0, 0, 0.25); border: 1px solid $mu-border; border-radius: 6px; padding: 3px; }
+        .mu-set-stats { color: $mu-text-muted; font-size: 0.9rem; }
     }
 
     // Callout / note box (author uses <div class="guide-note">...</div>)

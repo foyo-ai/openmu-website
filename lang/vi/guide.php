@@ -11,6 +11,7 @@ return [
 
     // categories (index sections)
     'cat_class'   => 'Hướng dẫn theo class',
+    'cat_gear'    => 'Set đồ & trang bị',
     'cat_wings'   => 'Wings & cách xoay',
     'cat_stats'   => 'Cộng điểm',
     'cat_general' => 'Tổng quan',
