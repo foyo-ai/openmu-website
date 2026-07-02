@@ -258,15 +258,28 @@ body {
         &.active { background: rgba($mu-gold, 0.16); border-color: $mu-gold; color: $mu-gold-bright; font-weight: 600; }
     }
 
+    // Sibling nav bar (top of wide gear pages): reuse the chip look as links.
+    .mu-sibling-nav {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+        a.mu-chip { text-decoration: none; }
+    }
+
     // Item tables (sets & weapons) with big art. Overrides the base 72px table img.
+    // Column min-widths stop the text columns from collapsing to one-word-per-line.
     .mu-itemtable {
         td { vertical-align: middle; }
         img { height: 116px; width: auto; max-width: none; }
         .mu-set-pieces { display: flex; gap: 0.35rem; flex-wrap: nowrap; }
-        .mu-set-pieces img { height: 80px; background: rgba(0, 0, 0, 0.25);
+        .mu-set-pieces img { height: 74px; background: rgba(0, 0, 0, 0.25);
             border: 1px solid $mu-border; border-radius: 6px; padding: 3px; }
         .it-name { font-weight: 600; color: $mu-heading; }
         .it-sub { color: $mu-gold-bright; font-size: 0.8rem; }
+
+        th, td { padding: 0.55rem 0.7rem; }
+        td:nth-child(2) { min-width: 9rem; }
+        td:nth-child(3) { min-width: 7rem; }
+        td:nth-child(4) { min-width: 8.5rem; }
+        td:nth-child(5) { min-width: 13rem; }
     }
 
     // Callout / note box (author uses <div class="guide-note">...</div>)
