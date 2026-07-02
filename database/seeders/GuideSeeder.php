@@ -79,15 +79,27 @@ class GuideSeeder extends Seeder
     }
 
     /** A set showcase card: the 5 piece images (helm/armor/pants/gloves/boots) + attributes. */
-    private function setCard(int $num, string $name, string $classes, int $drop, int $str, int $agi): string
+    /**
+     * A set card from a DB-sourced row: [number, name, dropLevel, defense, strReq, agiReq, levelReq, classes].
+     * Armor item groups are 7=helm, 8=armor, 9=pants, 10=gloves, 11=boots (NOT the equip slot 2-6).
+     * Some sets legitimately lack a piece (e.g. Magic Gladiator has no helm); onerror hides the gap.
+     */
+    private function setCard(array $s): string
     {
+        [$num, $name, $drop, $def, $str, $agi, $lvl, $classes] = $s;
+
         $imgs = '';
-        foreach ([2, 3, 4, 5, 6] as $g) {
-            $imgs .= $this->img($g . '_' . $num, $name);
+        foreach ([7, 8, 9, 10, 11] as $g) {
+            $imgs .= '<img src="/images/items/item_' . $g . '_' . $num . '_0.png" alt="' . $name
+                . '" title="' . $name . '" onerror="this.style.display=\'none\'">';
         }
-        $stats = 'Cấp độ rơi: ' . $drop . ' · Yêu cầu Sức mạnh: ' . $str;
+
+        $stats = 'Cấp độ rơi: ' . $drop . ' · Phòng thủ (áo): ' . $def . ' · Sức mạnh: ' . $str;
         if ($agi > 0) {
             $stats .= ' · Nhanh nhẹn: ' . $agi;
+        }
+        if ($lvl > 0) {
+            $stats .= ' · Cấp nhân vật: ' . $lvl;
         }
 
         return '<div class="mu-set"><div class="mu-set-head"><span class="mu-set-name">' . $name . '</span>'
@@ -319,49 +331,103 @@ HTML;
 
     private function setDetails(): array
     {
-        // Starter sets (numbers 0-11) are the only ones with full 5-piece art in the
-        // game files; ordered by drop level. [num, name, classes, dropLevel, strReq, agiReq]
-        $sets = [
-            [2, 'Pad', 'Dark Wizard, Magic Gladiator', 10, 30, 0],
-            [10, 'Vine', 'Fairy Elf', 10, 30, 60],
-            [5, 'Leather', 'Dark Knight, Magic Gladiator, Dark Lord, Rage Fighter', 10, 80, 0],
-            [0, 'Bronze', 'Dark Knight, Magic Gladiator, Dark Lord', 18, 80, 20],
-            [11, 'Silk', 'Fairy Elf', 20, 30, 70],
-            [4, 'Bone', 'Dark Wizard, Magic Gladiator', 22, 40, 0],
-            [6, 'Scale', 'Dark Knight, Magic Gladiator, Dark Lord, Rage Fighter', 28, 110, 0],
-            [8, 'Brass', 'Dark Knight, Magic Gladiator, Rage Fighter', 38, 100, 30],
-            [7, 'Sphinx', 'Dark Wizard, Magic Gladiator', 38, 40, 0],
-            [9, 'Plate', 'Dark Knight, Magic Gladiator, Rage Fighter', 48, 130, 0],
-            [3, 'Legendary', 'Dark Wizard, Magic Gladiator', 56, 40, 0],
-            [1, 'Dragon', 'Dark Knight, Magic Gladiator', 59, 120, 30],
+        // Every armor set from the muss6 config DB, grouped by drop-level tier.
+        // Row: [number, name, dropLevel, chestDefense, strReq, agiReq, levelReq, classes].
+        // (number is the set's item number shared across groups 7-11 helm..boots.)
+        $tiers = [
+            ['Sơ cấp (cấp độ rơi 10 tới 38)', [
+                [2, 'Pad', 10, 7, 30, 0, 0, 'Dark Wizard, Magic Gladiator'],
+                [5, 'Leather', 10, 10, 80, 0, 0, 'Dark Knight, Dark Lord, Magic Gladiator, Rage Fighter'],
+                [10, 'Vine', 10, 8, 30, 60, 0, 'Fairy Elf'],
+                [0, 'Bronze', 18, 14, 80, 20, 0, 'Dark Knight, Dark Lord, Magic Gladiator'],
+                [11, 'Silk', 20, 12, 30, 70, 0, 'Fairy Elf'],
+                [4, 'Bone', 22, 13, 40, 0, 0, 'Dark Wizard, Magic Gladiator'],
+                [6, 'Scale', 28, 18, 110, 0, 0, 'Dark Knight, Dark Lord, Magic Gladiator, Rage Fighter'],
+                [12, 'Wind', 32, 16, 30, 80, 0, 'Fairy Elf'],
+                [39, 'Mystery', 34, 22, 39, 0, 0, 'Summoner'],
+                [7, 'Sphinx', 38, 17, 40, 0, 0, 'Dark Wizard, Magic Gladiator'],
+                [8, 'Brass', 38, 22, 100, 30, 0, 'Dark Knight, Magic Gladiator, Rage Fighter'],
+            ]],
+            ['Trung cấp (44 tới 80)', [
+                [13, 'Spirit', 44, 21, 40, 80, 0, 'Fairy Elf'],
+                [9, 'Plate', 48, 30, 130, 0, 0, 'Dark Knight, Magic Gladiator, Rage Fighter'],
+                [3, 'Legendary', 56, 22, 40, 0, 0, 'Dark Wizard, Magic Gladiator'],
+                [40, 'Red Wing', 56, 28, 35, 8, 0, 'Summoner'],
+                [14, 'Guardian', 57, 29, 40, 80, 0, 'Fairy Elf'],
+                [1, 'Dragon', 59, 37, 120, 30, 0, 'Dark Knight, Magic Gladiator'],
+                [25, 'Light Plate', 62, 25, 70, 20, 0, 'Dark Lord'],
+                [59, 'Sacred', 66, 43, 85, 0, 1, 'Rage Fighter'],
+                [34, 'Ashcrow', 75, 42, 160, 50, 0, 'Dark Knight'],
+                [35, 'Eclipse', 75, 27, 53, 12, 0, 'Dark Wizard'],
+                [36, 'Iris', 75, 36, 50, 70, 0, 'Fairy Elf'],
+                [41, 'Ancient', 75, 35, 52, 16, 0, 'Summoner'],
+                [26, 'Adamantine', 78, 36, 77, 21, 0, 'Dark Lord'],
+                [15, 'Storm Crow', 80, 44, 150, 70, 0, 'Magic Gladiator'],
+            ]],
+            ['Cao cấp (82 tới 120)', [
+                [60, 'Storm Hard', 82, 51, 100, 0, 1, 'Rage Fighter'],
+                [16, 'Black Dragon', 90, 48, 170, 60, 0, 'Dark Knight'],
+                [18, 'Grand Soul', 91, 33, 59, 20, 0, 'Dark Wizard'],
+                [42, 'Black Rose', 91, 45, 60, 20, 0, 'Summoner'],
+                [19, 'Divine', 92, 44, 50, 110, 0, 'Fairy Elf'],
+                [27, 'Dark Steel', 96, 43, 84, 22, 0, 'Dark Lord'],
+                [17, 'Dark Phoenix', 100, 63, 214, 65, 0, 'Dark Knight'],
+                [61, 'Piercing', 101, 59, 115, 0, 1, 'Rage Fighter'],
+                [37, 'Valiant', 105, 52, 155, 50, 0, 'Magic Gladiator'],
+                [38, 'Glorious', 105, 47, 80, 21, 0, 'Dark Lord'],
+                [20, 'Thunder Hawk', 107, 60, 170, 70, 0, 'Magic Gladiator'],
+                [24, 'Red Spirit', 109, 55, 52, 115, 0, 'Fairy Elf'],
+                [44, 'Lilium', 113, 71, 110, 50, 0, 'Summoner'],
+                [28, 'Dark Master', 117, 51, 80, 21, 0, 'Dark Lord'],
+            ]],
+            ['Đỉnh cao & đồ thần (122 trở lên)', [
+                [22, 'Dark Soul', 122, 43, 55, 18, 0, 'Dark Wizard'],
+                [43, 'Aura', 122, 56, 57, 19, 380, 'Summoner'],
+                [50, 'Faith', 122, 52, 32, 29, 0, 'Fairy Elf'],
+                [48, 'Phantom', 125, 66, 62, 19, 0, 'Magic Gladiator'],
+                [21, 'Great Dragon', 126, 75, 200, 58, 0, 'Dark Knight'],
+                [23, 'Hurricane', 128, 73, 162, 66, 0, 'Magic Gladiator'],
+                [46, 'Brave', 128, 62, 74, 162, 0, 'Dark Knight'],
+                [49, 'Seraphim', 129, 60, 55, 197, 0, 'Fairy Elf'],
+                [52, 'Hades', 129, 50, 60, 15, 0, 'Dark Wizard'],
+                [47, 'Destroy', 131, 80, 212, 57, 0, 'Magic Gladiator'],
+                [45, 'Titan', 132, 81, 222, 32, 0, 'Dark Knight'],
+                [51, 'Paewang', 132, 58, 105, 38, 0, 'Dark Lord'],
+                [29, 'Dragon Knight', 140, 88, 170, 60, 380, 'Dark Knight'],
+                [73, 'Phoenix Soul', 143, 78, 97, 0, 380, 'Rage Fighter'],
+                [30, 'Venom Mist', 146, 57, 44, 15, 380, 'Dark Wizard'],
+                [31, 'Sylphid Ray', 146, 68, 38, 80, 380, 'Fairy Elf'],
+                [32, 'Volcano', 147, 86, 145, 60, 380, 'Magic Gladiator'],
+                [33, 'Sunlight', 147, 64, 62, 16, 380, 'Dark Lord'],
+            ]],
         ];
-        $cards = '';
-        foreach ($sets as $s) {
-            $cards .= $this->setCard($s[0], $s[1], $s[2], $s[3], $s[4], $s[5]);
+
+        $sections = '';
+        foreach ($tiers as [$title, $rows]) {
+            $cards = '';
+            foreach ($rows as $r) {
+                $cards .= $this->setCard($r);
+            }
+            $sections .= '<h2>' . $title . '</h2>' . $cards;
         }
 
         $body = <<<HTML
-<p>Set đồ (bộ giáp) gồm 5 món: <strong>Mũ, Áo, Quần, Găng, Giày</strong>. Mặc đủ các món cùng bộ sẽ kích hoạt <strong>set bonus</strong> (cộng thêm chỉ số). Chọn bộ hợp class và đủ chỉ số yêu cầu (chủ yếu là Sức mạnh, có bộ cần thêm Nhanh nhẹn) để mặc.</p>
+<p>Set đồ (bộ giáp) gồm 5 món: <strong>Mũ, Áo, Quần, Găng, Giày</strong>. Mặc đủ các món cùng bộ sẽ kích hoạt <strong>set bonus</strong> (cộng thêm chỉ số). Chọn bộ hợp class và đủ chỉ số yêu cầu (Sức mạnh, đôi khi cả Nhanh nhẹn và cấp nhân vật) để mặc.</p>
 
 <h2>Đồ thường, Excellent và Đồ thần</h2>
 <div class="guide-note">
-Cùng một bộ đồ có 3 "hạng": <strong>Thường</strong> (chỉ có phòng thủ), <strong>Excellent</strong> (thêm dòng option xịn như hồi HP/MP khi đánh, tăng % sát thương), và <strong>Đồ thần / Ancient</strong> (thêm chỉ số cổ và set bonus mạnh). Cả ba <strong>dùng chung một hình ảnh/model</strong> trong game, chỉ khác hào quang và dòng option. Vì vậy ảnh dưới đây là mẫu chung cho cả bản thường lẫn đồ thần của bộ đó.
+Cùng một bộ đồ có 3 "hạng": <strong>Thường</strong> (chỉ có phòng thủ), <strong>Excellent</strong> (thêm dòng option xịn như hồi HP/MP khi đánh, tăng % sát thương), và <strong>Đồ thần / Ancient</strong> (thêm chỉ số cổ và set bonus mạnh). Cả ba <strong>dùng chung một hình ảnh/model</strong> trong game, chỉ khác hào quang và dòng option, nên ảnh dưới là mẫu chung cho cả bản thường lẫn đồ thần của bộ đó.
 </div>
 
-<h2>Các bộ đồ khởi đầu (ảnh từng món)</h2>
-<p>Ảnh 5 món của mỗi bộ (Mũ · Áo · Quần · Găng · Giày) kèm cấp độ rơi và chỉ số yêu cầu, lấy từ cấu hình muss6:</p>
-{$cards}
-
-<div class="guide-note">
-File game chỉ có sẵn ảnh cho các bộ khởi đầu ở trên. Các bộ cao cấp và đồ thần (Dark Phoenix, Great Dragon, Dragon Knight, Sunlight, Aura...) chưa có ảnh trong file; xem danh sách và cấp độ của chúng ở phần <strong>Set đồ theo cấp độ</strong> trong hướng dẫn từng class.
-</div>
+<p>Danh sách đầy đủ các bộ giáp với ảnh 5 món (Mũ · Áo · Quần · Găng · Giày), class phù hợp, phòng thủ và chỉ số yêu cầu, lấy trực tiếp từ dữ liệu máy chủ muss6. Bộ nào thiếu 1 món (vd Magic Gladiator không đội Mũ) là do class đó không dùng món ấy.</p>
+{$sections}
 HTML;
 
         return [
             'slug' => 'set-do-thuoc-tinh', 'category' => 'gear', 'class_key' => null, 'icon' => 'shirt',
             'title_vi' => 'Set đồ & thuộc tính (kèm ảnh từng món)', 'title_en' => 'Armor sets & attributes',
-            'excerpt_vi' => 'Các bộ giáp: ảnh 5 món, class phù hợp, cấp độ rơi và chỉ số yêu cầu.',
-            'excerpt_en' => 'Armor sets: 5-piece art, class fit, drop level and requirements.',
+            'excerpt_vi' => 'Toàn bộ set giáp: ảnh 5 món, class phù hợp, phòng thủ và chỉ số yêu cầu.',
+            'excerpt_en' => 'All armor sets: 5-piece art, class fit, defense and requirements.',
             'body_vi' => $body, 'body_en' => null, 'sort_order' => 1, 'is_published' => true,
         ];
     }
