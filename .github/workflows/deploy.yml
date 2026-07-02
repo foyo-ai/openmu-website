@@ -67,6 +67,8 @@ jobs:
             docker compose --profile https pull web
             # Apply any new app-owned migrations (only creates public.* tables).
             docker compose --profile https run --rm web php artisan migrate --force
+            # Seed/refresh the built-in player guides (idempotent upsert by slug).
+            docker compose --profile https run --rm web php artisan db:seed --class=GuideSeeder --force
             docker compose --profile https up -d web
             docker image prune -f
             docker logout ghcr.io

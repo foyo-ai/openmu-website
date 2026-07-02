@@ -5,6 +5,7 @@ return [
     'home'       => 'Trang chủ',
     'rankings'   => 'Xếp hạng',
     'events'     => 'Sự kiện',
+    'guides'     => 'Hướng dẫn',
     'news'       => 'Tin tức',
     'download'   => 'Tải game',
     'login'      => 'Đăng nhập',

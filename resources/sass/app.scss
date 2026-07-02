@@ -141,6 +141,54 @@ body {
     tr:nth-child(1) .mu-rank-pos { color: #ffd966; }
 }
 
+// --- Guide article body ----------------------------------------------------
+// The guide body is trusted HTML authored by GMs. Style the common tags so the
+// operator can write plain <h2>/<table>/<ul>/<img> and get consistent output.
+.guide-body {
+    font-size: 1.02rem;
+    line-height: 1.7;
+
+    h2 {
+        margin: 2rem 0 0.75rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid $mu-border;
+        color: $mu-gold-bright;
+    }
+    h3 { margin: 1.5rem 0 0.5rem; color: $mu-heading; }
+    p, ul, ol { margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.25rem; }
+    li { margin-bottom: 0.3rem; }
+    a { color: $mu-gold-bright; }
+    img { max-width: 100%; height: auto; border-radius: $border-radius; }
+    code { color: $mu-gold-bright; background: rgba($mu-gold, 0.08); padding: 0.1rem 0.35rem; border-radius: 4px; }
+
+    // Item / recipe tables
+    .table-responsive, table { margin: 1rem 0 1.5rem; }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: $mu-surface;
+        border: 1px solid $mu-border;
+        border-radius: $border-radius;
+        overflow: hidden;
+
+        th, td { padding: 0.55rem 0.75rem; border-bottom: 1px solid $mu-border; text-align: left; vertical-align: middle; }
+        thead th { background: rgba($mu-gold, 0.08); color: $mu-text-muted; text-transform: uppercase; font-size: 0.74rem; letter-spacing: 0.06em; }
+        tbody tr:last-child td { border-bottom: 0; }
+        img { width: 32px; height: 32px; vertical-align: middle; }
+    }
+
+    // Callout / note box (author uses <div class="guide-note">...</div>)
+    .guide-note {
+        border-left: 3px solid $mu-gold;
+        background: rgba($mu-gold, 0.06);
+        padding: 0.75rem 1rem;
+        border-radius: 0 $border-radius $border-radius 0;
+        margin: 1rem 0 1.5rem;
+        color: $mu-text-muted;
+    }
+}
+
 // --- Buttons ---------------------------------------------------------------
 .btn-primary {
     --bs-btn-color: #1a1406;

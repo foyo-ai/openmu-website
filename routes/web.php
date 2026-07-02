@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\CharacterPointsController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\GuideController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
@@ -33,6 +34,8 @@ Route::group([
     Route::get('/', [PageController::class, 'home'])->name('home');
     Route::get('/rankings', [RankingController::class, 'index'])->name('rankings.index');
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
+    Route::get('/huong-dan', [GuideController::class, 'index'])->name('guides.index');
+    Route::get('/huong-dan/{guide}', [GuideController::class, 'show'])->name('guides.show');
     Route::get('/news', [NewsController::class, 'index'])->name('news.index');
     Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 
@@ -65,5 +68,6 @@ Route::group([
     Route::middleware(['auth', 'isGameMaster'])
         ->prefix('admin')->name('admin.')->group(function () {
             Route::resource('news', \App\Http\Controllers\Admin\NewsController::class)->except('show');
+            Route::resource('guides', \App\Http\Controllers\Admin\GuideController::class)->except('show');
         });
 });

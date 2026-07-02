@@ -51,6 +51,7 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">{{ __('nav.home') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('rankings.index') }}">{{ __('nav.rankings') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('events.index') }}">{{ __('nav.events') }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('guides.index') }}">{{ __('nav.guides') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('news.index') }}">{{ __('nav.news') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ collect(config('server.downloads'))->first() ?? '#' }}" target="_blank" rel="noopener">{{ __('nav.download') }}</a></li>
                     </ul>
