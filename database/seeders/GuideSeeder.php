@@ -117,14 +117,14 @@ class GuideSeeder extends Seeder
     private function farmMapFor(int $drop): string
     {
         return match (true) {
-            $drop <= 30  => 'Lorencia, Noria, Devias, Dungeon (quái cấp 10 tới 55)',
-            $drop <= 50  => 'Dungeon, Devias, Atlans, Lost Tower (quái cấp 25 tới 74)',
-            $drop <= 66  => 'Lost Tower, Atlans, Tarkan (quái cấp 47 tới 93)',
-            $drop <= 80  => 'Tarkan, Atlans, Aida, Icarus (quái cấp 72 tới 108)',
-            $drop <= 100 => 'Aida, Icarus, Land of Trials, Vulcanus (quái cấp 75 tới 124)',
-            $drop <= 120 => 'Vulcanus, Swamp of Calmness, Aida (quái Bloody), Raklion (quái cấp 90 tới 148)',
-            $drop <= 135 => 'Raklion, Swamp of Calmness, Aida (quái Bloody cấp 114 tới 120)',
-            default      => 'Raklion (quái cấp 140+ như Dark Giant, Dark Iron Knight)',
+            $drop <= 30  => 'Lorencia, Noria, Devias, Elvenland (quái cấp thấp)',
+            $drop <= 50  => 'Dungeon, Devias, Atlans (quái cấp 20 tới 74)',
+            $drop <= 66  => 'Lost Tower, Atlans, Dungeon (quái cấp 43 tới 90)',
+            $drop <= 80  => 'Tarkan, Aida, Icarus, Dungeon (quái cấp 72 tới 108)',
+            $drop <= 100 => 'Aida, Icarus, Land of Trials, Kanturu, Vulcanus (quái cấp 75 tới 129)',
+            $drop <= 120 => 'Vulcanus, Kanturu, Karutan, Aida (quái Bloody), Swamp of Calmness (quái cấp 90 tới 137)',
+            $drop <= 135 => 'LaCleon (Raklion), Swamp of Calmness, Kanturu (quái cấp 100 tới 148)',
+            default      => 'LaCleon (Raklion): quái cấp 140+ như Dark Mammoth, Dark Giant, Dark Iron Knight',
         };
     }
 
@@ -222,17 +222,19 @@ HTML;
 <div class="table-responsive"><table>
 <thead><tr><th>Map</th><th>Level quái</th><th>Quái tiêu biểu</th></tr></thead>
 <tbody>
-<tr><td>Lorencia / Noria / Devias</td><td>~10-50</td><td>Khởi đầu, quái yếu</td></tr>
-<tr><td>Dungeon</td><td>25-55</td><td>Poison Bull, Gorgon</td></tr>
-<tr><td>Lost Tower</td><td>47-66</td><td>Death Knight, Devil, Balrog</td></tr>
-<tr><td>Atlans</td><td>43-74</td><td>Lizard King, Hydra, Sea Worm</td></tr>
+<tr><td>Lorencia / Noria / Devias / Elvenland</td><td>2-48</td><td>Khởi đầu, quái yếu</td></tr>
+<tr><td>Dungeon</td><td>19-80</td><td>Poison Bull, Gorgon, Dark Knight</td></tr>
+<tr><td>Lost Tower</td><td>47-90</td><td>Death Knight, Devil, Balrog</td></tr>
+<tr><td>Atlans</td><td>43-74</td><td>Lizard King, Hydra, Great Bahamut</td></tr>
 <tr><td>Tarkan</td><td>72-93</td><td>Iron Wheel, Beam Knight, Death Beam Knight</td></tr>
-<tr><td>Aida</td><td>72-120</td><td>Witch Queen, Hell Maine, Bloody Witch Queen</td></tr>
 <tr><td>Icarus</td><td>75-108</td><td>Great Drakan, Phantom Knight, Dark Phoenix</td></tr>
-<tr><td>Land of Trials (Kanturu)</td><td>75-128</td><td>Fire Golem, Erohim</td></tr>
+<tr><td>Aida</td><td>72-120</td><td>Witch Queen, Hell Maine, Bloody Witch Queen</td></tr>
+<tr><td>Land of Trials (Kanturu)</td><td>75-128</td><td>Fire Golem, Queen Bee, Erohim</td></tr>
+<tr><td>Kanturu</td><td>80-129</td><td>Berserker, Gigantis, Genocider Warrior</td></tr>
+<tr><td>Karutan</td><td>99-120</td><td>Orcus, Crypta, Narcondra</td></tr>
+<tr><td>Vulcanus</td><td>90-124</td><td>Blood Assassin, Burning Lava Giant, Zombie Fighter</td></tr>
 <tr><td>Swamp of Calmness</td><td>95-137</td><td>Shadow Knight, Sapi Queen, Shadow Master</td></tr>
-<tr><td>Vulcanus</td><td>90-124</td><td>Blood Assassin, Burning Lava Giant</td></tr>
-<tr><td>Raklion</td><td>102-148</td><td>Ice Giant, Iron Knight, Dark Iron Knight</td></tr>
+<tr><td>LaCleon (Raklion)</td><td>102-148</td><td>Ice Giant, Iron Knight, Dark Iron Knight</td></tr>
 </tbody>
 </table></div>
 HTML;
