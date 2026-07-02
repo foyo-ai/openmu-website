@@ -73,7 +73,7 @@ class GuideSeeder extends Seeder
     private function guides(): array
     {
         return array_merge(
-            [$this->wingsOverview(), $this->wingsCrafting(), $this->setDetails(), $this->statBuilds()],
+            [$this->wingsOverview(), $this->wingsCrafting(), $this->setDetails(), $this->weaponsPage(), $this->statBuilds()],
             $this->classGuides(),
         );
     }
@@ -454,6 +454,220 @@ HTML;
             'excerpt_vi' => 'Toàn bộ set giáp: ảnh 5 món, class phù hợp, phòng thủ và chỉ số yêu cầu.',
             'excerpt_en' => 'All armor sets: 5-piece art, class fit, defense and requirements.',
             'body_vi' => $body, 'body_en' => null, 'sort_order' => 1, 'is_published' => true,
+        ];
+    }
+
+    /** A single weapon card: [number, name, dropLevel, minDmg, maxDmg, staffRise%, strReq, agiReq, levelReq, classes]. */
+    private function weaponCard(int $group, array $w): string
+    {
+        [$num, $name, $drop, $mind, $maxd, $rise, $str, $agi, $lvl, $classes] = $w;
+
+        $img = '<img src="/images/items/item_' . $group . '_' . $num . '_0.png" alt="' . $name
+            . '" title="' . $name . '" onerror="this.style.display=\'none\'">';
+
+        if ($mind === 0 && $maxd === 0 && $rise === 0) {
+            $dmg = 'Vật phẩm kỹ năng (sách phép)';
+        } else {
+            $parts = [];
+            if ($maxd > 0) {
+                $parts[] = 'Sát thương: ' . $mind . ' tới ' . $maxd;
+            }
+            if ($rise > 0) {
+                $parts[] = 'Sức mạnh phép: +' . $rise . '%';
+            }
+            $dmg = implode(' · ', $parts);
+        }
+
+        $req = 'Cấp độ rơi: ' . $drop;
+        if ($str > 0) {
+            $req .= ' · Sức mạnh: ' . $str;
+        }
+        if ($agi > 0) {
+            $req .= ' · Nhanh nhẹn: ' . $agi;
+        }
+        if ($lvl > 0) {
+            $req .= ' · Cấp NV: ' . $lvl;
+        }
+
+        return '<div class="mu-wpn">' . $img . '<div class="mu-wpn-info">'
+            . '<div class="mu-wpn-name">' . $name . '</div>'
+            . '<div class="mu-wpn-class">' . $classes . '</div>'
+            . '<div class="mu-wpn-stats">' . $dmg . '</div>'
+            . '<div class="mu-wpn-stats">' . $req . '</div>'
+            . '<div class="mu-wpn-farm"><i class="fa-solid fa-location-dot me-1"></i>Farm ở: ' . $this->farmMapFor($drop) . '</div>'
+            . '</div></div>';
+    }
+
+    private function weaponsPage(): array
+    {
+        // Every weapon from the muss6 config DB, grouped by weapon type.
+        // Row: [number, name, dropLevel, minDmg, maxDmg, staffRise%, strReq, agiReq, levelReq, classes].
+        $groups = [
+            [0, 'Kiếm & Găng (Sword / Rage Fighter Glove)', [
+                [1, 'Short Sword', 3, 3, 7, 0, 60, 0, 0, 'Dark Knight, Dark Lord, Dark Wizard, Fairy Elf, Magic Gladiator, Rage Fighter, Summoner'],
+                [0, 'Kris', 6, 6, 11, 0, 40, 40, 0, 'Dark Knight, Dark Lord, Dark Wizard, Fairy Elf, Magic Gladiator, Rage Fighter, Summoner'],
+                [2, 'Rapier', 9, 9, 15, 0, 50, 40, 0, 'Dark Knight, Dark Lord, Fairy Elf, Magic Gladiator, Summoner'],
+                [4, 'Sword of Assassin', 12, 12, 18, 0, 60, 40, 0, 'Dark Knight, Dark Lord, Magic Gladiator'],
+                [3, 'Katache', 16, 16, 26, 0, 80, 40, 0, 'Dark Knight, Dark Lord, Magic Gladiator'],
+                [6, 'Gladius', 20, 20, 30, 0, 110, 0, 0, 'Dark Knight, Dark Lord, Fairy Elf, Magic Gladiator'],
+                [7, 'Falchion', 24, 24, 34, 0, 120, 0, 0, 'Dark Knight, Dark Lord, Magic Gladiator'],
+                [8, 'Serpent Sword', 30, 30, 40, 0, 130, 0, 0, 'Dark Knight, Dark Lord, Magic Gladiator'],
+                [9, 'Sword of Salamander', 32, 32, 46, 0, 103, 0, 0, 'Dark Knight, Magic Gladiator'],
+                [5, 'Blade', 36, 36, 47, 0, 80, 50, 0, 'Dark Knight, Dark Lord, Dark Wizard, Fairy Elf, Magic Gladiator'],
+                [10, 'Light Saber', 40, 47, 61, 0, 80, 60, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [11, 'Legendary Sword', 44, 56, 72, 0, 120, 0, 0, 'Dark Knight, Magic Gladiator'],
+                [13, 'Double Blade', 48, 48, 56, 0, 70, 70, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [15, 'Giant Sword', 52, 60, 85, 0, 140, 0, 0, 'Dark Knight, Magic Gladiator'],
+                [32, 'Sacred Glove', 52, 52, 58, 0, 85, 35, 0, 'Rage Fighter'],
+                [12, 'Heliacal Sword', 56, 73, 98, 0, 140, 0, 0, 'Dark Knight, Magic Gladiator'],
+                [14, 'Lighting Sword', 59, 59, 67, 0, 90, 50, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [16, 'Sword of Destruction', 82, 82, 90, 0, 160, 60, 0, 'Dark Knight, Magic Gladiator'],
+                [33, 'Storm Hard Glove', 82, 82, 88, 0, 100, 50, 0, 'Rage Fighter'],
+                [19, 'Divine Sword of Archangel', 86, 220, 230, 0, 140, 50, 0, 'Dark Knight, Dark Lord, Magic Gladiator'],
+                [31, 'Rune Blade', 100, 104, 130, 52, 135, 62, 0, 'Magic Gladiator'],
+                [17, 'Dark Breaker', 104, 128, 153, 0, 180, 50, 0, 'Dark Knight'],
+                [18, 'Thunder Blade', 105, 140, 168, 0, 180, 50, 0, 'Magic Gladiator'],
+                [34, 'Piercing Blade Glove', 105, 95, 101, 0, 120, 60, 0, 'Rage Fighter'],
+                [24, 'Daybreak', 115, 182, 218, 0, 192, 30, 0, 'Dark Knight'],
+                [25, 'Sword Dancer', 115, 109, 136, 54, 136, 57, 0, 'Magic Gladiator'],
+                [27, 'Sword Breaker', 133, 91, 99, 0, 53, 176, 380, 'Dark Knight'],
+                [26, 'Flamberge', 137, 115, 126, 0, 193, 53, 380, 'Dark Knight'],
+                [28, 'Imperial Sword', 139, 98, 122, 54, 91, 73, 380, 'Magic Gladiator'],
+                [20, 'Knight Blade', 140, 107, 115, 0, 116, 38, 0, 'Dark Knight'],
+                [21, 'Dark Reign Blade', 140, 115, 142, 58, 116, 53, 0, 'Magic Gladiator'],
+                [22, 'Bone Blade', 147, 122, 135, 0, 100, 35, 380, 'Dark Knight'],
+                [23, 'Explosion Blade', 147, 127, 155, 67, 98, 48, 380, 'Magic Gladiator'],
+                [35, 'Phoenix Soul Star', 147, 122, 128, 0, 101, 51, 380, 'Rage Fighter'],
+            ]],
+            [1, 'Rìu (Axe)', [
+                [0, 'Small Axe', 1, 1, 6, 0, 50, 0, 0, 'Dark Knight, Dark Lord, Dark Wizard, Fairy Elf, Magic Gladiator, Rage Fighter, Summoner'],
+                [1, 'Hand Axe', 4, 4, 9, 0, 70, 0, 0, 'Dark Knight, Dark Lord, Dark Wizard, Fairy Elf, Magic Gladiator, Rage Fighter, Summoner'],
+                [2, 'Double Axe', 14, 14, 24, 0, 90, 0, 0, 'Dark Knight, Dark Lord, Magic Gladiator'],
+                [3, 'Tomahawk', 18, 18, 28, 0, 100, 0, 0, 'Dark Knight, Dark Lord, Magic Gladiator, Rage Fighter'],
+                [4, 'Elven Axe', 26, 26, 38, 0, 50, 70, 0, 'Dark Wizard, Fairy Elf, Magic Gladiator, Summoner'],
+                [5, 'Battle Axe', 30, 36, 44, 0, 120, 0, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [6, 'Nikkea Axe', 34, 38, 50, 0, 130, 0, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [7, 'Larkan Axe', 46, 54, 67, 0, 140, 0, 0, 'Dark Knight, Magic Gladiator'],
+                [8, 'Crescent Axe', 54, 69, 89, 0, 100, 40, 0, 'Dark Knight, Dark Wizard, Magic Gladiator'],
+            ]],
+            [2, 'Chuỳ & Gậy quyền (Mace / Scepter)', [
+                [0, 'Mace', 7, 7, 13, 0, 100, 0, 0, 'Dark Knight, Dark Lord, Magic Gladiator, Rage Fighter'],
+                [1, 'Morning Star', 13, 13, 22, 0, 100, 0, 0, 'Dark Knight, Dark Lord, Magic Gladiator, Rage Fighter'],
+                [2, 'Flail', 22, 22, 32, 0, 80, 50, 0, 'Dark Knight, Dark Lord, Magic Gladiator, Rage Fighter'],
+                [3, 'Great Hammer', 38, 45, 56, 0, 150, 0, 0, 'Dark Knight, Magic Gladiator, Rage Fighter'],
+                [8, 'Battle Scepter', 54, 41, 52, 0, 80, 17, 0, 'Dark Lord'],
+                [4, 'Crystal Morning Star', 66, 78, 107, 0, 130, 0, 0, 'Dark Knight, Dark Wizard, Fairy Elf, Magic Gladiator, Rage Fighter'],
+                [5, 'Crystal Sword', 72, 89, 120, 0, 130, 70, 0, 'Dark Knight, Dark Wizard, Fairy Elf, Magic Gladiator'],
+                [9, 'Master Scepter', 72, 57, 68, 0, 87, 18, 0, 'Dark Lord'],
+                [6, 'Chaos Dragon Axe', 75, 102, 130, 0, 140, 50, 0, 'Dark Knight, Magic Gladiator'],
+                [10, 'Great Scepter', 82, 74, 85, 0, 100, 21, 0, 'Dark Lord'],
+                [7, 'Elemental Mace', 90, 62, 80, 0, 15, 42, 0, 'Fairy Elf'],
+                [11, 'Lord Scepter', 98, 91, 102, 0, 105, 23, 0, 'Dark Lord'],
+                [15, 'Shining Scepter', 110, 99, 111, 0, 108, 22, 0, 'Dark Lord'],
+                [16, 'Frost Mace', 121, 106, 146, 0, 27, 19, 0, 'Fairy Elf'],
+                [17, 'Absolute Scepter', 135, 114, 132, 0, 119, 24, 0, 'Dark Lord'],
+                [12, 'Great Lord Scepter', 140, 108, 120, 0, 90, 20, 0, 'Dark Lord'],
+                [14, 'Soleil Scepter', 146, 130, 153, 0, 80, 15, 380, 'Dark Lord'],
+                [18, 'Stryker Scepter', 147, 112, 124, 0, 87, 20, 0, 'Dark Lord'],
+                [13, 'Divine Scepter of Archangel', 150, 200, 223, 0, 75, 16, 0, 'Dark Lord'],
+            ]],
+            [3, 'Giáo (Spear)', [
+                [5, 'Double Poleaxe', 13, 19, 31, 0, 70, 50, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [2, 'Dragon Lance', 15, 21, 33, 0, 70, 50, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [6, 'Halberd', 19, 25, 35, 0, 70, 50, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [1, 'Spear', 23, 30, 41, 0, 70, 50, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [3, 'Giant Trident', 29, 35, 43, 0, 90, 30, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [7, 'Berdysh', 37, 42, 54, 0, 80, 50, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [0, 'Light Spear', 42, 50, 63, 0, 60, 70, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [4, 'Serpent Spear', 46, 58, 80, 0, 90, 30, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [8, 'Great Scythe', 54, 71, 92, 0, 90, 50, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [9, 'Bill of Balrog', 63, 76, 102, 0, 80, 50, 0, 'Dark Knight, Fairy Elf, Magic Gladiator'],
+                [10, 'Dragon Spear', 92, 112, 140, 0, 170, 60, 0, 'Dark Knight'],
+                [11, 'Beuroba', 147, 190, 226, 0, 152, 25, 0, 'Dark Knight, Magic Gladiator'],
+            ]],
+            [4, 'Cung & Nỏ (Bow / Crossbow)', [
+                [0, 'Short Bow', 2, 3, 5, 0, 20, 80, 0, 'Fairy Elf'],
+                [8, 'Crossbow', 4, 5, 8, 0, 20, 90, 0, 'Fairy Elf'],
+                [1, 'Bow', 8, 9, 13, 0, 30, 90, 0, 'Fairy Elf'],
+                [9, 'Golden Crossbow', 12, 13, 19, 0, 30, 90, 0, 'Fairy Elf'],
+                [2, 'Elven Bow', 16, 17, 24, 0, 30, 90, 0, 'Fairy Elf'],
+                [10, 'Arquebus', 20, 22, 30, 0, 30, 90, 0, 'Fairy Elf'],
+                [3, 'Battle Bow', 26, 28, 37, 0, 30, 90, 0, 'Fairy Elf'],
+                [11, 'Light Crossbow', 32, 35, 44, 0, 30, 90, 0, 'Fairy Elf'],
+                [4, 'Tiger Bow', 40, 42, 52, 0, 30, 100, 0, 'Fairy Elf'],
+                [12, 'Serpent Crossbow', 48, 50, 61, 0, 30, 100, 0, 'Fairy Elf'],
+                [5, 'Silver Bow', 56, 59, 71, 0, 30, 100, 0, 'Fairy Elf'],
+                [13, 'Bluewing Crossbow', 68, 68, 82, 0, 40, 110, 0, 'Fairy Elf'],
+                [14, 'Aquagold Crossbow', 72, 78, 92, 0, 50, 130, 0, 'Fairy Elf'],
+                [6, 'Chaos Nature Bow', 75, 88, 106, 0, 40, 150, 0, 'Fairy Elf'],
+                [16, 'Saint Crossbow', 84, 102, 127, 0, 50, 160, 0, 'Fairy Elf'],
+                [17, 'Celestial Bow', 92, 127, 155, 0, 54, 198, 0, 'Fairy Elf'],
+                [18, 'Divine Crossbow of Archangel', 100, 224, 246, 0, 40, 110, 0, 'Fairy Elf'],
+                [19, 'Great Reign Crossbow', 100, 150, 172, 0, 61, 285, 0, 'Fairy Elf'],
+                [22, 'Albatross Bow', 110, 155, 177, 0, 60, 265, 0, 'Fairy Elf'],
+                [23, 'Stinger Bow', 134, 162, 184, 0, 32, 209, 0, 'Fairy Elf'],
+                [20, 'Arrow Viper Bow', 135, 166, 190, 0, 52, 245, 0, 'Fairy Elf'],
+                [21, 'Sylph Wind Bow', 147, 177, 200, 0, 46, 210, 380, 'Fairy Elf'],
+                [24, 'Air Lyn Bow', 147, 170, 194, 0, 49, 226, 0, 'Fairy Elf'],
+            ]],
+            [5, 'Gậy phép, Gậy & Sách (Staff / Stick / Book)', [
+                [0, 'Skull Staff', 6, 3, 4, 3, 40, 0, 0, 'Dark Wizard, Magic Gladiator, Summoner'],
+                [1, 'Angelic Staff', 18, 10, 12, 10, 50, 0, 0, 'Dark Wizard, Magic Gladiator'],
+                [14, 'Mistery Stick', 28, 17, 18, 17, 34, 14, 0, 'Summoner'],
+                [2, 'Serpent Staff', 30, 17, 18, 17, 50, 0, 0, 'Dark Wizard, Magic Gladiator'],
+                [3, 'Thunder Staff', 42, 23, 25, 23, 40, 10, 0, 'Dark Wizard, Magic Gladiator'],
+                [15, 'Violent Wind Stick', 42, 23, 25, 23, 33, 17, 0, 'Summoner'],
+                [4, 'Gorgon Staff', 52, 29, 32, 29, 50, 0, 0, 'Dark Wizard, Magic Gladiator'],
+                [21, 'Book of Sahamutt', 52, 0, 0, 0, 0, 20, 0, 'Summoner'],
+                [5, 'Legendary Staff', 59, 29, 31, 30, 50, 0, 0, 'Dark Wizard, Magic Gladiator'],
+                [16, 'Red Wing Stick', 59, 29, 31, 30, 36, 14, 0, 'Summoner'],
+                [22, 'Book of Neil', 59, 0, 0, 0, 0, 25, 0, 'Summoner'],
+                [23, 'Book of Lagle', 65, 0, 0, 0, 0, 30, 0, 'Summoner'],
+                [6, 'Staff of Resurrection', 70, 35, 39, 35, 60, 10, 0, 'Dark Wizard, Magic Gladiator'],
+                [7, 'Chaos Lightning Staff', 75, 47, 48, 47, 60, 10, 0, 'Dark Wizard, Magic Gladiator'],
+                [17, 'Ancient Stick', 78, 38, 40, 38, 50, 19, 0, 'Summoner'],
+                [8, 'Staff of Destruction', 90, 50, 54, 50, 60, 10, 0, 'Dark Wizard, Magic Gladiator'],
+                [9, 'Dragon Soul Staff', 100, 46, 48, 46, 52, 16, 0, 'Dark Wizard'],
+                [18, 'Demonic Stick', 100, 46, 48, 46, 54, 15, 0, 'Summoner'],
+                [10, 'Divine Staff of Archangel', 104, 153, 165, 78, 36, 4, 0, 'Dark Wizard, Magic Gladiator'],
+                [36, 'Divine Stick of Archangel', 104, 153, 165, 73, 55, 13, 0, 'Summoner'],
+                [13, 'Platina Staff', 110, 51, 53, 60, 50, 16, 0, 'Dark Wizard'],
+                [19, 'Storm Blitz Stick', 110, 51, 53, 55, 64, 15, 380, 'Summoner'],
+                [31, 'Imperial Staff', 137, 57, 61, 62, 48, 14, 380, 'Dark Wizard'],
+                [30, 'Deadly Staff', 138, 57, 59, 63, 47, 18, 380, 'Magic Gladiator'],
+                [11, 'Staff of Kundun', 140, 55, 61, 55, 45, 16, 0, 'Dark Wizard, Magic Gladiator'],
+                [12, 'Grand Viper Staff', 147, 66, 74, 65, 39, 13, 380, 'Dark Wizard'],
+                [20, 'Eternal Wing Stick', 147, 66, 74, 53, 57, 13, 380, 'Summoner'],
+                [33, 'Chromatic Staff', 147, 55, 57, 62, 50, 12, 0, 'Dark Wizard, Magic Gladiator'],
+                [34, 'Raven Stick', 147, 70, 78, 65, 50, 14, 0, 'Summoner'],
+            ]],
+        ];
+
+        $sections = '';
+        foreach ($groups as [$g, $label, $rows]) {
+            $cards = '';
+            foreach ($rows as $w) {
+                $cards .= $this->weaponCard($g, $w);
+            }
+            $sections .= '<h2>' . $label . '</h2><div class="mu-wpn-grid">' . $cards . '</div>';
+        }
+
+        $body = <<<HTML
+<p>Vũ khí quyết định sát thương chính của nhân vật. Mỗi class dùng loại vũ khí riêng: Dark Knight và Magic Gladiator dùng Kiếm / Rìu / Chuỳ / Giáo; Fairy Elf dùng Cung / Nỏ; Dark Wizard dùng Gậy phép; Dark Lord dùng Gậy quyền (Scepter); Summoner dùng Gậy và Sách; Rage Fighter dùng Găng đấm.</p>
+
+<div class="guide-note">
+Số "Sát thương" là sát thương gốc của vũ khí (chưa cộng chỉ số nhân vật, dòng Excellent hay nâng cấp +). Gậy phép ghi thêm "Sức mạnh phép" là % tăng sát thương phép của cây gậy. Vũ khí rơi từ quái theo cấp giống như giáp (xem gợi ý map ở mỗi món). Tất cả lấy trực tiếp từ dữ liệu máy chủ muss6.
+</div>
+
+{$sections}
+HTML;
+
+        return [
+            'slug' => 'vu-khi-thuoc-tinh', 'category' => 'gear', 'class_key' => null, 'icon' => 'khanda',
+            'title_vi' => 'Vũ khí & thuộc tính (kèm ảnh)', 'title_en' => 'Weapons & attributes',
+            'excerpt_vi' => 'Toàn bộ vũ khí: ảnh, sát thương, chỉ số yêu cầu, class phù hợp và nơi farm.',
+            'excerpt_en' => 'All weapons: art, damage, requirements, class and farm map.',
+            'body_vi' => $body, 'body_en' => null, 'sort_order' => 2, 'is_published' => true,
         ];
     }
 
