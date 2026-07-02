@@ -17,12 +17,11 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * The old Laravel-UI "/home" dashboard was a bare "You are logged in!" placeholder.
+     * Send logged-in players to their character list instead (the real dashboard).
      */
     public function index()
     {
-        return view('home');
+        return redirect()->route('character.index');
     }
 }

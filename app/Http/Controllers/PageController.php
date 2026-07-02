@@ -38,6 +38,20 @@ class PageController extends Controller
     }
 
     /**
+     * Download landing page. Shows the one-click installer behind a deliberate button
+     * (the nav "Tải game" used to hit the .exe directly, causing accidental downloads).
+     */
+    public function download()
+    {
+        return view('download', [
+            'installerUrl' => collect(config('server.downloads'))->first(),
+            'connectHost'  => config('server.connect_host'),
+            'connectPort'  => config('server.connect_port'),
+            'discordUrl'   => config('server.discord_url'),
+        ]);
+    }
+
+    /**
      * Server rates for the landing page. Experience/master rates and the level cap are read
      * LIVE from the game server (api/v1 /server-info) so they stay accurate; drop rate and the
      * "max reset" policy have no single game-config value, so they stay operator-set in config.

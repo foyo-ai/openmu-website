@@ -40,7 +40,7 @@
                 @else
                     <a href="{{ route('character.index') }}" class="btn btn-primary btn-lg px-4">{{ __('nav.characters') }}</a>
                 @endguest
-                <a href="{{ collect(config('server.downloads'))->first() ?? '#' }}" class="btn btn-outline-light btn-lg px-4" target="_blank" rel="noopener">
+                <a href="{{ route('download') }}" class="btn btn-outline-light btn-lg px-4">
                     <i class="fa-solid fa-download me-2"></i>{{ __('home.download_game') }}
                 </a>
             </div>

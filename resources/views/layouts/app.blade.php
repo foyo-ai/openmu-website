@@ -53,7 +53,7 @@
                         <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('events.*')]) @if(request()->routeIs('events.*')) aria-current="page" @endif href="{{ route('events.index') }}">{{ __('nav.events') }}</a></li>
                         <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('guides.*')]) @if(request()->routeIs('guides.*')) aria-current="page" @endif href="{{ route('guides.index') }}">{{ __('nav.guides') }}</a></li>
                         <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('news.*')]) @if(request()->routeIs('news.*')) aria-current="page" @endif href="{{ route('news.index') }}">{{ __('nav.news') }}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ collect(config('server.downloads'))->first() ?? '#' }}" target="_blank" rel="noopener">{{ __('nav.download') }}</a></li>
+                        <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('download')]) @if(request()->routeIs('download')) aria-current="page" @endif href="{{ route('download') }}">{{ __('nav.download') }}</a></li>
                     </ul>
 
                     <ul class="navbar-nav ms-auto align-items-lg-center">
@@ -120,7 +120,7 @@
                     <div class="col-md-6 text-md-end small">
                         <a class="me-3" href="{{ route('rankings.index') }}">{{ __('nav.rankings') }}</a>
                         <a class="me-3" href="{{ route('news.index') }}">{{ __('nav.news') }}</a>
-                        <a href="{{ collect(config('server.downloads'))->first() ?? '#' }}" target="_blank" rel="noopener">{{ __('nav.download') }}</a>
+                        <a href="{{ route('download') }}">{{ __('nav.download') }}</a>
                         <div class="mt-2 text-muted">© {{ date('Y') }} muss6.org</div>
                     </div>
                 </div>

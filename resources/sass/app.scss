@@ -310,6 +310,33 @@ body {
     }
 }
 
+// --- Download steps --------------------------------------------------------
+.mu-steps {
+    counter-reset: mu-step;
+    list-style: none;
+    padding-left: 0;
+    li {
+        position: relative;
+        padding: 0.6rem 0 0.6rem 3rem;
+        border-bottom: 1px solid $mu-border;
+        color: $mu-text;
+        &:last-child { border-bottom: 0; }
+        &::before {
+            counter-increment: mu-step;
+            content: counter(mu-step);
+            position: absolute; left: 0; top: 0.5rem;
+            width: 2rem; height: 2rem;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba($mu-gold, 0.15);
+            border: 1px solid rgba($mu-gold, 0.5);
+            color: $mu-gold-bright;
+            border-radius: 50%;
+            font-family: $headings-font-family;
+            font-weight: 700;
+        }
+    }
+}
+
 // --- Buttons ---------------------------------------------------------------
 .btn-primary {
     --bs-btn-color: #1a1406;

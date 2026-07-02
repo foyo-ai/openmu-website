@@ -32,6 +32,7 @@ Route::group([
 
     // --- Public ---
     Route::get('/', [PageController::class, 'home'])->name('home');
+    Route::get('/tai-game', [PageController::class, 'download'])->name('download');
     Route::get('/rankings', [RankingController::class, 'index'])->name('rankings.index');
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
     Route::get('/huong-dan', [GuideController::class, 'index'])->name('guides.index');
