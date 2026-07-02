@@ -48,11 +48,11 @@
 
                 <div class="collapse navbar-collapse" id="mainNav">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">{{ __('nav.home') }}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('rankings.index') }}">{{ __('nav.rankings') }}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('events.index') }}">{{ __('nav.events') }}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('guides.index') }}">{{ __('nav.guides') }}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('news.index') }}">{{ __('nav.news') }}</a></li>
+                        <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('home')]) @if(request()->routeIs('home')) aria-current="page" @endif href="{{ route('home') }}">{{ __('nav.home') }}</a></li>
+                        <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('rankings.*')]) @if(request()->routeIs('rankings.*')) aria-current="page" @endif href="{{ route('rankings.index') }}">{{ __('nav.rankings') }}</a></li>
+                        <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('events.*')]) @if(request()->routeIs('events.*')) aria-current="page" @endif href="{{ route('events.index') }}">{{ __('nav.events') }}</a></li>
+                        <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('guides.*')]) @if(request()->routeIs('guides.*')) aria-current="page" @endif href="{{ route('guides.index') }}">{{ __('nav.guides') }}</a></li>
+                        <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('news.*')]) @if(request()->routeIs('news.*')) aria-current="page" @endif href="{{ route('news.index') }}">{{ __('nav.news') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ collect(config('server.downloads'))->first() ?? '#' }}" target="_blank" rel="noopener">{{ __('nav.download') }}</a></li>
                     </ul>
 

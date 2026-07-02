@@ -42,7 +42,24 @@ body {
         color: $mu-heading;
         .brand-accent { color: $mu-gold; }
     }
-    .nav-link { font-weight: 500; }
+    .nav-link {
+        font-weight: 500;
+        position: relative;
+        &:hover { color: $mu-gold-bright; }
+        &.active {
+            color: $mu-gold-bright;
+            font-weight: 600;
+            // gold underline marker
+            &::after {
+                content: '';
+                position: absolute;
+                left: 0.5rem; right: 0.5rem; bottom: 0.15rem;
+                height: 2px;
+                background: linear-gradient(90deg, $mu-gold, $mu-gold-bright);
+                border-radius: 2px;
+            }
+        }
+    }
 }
 
 // --- Hero ------------------------------------------------------------------
