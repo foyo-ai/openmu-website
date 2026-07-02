@@ -57,6 +57,19 @@ class GuideSeeder extends Seeder
             . $body . '</tbody></table></div>';
     }
 
+    /** A material card: big art + "dùng cho" + a list of farm sources (map/quái/tỉ lệ). */
+    private function matCard(string $code, string $name, string $use, array $sources): string
+    {
+        $li = '';
+        foreach ($sources as $s) {
+            $li .= '<li>' . $s . '</li>';
+        }
+
+        return '<div class="mu-mat">' . $this->img($code, $name)
+            . '<div class="mu-mat-info"><div class="mu-mat-name">' . $name . '</div>'
+            . '<div class="mu-mat-use">' . $use . '</div><ul>' . $li . '</ul></div></div>';
+    }
+
     private function guides(): array
     {
         return array_merge(
@@ -117,14 +130,62 @@ HTML;
 
     private function wingsCrafting(): array
     {
-        $chaos = $this->img('12_15', 'Jewel of Chaos');
-        $bless = $this->img('14_13', 'Jewel of Bless');
-        $soul = $this->img('14_14', 'Jewel of Soul');
-        $creation = $this->img('14_22', 'Jewel of Creation');
-        $life = $this->img('14_16', 'Jewel of Life');
-        $loch = $this->img('13_14', "Loch's Feather");
-        $flame = $this->img('13_52', 'Flame of Condor');
-        $condor = $this->img('13_53', 'Feather of Condor');
+        // Material cards: big art + where-to-farm (map / monster names / drop rate),
+        // all taken from the muss6 config (global jewel drop; Icarus / Barracks of Balgass).
+        $matGrid = '<div class="mu-mat-grid">'
+            . $this->matCard('12_15', 'Jewel of Chaos', 'Dùng: cả 3 cấp wing', [
+                'Rơi từ <strong>mọi quái, mọi map</strong> — ~0.1%',
+                'Thưởng <strong>Chaos Castle</strong>: 90% cho người thắng',
+                'Sự kiện <strong>Red Dragon</strong>: rơi 100%',
+            ])
+            . $this->matCard('14_13', 'Jewel of Bless', 'Dùng: wing cấp 1 (tăng %)', [
+                'Rơi từ mọi quái — ~0.1%',
+                'Chaos Castle; sự kiện Red Dragon',
+            ])
+            . $this->matCard('14_14', 'Jewel of Soul', 'Dùng: wing cấp 1 (tăng %)', [
+                'Rơi từ mọi quái — ~0.1%',
+                'Chaos Castle; sự kiện Red Dragon',
+            ])
+            . $this->matCard('14_22', 'Jewel of Creation', 'Dùng: wing cấp 3', [
+                'Rơi từ quái <strong>level 72+</strong> — ~0.1%',
+                'Chaos Castle',
+            ])
+            . $this->matCard('14_16', 'Jewel of Life', 'Dùng: nâng cấp option đồ', [
+                'Rơi từ quái <strong>level 72+</strong> — ~0.1%',
+            ])
+            . $this->matCard('13_14', "Loch's Feather", 'Dùng: wing cấp 2', [
+                '<strong>Chỉ có ở map Icarus</strong>, quái level 82+ — ~0.1%',
+                'Quái rơi: Queen Rainer (82), Drakan (86), Alpha Crust (92), Phantom Knight (96), Great Drakan (100), Dark Phoenix (108)',
+            ])
+            . $this->matCard('13_52', 'Flame of Condor', 'Dùng: wing cấp 3 (bước 2)', [
+                '<strong>Chỉ có ở map Barracks of Balgass</strong> — ~0.1%',
+                'Quái rơi: Balram (117), Death Spirit (119), Soram (119) — cả 3 đều rơi',
+            ])
+            . $this->matCard('13_53', 'Feather of Condor', 'Dùng: wing cấp 3', [
+                'Không rơi từ quái — chỉ <strong>chế được</strong> ở bước 1',
+            ])
+            . '</div>';
+
+        $farmTable = <<<'HTML'
+<h3>Farm ngọc ở map nào?</h3>
+<p>Ngọc rơi theo cơ chế <strong>toàn cục</strong> (mọi quái ~0.1%), nên hãy chọn map hợp với level nhân vật, quái đông và giết nhanh:</p>
+<div class="table-responsive"><table>
+<thead><tr><th>Map</th><th>Level quái</th><th>Quái tiêu biểu</th></tr></thead>
+<tbody>
+<tr><td>Lorencia / Noria / Devias</td><td>~10–50</td><td>Khởi đầu, quái yếu</td></tr>
+<tr><td>Dungeon</td><td>25–55</td><td>Poison Bull, Gorgon</td></tr>
+<tr><td>Lost Tower</td><td>47–66</td><td>Death Knight, Devil, Balrog</td></tr>
+<tr><td>Atlans</td><td>43–74</td><td>Lizard King, Hydra, Sea Worm</td></tr>
+<tr><td>Tarkan</td><td>72–93</td><td>Iron Wheel, Beam Knight, Death Beam Knight</td></tr>
+<tr><td>Aida</td><td>72–120</td><td>Witch Queen, Hell Maine, Bloody Witch Queen</td></tr>
+<tr><td>Icarus</td><td>75–108</td><td>Great Drakan, Phantom Knight, Dark Phoenix</td></tr>
+<tr><td>Land of Trials (Kanturu)</td><td>75–128</td><td>Fire Golem, Erohim</td></tr>
+<tr><td>Swamp of Calmness</td><td>95–137</td><td>Shadow Knight, Sapi Queen, Shadow Master</td></tr>
+<tr><td>Vulcanus</td><td>90–124</td><td>Blood Assassin, Burning Lava Giant</td></tr>
+<tr><td>Raklion</td><td>102–148</td><td>Ice Giant, Iron Knight, Dark Iron Knight</td></tr>
+</tbody>
+</table></div>
+HTML;
 
         $tbl1 = $this->matTable([
             ['12_15', 'Jewel of Chaos', '1 — bắt buộc'],
@@ -178,24 +239,8 @@ Các con số dưới đây (nguyên liệu, số ngọc, tỉ lệ, zen) và ng
 {$tbl3b}
 
 <h2>Nguyên liệu & nơi tìm</h2>
-<div class="table-responsive">
-<table>
-<thead><tr><th></th><th>Nguyên liệu</th><th>Dùng cho</th><th>Nguồn rơi (theo config muss6)</th></tr></thead>
-<tbody>
-<tr><td class="mu-ic">{$chaos}</td><td>Jewel of Chaos</td><td>Cả 3 cấp</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle thưởng 90%; Red Dragon rơi 100%</td></tr>
-<tr><td class="mu-ic">{$bless}</td><td>Jewel of Bless</td><td>Cấp 1 (tăng %)</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle; Red Dragon</td></tr>
-<tr><td class="mu-ic">{$soul}</td><td>Jewel of Soul</td><td>Cấp 1 (tăng %)</td><td>Rơi từ mọi quái (~0.1%); Chaos Castle; Red Dragon</td></tr>
-<tr><td class="mu-ic">{$creation}</td><td>Jewel of Creation</td><td>Cấp 3</td><td>Rơi từ mọi quái (~0.1%, quái lvl 72+); Chaos Castle</td></tr>
-<tr><td class="mu-ic">{$life}</td><td>Jewel of Life</td><td>Nâng cấp option</td><td>Rơi từ mọi quái (~0.1%, quái lvl 72+)</td></tr>
-<tr><td class="mu-ic">{$loch}</td><td>Loch's Feather</td><td>Cấp 2</td><td><strong>Chỉ map Icarus</strong> (~0.1%, quái lvl 82+)</td></tr>
-<tr><td class="mu-ic">{$flame}</td><td>Flame of Condor</td><td>Cấp 3 (bước 2)</td><td><strong>Chỉ map Barracks of Balgass</strong> (~0.1%)</td></tr>
-<tr><td class="mu-ic">{$condor}</td><td>Feather of Condor</td><td>Cấp 3</td><td>Không rơi — chỉ chế được ở bước 1</td></tr>
-</tbody>
-</table>
-</div>
-<div class="guide-note">
-Ở muss6, ngọc rơi theo cơ chế <strong>toàn cục</strong>: mọi quái ở mọi map đều có ~0.1% rơi ngọc. Muốn cày ngọc nhanh, chọn map có mật độ quái cao và giết nhanh. Riêng Loch's Feather chỉ có ở <strong>Icarus</strong> và Flame of Condor chỉ có ở <strong>Barracks of Balgass</strong>.
-</div>
+{$matGrid}
+{$farmTable}
 
 <h2>Mẹo</h2>
 <ul>
