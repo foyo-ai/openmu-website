@@ -26,7 +26,7 @@ class GuideSeeder extends Seeder
     private function guides(): array
     {
         return array_merge(
-            [$this->wingsOverview(), $this->wingsCrafting(), $this->setDetails(), $this->weaponsPage(), $this->statBuilds()],
+            [$this->offlineCommands(), $this->wingsOverview(), $this->wingsCrafting(), $this->setDetails(), $this->weaponsPage(), $this->statBuilds()],
             $this->classGuides(),
         );
     }
@@ -442,6 +442,141 @@ HTML;
             'title_vi' => 'Cách cộng điểm hiệu quả', 'title_en' => 'Effective stat builds',
             'excerpt_vi' => 'Ý nghĩa 4 chỉ số và nguyên tắc cộng điểm chung.',
             'excerpt_en' => 'What the core stats do and general allocation principles.',
+            'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 1, 'is_published' => true,
+        ];
+    }
+
+    // -------------------------------------------------------------- General --
+
+    /** Offline session commands: /offstore (offline shop) and /offlevel (offline leveling). */
+    private function offlineCommands(): array
+    {
+        $build = function (string $loc) {
+            $x = $loc === 'vi' ? [
+                'lead' => 'muss6 có 2 lệnh cho phép <strong>nhân vật ở lại trong game sau khi bạn tắt máy</strong>: '
+                    . '<code>/offstore</code> (đứng bán hàng offline) và <code>/offlevel</code> (treo máy luyện cấp offline). '
+                    . 'Gõ lệnh xong, game tự ngắt kết nối, bạn đóng game và nhân vật vẫn tiếp tục hoạt động trên server.',
+                'h_store' => 'Bán hàng offline: /offstore',
+                'store_steps' => [
+                    'Xếp đồ muốn bán vào <strong>cửa hàng cá nhân</strong>, đặt giá từng món, đặt tên shop rồi <strong>mở shop</strong> như bình thường.',
+                    'Gõ <code>/offstore</code> vào khung chat. Thấy dòng thông báo xanh <em>"Offline store started. You can log back in at any time to stop it."</em> là thành công.',
+                    'Game sẽ tự ngắt kết nối, bạn <strong>đóng game được luôn</strong>. Nhân vật đứng nguyên tại chỗ và tiếp tục bán hàng.',
+                ],
+                'store_notes' => [
+                    '<strong>Miễn phí</strong>, không tốn zen.',
+                    'Phải mở shop trước rồi mới gõ lệnh, chưa mở shop thì lệnh sẽ báo nhắc mở shop.',
+                    '<strong>Bán hết hàng</strong>: shop tự đóng, nhân vật tự thoát và toàn bộ zen bán được <strong>lưu ngay</strong> vào nhân vật.',
+                    'Người mua chỉ cần bấm vào biển hiệu shop trên đầu nhân vật để xem và mua như shop thường.',
+                    'Mẹo: đứng bán ở chỗ đông người qua lại (quảng trường Lorencia) để dễ bán.',
+                ],
+                'h_level' => 'Luyện cấp offline: /offlevel',
+                'level_steps' => [
+                    'Bật <strong>MU Helper</strong> (phím <strong>Home</strong>), chỉnh cấu hình đánh quái / nhặt đồ / buff và để nhân vật train ổn định một lúc.',
+                    'Gõ <code>/offlevel</code> vào khung chat. Nhân vật chuyển sang chế độ offline và tiếp tục tự đánh quái theo đúng cấu hình MU Helper.',
+                    'Đóng game. Nhân vật vẫn luyện cấp, nhặt đồ, dùng buff và tự hồi máu trên server.',
+                ],
+                'level_notes' => [
+                    '<strong>Có phí zen</strong>: thu một khoản khi kích hoạt (tăng theo cấp nhân vật) và trừ dần trong lúc treo, giống phí MU Helper thông thường.',
+                    'Yêu cầu MU Helper đang chạy tại thời điểm gõ lệnh.',
+                    'Nếu nhân vật <strong>bị chết</strong>, nhân vật sẽ hồi sinh rồi phiên offline tự dừng (tránh chết lặp tốn đồ).',
+                ],
+                'h_common' => 'Lưu ý chung cho cả 2 lệnh',
+                'common' => [
+                    'Mỗi tài khoản chỉ chạy được <strong>1 phiên offline</strong> tại một thời điểm.',
+                    '<strong>Đăng nhập lại</strong> tài khoản bất cứ lúc nào để dừng phiên offline, tiến độ (zen, exp, đồ) được giữ nguyên.',
+                    'Khi server bảo trì hoặc khởi động lại, phiên offline sẽ dừng, bạn cần vào game bật lại.',
+                    'Cần <strong>client mới nhất</strong>: chỉ cần mở game qua Launcher là tự cập nhật.',
+                ],
+                'cols' => ['', '/offstore', '/offlevel'],
+                'rows' => [
+                    ['Công dụng', 'Đứng bán hàng trong shop cá nhân', 'Tự đánh quái luyện cấp theo MU Helper'],
+                    ['Điều kiện', 'Shop cá nhân đang mở', 'MU Helper đang chạy'],
+                    ['Chi phí', 'Miễn phí', 'Phí zen theo cấp + trừ dần khi treo'],
+                    ['Tự dừng khi', 'Bán hết hàng (zen lưu ngay)', 'Nhân vật chết (sau khi hồi sinh)'],
+                    ['Dừng thủ công', 'Đăng nhập lại', 'Đăng nhập lại'],
+                ],
+            ] : [
+                'lead' => 'muss6 has 2 commands that let your <strong>character stay in the game after you close the client</strong>: '
+                    . '<code>/offstore</code> (offline personal store) and <code>/offlevel</code> (offline leveling). '
+                    . 'After the command, the game disconnects on purpose; close the client and your character keeps going on the server.',
+                'h_store' => 'Offline store: /offstore',
+                'store_steps' => [
+                    'Put the items into your <strong>personal store</strong>, set a price on each, name the store and <strong>open it</strong> as usual.',
+                    'Type <code>/offstore</code> in chat. The blue message <em>"Offline store started. You can log back in at any time to stop it."</em> confirms it worked.',
+                    'The game disconnects itself and you can <strong>close the client</strong>. Your character keeps selling on the spot.',
+                ],
+                'store_notes' => [
+                    '<strong>Free</strong>, costs no zen.',
+                    'The store must already be open when you type the command, otherwise it reminds you to open it first.',
+                    '<strong>Sold out</strong>: the store closes, the character logs out and all earned zen is <strong>saved immediately</strong>.',
+                    'Buyers just click the store sign above your head and buy like from any normal store.',
+                    'Tip: park in a busy spot (Lorencia square) to sell faster.',
+                ],
+                'h_level' => 'Offline leveling: /offlevel',
+                'level_steps' => [
+                    'Start <strong>MU Helper</strong> (<strong>Home</strong> key), tune its attack / loot / buff settings and let it grind stably for a bit.',
+                    'Type <code>/offlevel</code> in chat. The character switches to offline mode and keeps fighting with your MU Helper settings.',
+                    'Close the client. The character keeps leveling, looting, buffing and healing on the server.',
+                ],
+                'level_notes' => [
+                    '<strong>Costs zen</strong>: an activation fee (scales with character level) plus the usual ongoing MU Helper zen drain.',
+                    'MU Helper must be running when you type the command.',
+                    'If the character <strong>dies</strong>, it respawns and the offline session stops (no repeated deaths).',
+                ],
+                'h_common' => 'Notes for both commands',
+                'common' => [
+                    'Each account can run only <strong>one offline session</strong> at a time.',
+                    '<strong>Log back in</strong> at any time to stop the session, all progress (zen, exp, items) is kept.',
+                    'A server restart or maintenance stops the session, just log in and start it again.',
+                    'Requires the <strong>latest client</strong>: simply start the game through the Launcher and it updates itself.',
+                ],
+                'cols' => ['', '/offstore', '/offlevel'],
+                'rows' => [
+                    ['Purpose', 'Sell from your personal store', 'Grind monsters with MU Helper'],
+                    ['Requires', 'Personal store open', 'MU Helper running'],
+                    ['Cost', 'Free', 'Level-based zen fee + ongoing drain'],
+                    ['Auto-stops when', 'Sold out (zen saved immediately)', 'Character dies (after respawn)'],
+                    ['Manual stop', 'Log back in', 'Log back in'],
+                ],
+            ];
+
+            $ol = function (array $items) {
+                $li = '';
+                foreach ($items as $i) {
+                    $li .= '<li>' . $i . '</li>';
+                }
+
+                return '<ol>' . $li . '</ol>';
+            };
+            $ul = function (array $items) {
+                $li = '';
+                foreach ($items as $i) {
+                    $li .= '<li>' . $i . '</li>';
+                }
+
+                return '<ul>' . $li . '</ul>';
+            };
+
+            $rows = '';
+            foreach ($x['rows'] as $r) {
+                $rows .= "<tr><td><strong>{$r[0]}</strong></td><td>{$r[1]}</td><td>{$r[2]}</td></tr>";
+            }
+            $table = '<div class="table-responsive"><table><thead><tr><th>' . $x['cols'][0] . '</th><th>'
+                . $x['cols'][1] . '</th><th>' . $x['cols'][2] . '</th></tr></thead><tbody>' . $rows . '</tbody></table></div>';
+
+            return "<p>{$x['lead']}</p>"
+                . "<h2>{$x['h_store']}</h2>" . $ol($x['store_steps']) . $ul($x['store_notes'])
+                . "<h2>{$x['h_level']}</h2>" . $ol($x['level_steps']) . $ul($x['level_notes'])
+                . "<h2>{$x['h_common']}</h2>" . '<div class="guide-note">' . $ul($x['common']) . '</div>'
+                . $table;
+        };
+
+        return [
+            'slug' => 'treo-may-offline', 'category' => 'general', 'class_key' => null, 'icon' => 'moon',
+            'title_vi' => 'Treo máy offline: bán hàng (/offstore) & luyện cấp (/offlevel)',
+            'title_en' => 'Offline mode: store (/offstore) & leveling (/offlevel)',
+            'excerpt_vi' => 'Tắt game mà nhân vật vẫn đứng bán hàng hoặc tự luyện cấp trên server.',
+            'excerpt_en' => 'Close the game while your character keeps selling or leveling on the server.',
             'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 1, 'is_published' => true,
         ];
     }
