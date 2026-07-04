@@ -72,7 +72,7 @@
                 ['icon' => 'scale-balanced', 'k' => 'nop2w'],
                 ['icon' => 'download', 'k' => 'install'],
                 ['icon' => 'bolt', 'k' => 'rates'],
-                ['icon' => 'users', 'k' => 'community'],
+                ['icon' => 'moon', 'k' => 'offline'],
             ] as $f)
                 <div class="col-md-6 col-lg-3">
                     <div class="card mu-feature p-4 h-100">

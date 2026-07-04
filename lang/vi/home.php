@@ -2,7 +2,7 @@
 
 return [
     'hero_title'    => 'MU Online Season 6',
-    'hero_subtitle' => 'Server do cộng đồng vận hành, duy trì bằng donate tự nguyện. Rate cao, chơi thoải mái. Tải một lần, cài là chơi — không cấu hình gì thêm.',
+    'hero_subtitle' => 'Server MU Online Season 6 do cộng đồng vận hành. Rate cao, chơi thoải mái, không pay-to-win. Tải một lần, cài là chơi, không cấu hình gì thêm.',
     'play_now'      => 'Chơi ngay',
     'download_game' => 'Tải game',
     'create_account' => 'Tạo tài khoản',
@@ -23,13 +23,13 @@ return [
 
     'features_title' => 'Vì sao chọn muss6?',
     'feature_nop2w'      => 'Không Pay-to-Win',
-    'feature_nop2w_desc' => 'Donate chỉ để ủng hộ duy trì server, không bán sức mạnh. Ai cũng chơi công bằng.',
+    'feature_nop2w_desc' => 'Không bán sức mạnh, không cash shop. Mọi người chơi trên một sân chơi công bằng.',
     'feature_install'      => 'Cài đặt 1-click',
-    'feature_install_desc' => 'Tải bộ cài, chạy là chơi — không giải nén, không sửa config. Launcher tự cập nhật phiên bản.',
+    'feature_install_desc' => 'Tải bộ cài, chạy là chơi: không giải nén, không sửa config. Launcher tự cập nhật phiên bản.',
     'feature_rates'      => 'Rate cao, chơi thoải mái',
     'feature_rates_desc' => 'Tỉ lệ kinh nghiệm & rớt đồ cao, lên đồ nhanh, tập trung vào PvP và sự kiện.',
-    'feature_community'      => 'Cộng đồng & minh bạch',
-    'feature_community_desc' => 'Server duy trì bằng donate tự nguyện, thông tin công khai, hỗ trợ qua Discord.',
+    'feature_offline'      => 'Treo máy offline',
+    'feature_offline_desc' => 'Tắt game mà nhân vật vẫn tự luyện cấp (/offlevel) hoặc đứng bán hàng (/offstore) trên server.',
 
     'classes_title'    => 'Các lớp nhân vật',
     'classes_subtitle' => '7 lớp nhân vật cổ điển của MU Season 6.',

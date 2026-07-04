@@ -69,6 +69,8 @@ jobs:
             docker compose --profile https run --rm web php artisan migrate --force
             # Seed/refresh the built-in player guides (idempotent upsert by slug).
             docker compose --profile https run --rm web php artisan db:seed --class=GuideSeeder --force
+            # Seed announcement posts (insert-only by slug; GM edits are kept).
+            docker compose --profile https run --rm web php artisan db:seed --class=NewsSeeder --force
             docker compose --profile https up -d web
             docker image prune -f
             docker logout ghcr.io

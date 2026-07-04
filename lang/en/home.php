@@ -2,7 +2,7 @@
 
 return [
     'hero_title'    => 'MU Online Season 6',
-    'hero_subtitle' => 'A community-run server sustained by voluntary donations. High rates, relaxed grind. Download once, install and play — no extra config.',
+    'hero_subtitle' => 'A community-run MU Online Season 6 server. High rates, relaxed grind, no pay-to-win. Download once, install and play, no extra config.',
     'play_now'      => 'Play now',
     'download_game' => 'Download game',
     'create_account' => 'Create account',
@@ -23,13 +23,13 @@ return [
 
     'features_title' => 'Why play on muss6?',
     'feature_nop2w'      => 'No Pay-to-Win',
-    'feature_nop2w_desc' => 'Donations only help keep the server running — power is never for sale. Everyone plays on a level field.',
+    'feature_nop2w_desc' => 'Power is never for sale, no cash shop. Everyone plays on a level field.',
     'feature_install'      => '1-Click install',
-    'feature_install_desc' => 'Download the installer, run it and play — no unzipping, no editing config. The launcher auto-updates.',
+    'feature_install_desc' => 'Download the installer, run it and play: no unzipping, no editing config. The launcher auto-updates.',
     'feature_rates'      => 'High rates, relaxed grind',
     'feature_rates_desc' => 'High experience & drop rates, fast gearing, focused on PvP and events.',
-    'feature_community'      => 'Community & transparency',
-    'feature_community_desc' => 'Sustained by voluntary donations, open information, support via Discord.',
+    'feature_offline'      => 'Offline mode',
+    'feature_offline_desc' => 'Close the game while your character keeps leveling (/offlevel) or selling in a store (/offstore) on the server.',
 
     'classes_title'    => 'Character classes',
     'classes_subtitle' => 'The 7 classic classes of MU Season 6.',
