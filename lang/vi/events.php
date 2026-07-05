@@ -10,6 +10,9 @@ return [
     'reward'    => 'Phần thưởng',
     'rate'      => 'Tỉ lệ',
     'live'      => 'Đang diễn ra',
-    'starts_in' => 'Bắt đầu sau',
+    'soon'      => 'Sắp diễn ra',
+    'opens_in'  => 'Mở sau',
     'ends_in'   => 'Kết thúc sau',
+    'schedule'  => 'Lịch cả ngày',
+    'slots'     => 'mốc',
 ];

@@ -95,6 +95,62 @@ body {
     }
 }
 
+// --- Event cards -----------------------------------------------------------
+// Status badges: gold = running now, green = starting soon (get ready to join).
+.mu-badge-live {
+    background: rgba($mu-gold, 0.15);
+    color: $mu-gold-bright;
+    border: 1px solid rgba($mu-gold, 0.35);
+}
+.mu-badge-soon {
+    background: rgba(45, 168, 89, 0.18);
+    color: #6ee7a0;
+    border: 1px solid rgba(45, 168, 89, 0.45);
+}
+
+.event-schedule {
+    summary {
+        cursor: pointer;
+        color: $mu-text-muted;
+        list-style: none;
+        user-select: none;
+        &::-webkit-details-marker { display: none; }
+        &::before {
+            content: '\25B8'; // ▸
+            display: inline-block;
+            margin-right: 0.4rem;
+            transition: transform 0.15s ease;
+            color: $mu-gold;
+        }
+        &:hover { color: $mu-heading; }
+    }
+    &[open] summary::before { transform: rotate(90deg); }
+}
+
+.event-chip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(3.4rem, 1fr));
+    gap: 0.35rem;
+}
+.event-chip {
+    text-align: center;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    padding: 0.2rem 0;
+    border-radius: 0.4rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid $mu-border;
+    color: $mu-text;
+
+    &.is-past { opacity: 0.4; }
+    &.is-next {
+        background: rgba($mu-gold, 0.16);
+        border-color: rgba($mu-gold, 0.55);
+        color: $mu-gold-bright;
+        font-weight: 600;
+    }
+}
+
 // --- Stat / rate badges ----------------------------------------------------
 .mu-stat {
     background: $mu-surface;

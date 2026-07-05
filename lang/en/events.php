@@ -10,6 +10,9 @@ return [
     'reward'    => 'Reward',
     'rate'      => 'Rate',
     'live'      => 'Live now',
-    'starts_in' => 'Starts in',
+    'soon'      => 'Starting soon',
+    'opens_in'  => 'Opens in',
     'ends_in'   => 'Ends in',
+    'schedule'  => 'Full-day schedule',
+    'slots'     => 'slots',
 ];

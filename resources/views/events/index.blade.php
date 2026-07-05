@@ -7,7 +7,8 @@
     <div class="container py-5"
          data-events-now="{{ $serverNowMs }}"
          data-txt-live="{{ __('events.live') }}"
-         data-txt-starts="{{ __('events.starts_in') }}"
+         data-txt-soon="{{ __('events.soon') }}"
+         data-txt-opens="{{ __('events.opens_in') }}"
          data-txt-ends="{{ __('events.ends_in') }}">
         <h1 class="mu-section-title mb-1">{{ __('events.title') }}</h1>
         <p class="text-muted">{{ __('events.subtitle') }}</p>
@@ -19,7 +20,7 @@
                 @foreach($events as $ev)
                     <div class="col-md-6 col-lg-4">
                         <div class="card mu-feature h-100 p-0 overflow-hidden event-card"
-                             data-times="{{ implode(',', $ev['times']) }}" data-duration="{{ $ev['duration'] }}">
+                             data-duration="{{ $ev['duration'] }}">
                             @if($ev['image'])
                                 <img src="{{ $ev['image'] }}" class="card-img-top" alt="{{ $ev['name'] }}" style="height:150px;object-fit:cover">
                             @endif
@@ -33,8 +34,20 @@
 
                                 <div class="small text-muted">
                                     <div><i class="fa-regular fa-clock me-1"></i>{{ __('events.duration') }}: {{ $ev['duration'] }} {{ __('events.minutes') }}</div>
-                                    <div class="mt-1"><i class="fa-solid fa-calendar-day me-1"></i>{{ __('events.times') }}: <span class="event-times">{{ implode(' · ', $ev['times']) }}</span> <span class="event-tz text-uppercase"></span></div>
                                 </div>
+
+                                <details class="event-schedule mt-2">
+                                    <summary class="small">
+                                        <i class="fa-solid fa-calendar-day me-1"></i>{{ __('events.schedule') }}
+                                        <span class="text-muted">({{ count($ev['times']) }} {{ __('events.slots') }})</span>
+                                        <span class="event-tz text-uppercase text-muted"></span>
+                                    </summary>
+                                    <div class="event-chip-grid mt-2">
+                                        @foreach($ev['times'] as $t)
+                                            <span class="event-chip" data-utc="{{ $t }}">{{ $t }}</span>
+                                        @endforeach
+                                    </div>
+                                </details>
 
                                 @if($ev['reward'] || $ev['rate'])
                                     <hr class="my-3">
@@ -59,13 +72,18 @@
         var root = document.querySelector('[data-events-now]');
         if (!root) return;
 
-        var anchor = parseInt(root.getAttribute('data-events-now'), 10);   // server UTC epoch (ms)
         var pageLoad = Date.now();
         var LIVE = root.getAttribute('data-txt-live');
-        var STARTS = root.getAttribute('data-txt-starts');
+        var SOON = root.getAttribute('data-txt-soon');
+        var OPENS = root.getAttribute('data-txt-opens');
         var ENDS = root.getAttribute('data-txt-ends');
-        var cards = Array.prototype.slice.call(document.querySelectorAll('.event-card'));
+        var SOON_MS = 3 * 60000;   // "starting soon" threshold: 3 minutes before the start
 
+        // Read the current server time fresh each run (attribute + elapsed since load) so a
+        // manual anchor change also re-syncs, and re-query cards so any late DOM change is seen.
+        function serverNow() {
+            return parseInt(root.getAttribute('data-events-now'), 10) + (Date.now() - pageLoad);
+        }
         function pad(n) { return (n < 10 ? '0' : '') + n; }
         function fmt(ms) {
             var s = Math.max(0, Math.floor(ms / 1000));
@@ -73,57 +91,71 @@
             return (h > 0 ? pad(h) + ':' : '') + pad(m) + ':' + pad(ss);
         }
 
-        // Render each event's daily start times in the visitor's chosen timezone (the UTC
-        // "HH:mm" from the game, converted via the shared MU_TZ helper). Re-runs on tz change.
+        // Convert each schedule chip's UTC "HH:mm" to the visitor's timezone label. Runs on
+        // load and whenever the timezone changes.
         function renderTimes() {
             if (!window.MU_TZ) return;
             var tz = window.MU_TZ.get();
-            var now = anchor + (Date.now() - pageLoad);
+            var now = serverNow();
             var d = new Date(now);
             var offset = window.MU_TZ.offset(now, tz);
-            cards.forEach(function (card) {
-                var times = (card.getAttribute('data-times') || '').split(',').filter(Boolean);
-                var el = card.querySelector('.event-times');
+            document.querySelectorAll('.event-card').forEach(function (card) {
                 var tzEl = card.querySelector('.event-tz');
-                if (!el || !times.length) return;
-                var local = times.map(function (t) {
-                    var p = t.split(':');
+                if (tzEl) tzEl.textContent = offset ? ' (' + offset + ')' : '';
+                card.querySelectorAll('.event-chip').forEach(function (chip) {
+                    var p = (chip.getAttribute('data-utc') || '').split(':');
+                    if (p.length < 2) return;
                     var ms = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), parseInt(p[0], 10), parseInt(p[1], 10), 0);
-                    return window.MU_TZ.time(ms, tz).slice(0, 5);   // HH:mm in the chosen tz
-                }).sort();
-                el.textContent = local.join(' · ');
-                if (tzEl) tzEl.textContent = offset ? '(' + offset + ')' : '';
+                    chip.textContent = window.MU_TZ.time(ms, tz).slice(0, 5);   // HH:mm in the chosen tz
+                });
             });
         }
 
         function tick() {
-            var now = anchor + (Date.now() - pageLoad);     // current server time (UTC ms)
+            var now = serverNow();
             var d = new Date(now);
-            cards.forEach(function (card) {
-                var times = (card.getAttribute('data-times') || '').split(',').filter(Boolean);
+            document.querySelectorAll('.event-card').forEach(function (card) {
+                var chips = Array.prototype.slice.call(card.querySelectorAll('.event-chip'));
                 var dur = (parseInt(card.getAttribute('data-duration'), 10) || 0) * 60000;
                 var statusEl = card.querySelector('.event-status');
-                if (!times.length || !statusEl) return;
+                if (!chips.length || !statusEl) return;
 
-                var running = null, nextStart = null;
-                for (var day = 0; day <= 1; day++) {
-                    times.forEach(function (t) {
-                        var p = t.split(':');
+                var runEnd = null, nextStart = null, nextChip = null;
+                chips.forEach(function (chip) {
+                    chip.classList.remove('is-next', 'is-past');
+                    var p = (chip.getAttribute('data-utc') || '').split(':');
+                    if (p.length < 2) return;
+                    // Consider today's and tomorrow's occurrence of this daily slot.
+                    for (var day = 0; day <= 1; day++) {
                         var start = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + day,
                                              parseInt(p[0], 10), parseInt(p[1], 10), 0);
                         var end = start + dur;
-                        if (now >= start && now < end && (running === null || end < running)) running = end;
-                        if (start > now && (nextStart === null || start < nextStart)) nextStart = start;
-                    });
-                }
+                        if (now >= start && now < end && (runEnd === null || end < runEnd)) runEnd = end;
+                        if (start > now && (nextStart === null || start < nextStart)) { nextStart = start; nextChip = chip; }
+                    }
+                    // Dim slots already passed earlier today.
+                    var todayStart = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),
+                                              parseInt(p[0], 10), parseInt(p[1], 10), 0);
+                    if (todayStart + dur <= now) chip.classList.add('is-past');
+                });
+                if (nextChip) nextChip.classList.add('is-next');
 
-                if (running !== null) {
-                    statusEl.innerHTML = '<span class="badge bg-success">● ' + LIVE + '</span>' +
-                        ' <span class="text-muted small ms-1">' + ENDS + ' ' + fmt(running - now) + '</span>';
+                var html;
+                if (runEnd !== null) {
+                    // Running now: informational gold badge (entry may already be closed).
+                    html = '<span class="badge mu-badge-live">' + LIVE + '</span>' +
+                        ' <span class="text-muted small ms-1">' + ENDS + ' ' + fmt(runEnd - now) + '</span>';
+                } else if (nextStart !== null && nextStart - now <= SOON_MS) {
+                    // Under 3 minutes to the next start: green "get ready to join".
+                    html = '<span class="badge mu-badge-soon">● ' + SOON + '</span>' +
+                        ' <span class="text-muted small ms-1">' + fmt(nextStart - now) + '</span>';
                 } else if (nextStart !== null) {
-                    statusEl.innerHTML = '<span class="badge" style="background:rgba(233,196,106,.15);color:#e9c46a;border:1px solid rgba(233,196,106,.3)">' +
-                        STARTS + ' ' + fmt(nextStart - now) + '</span>';
+                    // Further out: neutral countdown.
+                    html = '<span class="text-muted small">' + OPENS + ' ' + fmt(nextStart - now) + '</span>';
+                } else {
+                    html = '';
                 }
+                statusEl.innerHTML = html;
             });
         }
 
