@@ -62,20 +62,13 @@ body {
     }
 
     // Collapsed (mobile) menu: items are stacked full-width, so the underline
-    // reads as a separator line instead of a selection marker. Use a left gold
-    // bar + soft gold background there, and give the items breathing room.
+    // would stretch across the whole menu. Shrink the active item to its text
+    // so the underline hugs the label.
     @include media-breakpoint-down(lg) {
-        .navbar-nav .nav-link {
-            padding: 0.6rem 0.9rem;
-            margin: 0.1rem 0;
-            border-radius: 0.5rem;
+        .navbar-nav .nav-link.active {
+            width: fit-content;
 
-            &.active {
-                background: rgba($mu-gold, 0.12);
-                box-shadow: inset 3px 0 0 $mu-gold;
-
-                &::after { display: none; }
-            }
+            &::after { left: 0; right: 0; }
         }
     }
 }
