@@ -189,7 +189,7 @@ class GuideSeeder extends Seeder
     private function farmMapFor(int $drop, string $loc): string
     {
         $b = match (true) {
-            $drop <= 30  => ['Lorencia, Noria, Devias, Elvenland', 'quái cấp thấp', 'low-level monsters'],
+            $drop <= 30  => ['Lorencia, Noria, Devias, Elveland', 'quái cấp thấp', 'low-level monsters'],
             $drop <= 50  => ['Dungeon, Devias, Atlans', 'quái cấp 20 tới 74', 'monsters lv 20 to 74'],
             $drop <= 66  => ['Lost Tower, Atlans, Dungeon', 'quái cấp 43 tới 90', 'monsters lv 43 to 90'],
             $drop <= 80  => ['Tarkan, Aida, Icarus, Dungeon', 'quái cấp 72 tới 108', 'monsters lv 72 to 108'],
@@ -277,7 +277,7 @@ class GuideSeeder extends Seeder
             $vi = $loc === 'vi';
 
             $tbl1 = $this->matTable([
-                ['2_6', $vi ? 'Vũ khí Chaos +4 trở lên' : 'A Chaos weapon +4 or higher', $vi ? 'Chaos Dragon Axe / Nature Bow / Lightning Staff (bắt buộc)' : 'Chaos Dragon Axe / Nature Bow / Lightning Staff (required)'],
+                ['2_6', $vi ? 'Vũ khí Chaos +4 trở lên' : 'A Chaos weapon +4 or higher', $vi ? 'Chaos Dragon Axe / Chaos Nature Bow / Chaos Lightning Staff (bắt buộc)' : 'Chaos Dragon Axe / Chaos Nature Bow / Chaos Lightning Staff (required)'],
                 [null, $vi ? 'Vật phẩm phụ +4 trở lên' : 'Extra item +4 or higher', $vi ? 'tuỳ chọn, tăng %' : 'optional, raises %'],
                 ['12_15', 'Jewel of Chaos', $vi ? '1, bắt buộc' : '1, required'],
                 ['14_13', 'Jewel of Bless', $vi ? 'tuỳ chọn, tăng %' : 'optional, raises %'],
@@ -329,6 +329,7 @@ class GuideSeeder extends Seeder
                 ])
                 . $this->matCard('14_16', 'Jewel of Life', $vi ? 'Dùng: nâng cấp option đồ' : 'Used in: item option upgrades', [
                     $vi ? 'Rơi từ quái <strong>level 72+</strong> (~0.1%)' : 'Drops from <strong>lv 72+</strong> monsters (~0.1%)',
+                    $vi ? 'Thưởng <strong>Chaos Castle</strong> cho người thắng' : '<strong>Chaos Castle</strong> reward for the winner',
                 ])
                 . $this->matCard('13_14', "Loch's Feather", $vi ? 'Dùng: wing cấp 2' : 'Used in: level-2 wing', [
                     $vi ? '<strong>Chỉ có ở map Icarus</strong>, quái level 82+ (~0.1%)' : '<strong>Icarus map only</strong>, lv 82+ monsters (~0.1%)',
@@ -350,14 +351,14 @@ class GuideSeeder extends Seeder
             $farmTable = "<h3>" . ($vi ? 'Farm ngọc ở map nào?' : 'Where to farm jewels?') . "</h3><p>{$farmIntro}</p>"
                 . '<div class="table-responsive"><table>'
                 . "<thead><tr><th>{$fh[0]}</th><th>{$fh[1]}</th><th>{$fh[2]}</th></tr></thead><tbody>"
-                . '<tr><td>Lorencia / Noria / Devias / Elvenland</td><td>2-48</td><td>' . ($vi ? 'Khởi đầu, quái yếu' : 'Starter, weak monsters') . '</td></tr>'
+                . '<tr><td>Lorencia / Noria / Devias / Elveland</td><td>2-48</td><td>' . ($vi ? 'Khởi đầu, quái yếu' : 'Starter, weak monsters') . '</td></tr>'
                 . '<tr><td>Dungeon</td><td>19-80</td><td>Poison Bull, Gorgon, Dark Knight</td></tr>'
                 . '<tr><td>Lost Tower</td><td>47-90</td><td>Death Knight, Devil, Balrog</td></tr>'
                 . '<tr><td>Atlans</td><td>43-74</td><td>Lizard King, Hydra, Great Bahamut</td></tr>'
                 . '<tr><td>Tarkan</td><td>72-93</td><td>Iron Wheel, Beam Knight, Death Beam Knight</td></tr>'
                 . '<tr><td>Icarus</td><td>75-108</td><td>Great Drakan, Phantom Knight, Dark Phoenix</td></tr>'
                 . '<tr><td>Aida</td><td>72-120</td><td>Witch Queen, Hell Maine, Bloody Witch Queen</td></tr>'
-                . '<tr><td>Land of Trials (Kanturu)</td><td>75-128</td><td>Fire Golem, Queen Bee, Erohim</td></tr>'
+                . '<tr><td>Land of Trials</td><td>75-128</td><td>Fire Golem, Queen Bee, Erohim</td></tr>'
                 . '<tr><td>Kanturu</td><td>80-129</td><td>Berserker, Gigantis, Genocider Warrior</td></tr>'
                 . '<tr><td>Karutan</td><td>99-120</td><td>Orcus, Crypta, Narcondra</td></tr>'
                 . '<tr><td>Vulcanus</td><td>90-124</td><td>Blood Assassin, Burning Lava Giant, Zombie Fighter</td></tr>'
@@ -425,7 +426,7 @@ class GuideSeeder extends Seeder
 <figure class="guide-fig" style="max-width:360px;margin-left:auto;margin-right:auto"><img src="/images/guides/stats-1-charwindow.jpg" loading="lazy" alt="Cửa sổ nhân vật"><figcaption>Cửa sổ nhân vật (phím C): 4 chỉ số STR/AGI/STA/ENG, số điểm chưa cộng (Point) và nút + để cộng. Dưới mỗi chỉ số là hiệu quả của nó.</figcaption></figure>
 <h2>4 chỉ số cơ bản</h2>
 <ul>
-<li><strong>Strength (Sức mạnh)</strong>: tăng sát thương vật lý và yêu cầu mặc đồ nặng. Cốt lõi của Dark Knight, Rage Fighter, một phần Magic Gladiator.</li>
+<li><strong>Strength (Sức mạnh)</strong>: tăng sát thương vật lý; cũng là chỉ số cần để mặc được đồ nặng. Cốt lõi của Dark Knight, Rage Fighter, một phần Magic Gladiator.</li>
 <li><strong>Agility (Nhanh nhẹn)</strong>: tăng thủ, tốc đánh, sát thương cung. Cốt lõi của Fairy Elf.</li>
 <li><strong>Vitality (Thể lực)</strong>: tăng máu (HP). Cần cho PvP và trụ lâu khi farm.</li>
 <li><strong>Energy (Năng lượng)</strong>: tăng sát thương phép. Cốt lõi của Dark Wizard, Summoner, Magic Gladiator hệ phép.</li>
@@ -445,7 +446,7 @@ HTML
 <figure class="guide-fig" style="max-width:360px;margin-left:auto;margin-right:auto"><img src="/images/guides/stats-1-charwindow.jpg" loading="lazy" alt="Character window"><figcaption>The character window (C key): the 4 stats STR/AGI/STA/ENG, unspent Points and the + button. Each stat's effect is listed below it.</figcaption></figure>
 <h2>The 4 core stats</h2>
 <ul>
-<li><strong>Strength</strong>: raises physical damage and the requirement to wear heavy gear. Core for Dark Knight, Rage Fighter, and physical Magic Gladiator.</li>
+<li><strong>Strength</strong>: raises physical damage; it is also the stat you need to wear heavy gear. Core for Dark Knight, Rage Fighter, and physical Magic Gladiator.</li>
 <li><strong>Agility</strong>: raises defense, attack speed and bow damage. Core for Fairy Elf.</li>
 <li><strong>Vitality</strong>: raises HP. Needed for PvP and long farming.</li>
 <li><strong>Energy</strong>: raises magic damage. Core for Dark Wizard, Summoner and magic Magic Gladiator.</li>
@@ -793,7 +794,7 @@ HTML;
                 'items' => [
                     ['Reset nhân vật', 'Khi đạt <strong>cấp 400</strong> (cấp tối đa), bạn có thể Reset: nhân vật về <strong>cấp 1</strong> nhưng '
                         . '<strong>giữ nguyên trang bị và điểm đã cộng</strong>. Reset <strong>không giới hạn số lần</strong>; số lần reset '
-                        . 'hiển thị trên <a href="/xep-hang">bảng xếp hạng</a>.'],
+                        . 'hiển thị trên <a href="/rankings">bảng xếp hạng</a>.'],
                     ['Xoá PK', 'Nếu nhân vật giết người chơi khác nhiều lần sẽ thành <strong>Player Killer (PK)</strong> và bị hạn chế '
                         . '(một số NPC/sự kiện không cho vào, dễ bị lính canh và người chơi khác tấn công). Dùng <strong>Xoá PK</strong> để về trạng thái bình thường.'],
                     ['Về thị trấn', 'Nếu nhân vật bị kẹt hoặc không vào được game, dùng <strong>Về thị trấn</strong> để đưa nhân vật về Lorencia an toàn.'],
@@ -807,7 +808,7 @@ HTML;
                 'items' => [
                     ['Reset character', 'Once you reach <strong>level 400</strong> (max level) you can reset: the character goes back to '
                         . '<strong>level 1</strong> but <strong>keeps its gear and added stat points</strong>. Resets are <strong>unlimited</strong>; '
-                        . 'your reset count shows on the <a href="/en/xep-hang">rankings</a>.'],
+                        . 'your reset count shows on the <a href="/en/rankings">rankings</a>.'],
                     ['Clear PK', 'Killing other players repeatedly turns your character into a <strong>Player Killer (PK)</strong>, which is restricted '
                         . '(barred from some NPCs/events, attacked by guards and players). Use <strong>Clear PK</strong> to return to normal.'],
                     ['Move to town', 'If your character gets stuck or cannot enter the game, use <strong>Move to town</strong> to warp it back to safe Lorencia.'],
@@ -839,9 +840,9 @@ HTML;
     private function eventsGuide(): array
     {
         // [level, characterLevelRange] per event, from the server's Season 6 config.
-        $bloodTiers = [[1, '15 – 80'], [2, '81 – 130'], [3, '131 – 180'], [4, '181 – 230'], [5, '231 – 280'], [6, '281 – 330'], [7, '331 – 400']];
-        $devilTiers = [[1, '15 – 130'], [2, '131 – 180'], [3, '181 – 230'], [4, '231 – 280'], [5, '281 – 330'], [6, '331 – 400']];
-        $chaosTiers = [[1, '15 – 49'], [2, '50 – 119'], [3, '120 – 179'], [4, '180 – 239'], [5, '240 – 299'], [6, '300 – 400']];
+        $bloodTiers = [[1, '15-80'], [2, '81-130'], [3, '131-180'], [4, '181-230'], [5, '231-280'], [6, '281-330'], [7, '331-400']];
+        $devilTiers = [[1, '15-130'], [2, '131-180'], [3, '181-230'], [4, '231-280'], [5, '281-330'], [6, '331-400']];
+        $chaosTiers = [[1, '15-49'], [2, '50-119'], [3, '120-179'], [4, '180-239'], [5, '240-299'], [6, '300-400']];
 
         $build = function (string $loc) use ($bloodTiers, $devilTiers, $chaosTiers) {
             $vi = $loc === 'vi';
@@ -858,7 +859,7 @@ HTML;
 
             $x = $vi ? [
                 'lead' => 'muss6 có nhiều sự kiện chạy tự động theo lịch. Xem <strong>giờ chính xác</strong> (theo múi giờ của bạn) ở trang '
-                    . '<a href="/su-kien">Sự kiện</a>. Bài này giải thích cách chơi 3 sự kiện vào-cửa phổ biến.',
+                    . '<a href="/events">Sự kiện</a>. Bài này giải thích cách chơi 3 sự kiện vào-cửa phổ biến.',
                 'h_common' => 'Cách vào sự kiện (chung)',
                 'common' => [
                     'Cần có <strong>vé</strong> tương ứng của sự kiện trong túi đồ (mua ở NPC hoặc rơi từ quái).',
@@ -872,14 +873,14 @@ HTML;
                 'bc_goal' => '<strong>Mục tiêu (phối hợp):</strong> cả nhóm cùng phá <strong>Cổng Lâu Đài</strong> rồi tiêu diệt <strong>Tượng Pha Lê</strong> trước khi hết giờ.',
                 'bc_howto' => [
                     'Mọi người vào <strong>cùng một phe</strong>, phối hợp làm nhiệm vụ trong 20 phút.',
-                    'Đánh quái canh (Spirit Sorcerer) đủ số để <strong>mở cầu</strong>, rồi phá <strong>Cổng Lâu Đài</strong>.',
+                    'Đánh đủ quái canh để <strong>mở cầu</strong>, rồi phá <strong>Cổng Lâu Đài</strong>.',
                     'Băng qua cầu vào trong, tấn công <strong>Tượng Pha Lê (Crystal Statue)</strong> để hoàn thành.',
                     'Hoàn thành <strong>càng sớm, thưởng càng cao</strong> (có thưởng cộng theo thời gian còn lại).',
                 ],
                 'bc_facts' => ['<strong>Vé:</strong> Invisibility Cloak (Áo tàng hình)', '<strong>Lịch:</strong> mỗi 2 giờ', '<strong>Thời gian:</strong> mở cửa 1 phút, chơi 20 phút', '<strong>Phí:</strong> miễn phí'],
                 'bc_rewards' => [
                     '<strong>Kinh nghiệm</strong> khi phá cổng và giết Tượng, cộng thưởng hoàn thành và thưởng theo giây còn lại.',
-                    '<strong>Zen</strong>: người thắng 20.000 – 250.000, người thua 10.000 – 120.000 (tuỳ cấp sự kiện).',
+                    '<strong>zen</strong>: người thắng 20.000-250.000, người thua 10.000-120.000 (tuỳ cấp sự kiện).',
                     '<strong>Ngọc Hỗn Nguyên (Jewel of Chaos)</strong>: rơi 90% cho người hoàn thành.',
                 ],
                 'ds_h' => 'Devil Square (Quảng Trường Quỷ)',
@@ -891,7 +892,7 @@ HTML;
                 ],
                 'ds_facts' => ['<strong>Vé:</strong> Devil\'s Invitation (Lời mời của Quỷ)', '<strong>Lịch:</strong> mỗi 4 giờ', '<strong>Thời gian:</strong> mở cửa 1 phút, chơi 20 phút', '<strong>Phí:</strong> miễn phí'],
                 'ds_rewards' => [
-                    'Thưởng theo <strong>thứ hạng (1 – 4)</strong>: hạng càng cao, kinh nghiệm và zen càng nhiều.',
+                    'Thưởng theo <strong>thứ hạng (1-4)</strong>: hạng càng cao, kinh nghiệm và zen càng nhiều.',
                     '<strong>Kinh nghiệm</strong> và <strong>zen</strong> (hạng 1 nhận nhiều nhất, zen tới ~150.000 ở cấp cao).',
                 ],
                 'cc_h' => 'Chaos Castle (Hỗn Nguyên Lâu)',
@@ -902,14 +903,14 @@ HTML;
                     '<strong>Địa hình thu hẹp dần</strong> qua từng giai đoạn, dồn mọi người lại gần nhau; cẩn thận bị đẩy rớt khỏi rìa.',
                     'Người <strong>sống sót cuối cùng</strong> (hoặc điểm cao nhất) chiến thắng.',
                 ],
-                'cc_facts' => ['<strong>Vé:</strong> Armor of Guardsman (Giáp Vệ Binh)', '<strong>Lịch:</strong> mỗi 1 giờ', '<strong>Thời gian:</strong> mở cửa 5 phút, chơi 10 phút', '<strong>Phí vào:</strong> tăng theo cấp, từ 25.000 zen (cấp 1) đến 1.000.000 zen (cấp 7)'],
+                'cc_facts' => ['<strong>Vé:</strong> Armor of Guardsman (Giáp Vệ Binh)', '<strong>Lịch:</strong> mỗi 1 giờ', '<strong>Thời gian:</strong> mở cửa 5 phút, chơi 10 phút', '<strong>Phí vào:</strong> tăng theo cấp, từ 25.000 zen (cấp 1) đến 650.000 zen (cấp 6)'],
                 'cc_rewards' => [
                     '<strong>Nhiều loại ngọc</strong> cho người thắng (90%): Ngọc Hỗn Nguyên (Chaos), Phúc (Bless), Tâm Linh (Soul), Sáng Tạo (Creation), Sự Sống (Life).',
                     'Cơ hội nhận <strong>đồ thần (Ancient)</strong> ở các cấp sự kiện cao hơn.',
                 ],
             ] : [
                 'lead' => 'muss6 runs several scheduled events. See the <strong>exact times</strong> (in your timezone) on the '
-                    . '<a href="/en/su-kien">Events</a> page. This guide explains the 3 common entry-based events.',
+                    . '<a href="/en/events">Events</a> page. This guide explains the 3 common entry-based events.',
                 'h_common' => 'How to enter an event (general)',
                 'common' => [
                     'You need the event\'s <strong>ticket</strong> in your inventory (bought from an NPC or dropped by monsters).',
@@ -923,14 +924,14 @@ HTML;
                 'bc_goal' => '<strong>Goal (cooperative):</strong> the whole group breaks the <strong>Castle Gate</strong> then destroys the <strong>Crystal Statue</strong> before time runs out.',
                 'bc_howto' => [
                     'Everyone enters on the <strong>same side</strong> and works together within 20 minutes.',
-                    'Kill enough guard monsters (Spirit Sorcerers) to <strong>open the bridge</strong>, then break the <strong>Castle Gate</strong>.',
+                    'Kill enough guard monsters to <strong>open the bridge</strong>, then break the <strong>Castle Gate</strong>.',
                     'Cross the bridge and attack the <strong>Crystal Statue</strong> to finish.',
                     'The <strong>faster you finish, the bigger the reward</strong> (there is a bonus for remaining time).',
                 ],
                 'bc_facts' => ['<strong>Ticket:</strong> Invisibility Cloak', '<strong>Schedule:</strong> every 2 hours', '<strong>Timing:</strong> 1-minute entry, 20-minute run', '<strong>Fee:</strong> free'],
                 'bc_rewards' => [
                     '<strong>Experience</strong> for breaking the gate and killing the Statue, plus a completion bonus and a per-second bonus.',
-                    '<strong>Zen</strong>: winners 20,000 – 250,000, losers 10,000 – 120,000 (by event level).',
+                    '<strong>zen</strong>: winners 20,000-250,000, losers 10,000-120,000 (by event level).',
                     '<strong>Jewel of Chaos</strong>: 90% drop for those who complete it.',
                 ],
                 'ds_h' => 'Devil Square',
@@ -942,7 +943,7 @@ HTML;
                 ],
                 'ds_facts' => ['<strong>Ticket:</strong> Devil\'s Invitation', '<strong>Schedule:</strong> every 4 hours', '<strong>Timing:</strong> 1-minute entry, 20-minute run', '<strong>Fee:</strong> free'],
                 'ds_rewards' => [
-                    'Rewards by <strong>rank (1 – 4)</strong>: the higher your rank, the more experience and zen.',
+                    'Rewards by <strong>rank (1-4)</strong>: the higher your rank, the more experience and zen.',
                     '<strong>Experience</strong> and <strong>zen</strong> (rank 1 gets the most, zen up to ~150,000 at high levels).',
                 ],
                 'cc_h' => 'Chaos Castle',
@@ -953,7 +954,7 @@ HTML;
                     'The <strong>terrain shrinks</strong> each stage, pushing everyone together; watch out for being knocked off the edge.',
                     'The <strong>last survivor</strong> (or highest score) wins.',
                 ],
-                'cc_facts' => ['<strong>Ticket:</strong> Armor of Guardsman', '<strong>Schedule:</strong> every hour', '<strong>Timing:</strong> 5-minute entry, 10-minute run', '<strong>Entry fee:</strong> scales with level, from 25,000 zen (level 1) to 1,000,000 zen (level 7)'],
+                'cc_facts' => ['<strong>Ticket:</strong> Armor of Guardsman', '<strong>Schedule:</strong> every hour', '<strong>Timing:</strong> 5-minute entry, 10-minute run', '<strong>Entry fee:</strong> scales with level, from 25,000 zen (level 1) to 650,000 zen (level 6)'],
                 'cc_rewards' => [
                     '<strong>Various jewels</strong> for the winner (90%): Jewel of Chaos, Bless, Soul, Creation and Life.',
                     'A chance at <strong>ancient items</strong> at higher event levels.',
