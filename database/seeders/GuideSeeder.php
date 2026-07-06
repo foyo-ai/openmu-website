@@ -411,6 +411,7 @@ class GuideSeeder extends Seeder
     {
         $build = fn (string $loc) => $loc === 'vi' ? <<<'HTML'
 <p>Mỗi khi lên cấp, nhân vật nhận điểm để cộng vào các chỉ số. Cộng đúng giúp bạn mạnh hơn và tiết kiệm reset.</p>
+<figure class="guide-fig" style="max-width:360px;margin-left:auto;margin-right:auto"><img src="/images/guides/stats-1-charwindow.jpg" loading="lazy" alt="Cửa sổ nhân vật"><figcaption>Cửa sổ nhân vật (phím C): 4 chỉ số STR/AGI/STA/ENG, số điểm chưa cộng (Point) và nút + để cộng. Dưới mỗi chỉ số là hiệu quả của nó.</figcaption></figure>
 <h2>4 chỉ số cơ bản</h2>
 <ul>
 <li><strong>Strength (Sức mạnh)</strong>: tăng sát thương vật lý và yêu cầu mặc đồ nặng. Cốt lõi của Dark Knight, Rage Fighter, một phần Magic Gladiator.</li>
@@ -430,6 +431,7 @@ class GuideSeeder extends Seeder
 HTML
             : <<<'HTML'
 <p>Every level-up gives points to spend on stats. Spending them well makes you stronger and saves resets.</p>
+<figure class="guide-fig" style="max-width:360px;margin-left:auto;margin-right:auto"><img src="/images/guides/stats-1-charwindow.jpg" loading="lazy" alt="Character window"><figcaption>The character window (C key): the 4 stats STR/AGI/STA/ENG, unspent Points and the + button. Each stat's effect is listed below it.</figcaption></figure>
 <h2>The 4 core stats</h2>
 <ul>
 <li><strong>Strength</strong>: raises physical damage and the requirement to wear heavy gear. Core for Dark Knight, Rage Fighter, and physical Magic Gladiator.</li>
