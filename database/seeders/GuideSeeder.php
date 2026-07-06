@@ -667,7 +667,13 @@ HTML;
                 'Requires the <strong>latest client</strong>: simply start the game through the Launcher and it updates itself.',
             ];
 
-            return "<p>{$lead}</p><h2>{$hSteps}</h2>" . $this->olHtml($steps) . $this->ulHtml($notes)
+            $figCap = $vi
+                ? 'Cửa sổ cấu hình MU Helper (mở bằng phím Z): chỉnh phạm vi đánh, kỹ năng, buff, nhặt đồ. Bật/tắt MU Helper bằng phím Home.'
+                : 'The MU Helper config window (open with Z): set attack range, skills, buffs and looting. Toggle MU Helper with the Home key.';
+            $fig = '<figure class="guide-fig"><img src="/images/guides/offlevel-1-muhelper.jpg" loading="lazy" alt="' . $figCap . '">'
+                . '<figcaption>' . $figCap . '</figcaption></figure>';
+
+            return "<p>{$lead}</p><h2>{$hSteps}</h2>" . $this->olHtml($steps) . $fig . $this->ulHtml($notes)
                 . "<h2>{$hCommon}</h2>" . $this->noteBox($this->ulHtml($common));
         };
 
@@ -848,15 +854,46 @@ HTML;
                     '<strong>Chuột phải vào vé</strong> để hiện danh sách cấp độ, rồi chọn cấp phù hợp với nhân vật.',
                 ],
                 'lvl_hdr' => 'Cấp sự kiện', 'range_hdr' => 'Cấp nhân vật',
+                'l_howto' => 'Cách chơi', 'l_info' => 'Thông tin', 'l_rewards' => 'Phần thưởng',
                 'bc_h' => 'Blood Castle (Quỷ Thành)',
-                'bc_goal' => '<strong>Mục tiêu (phối hợp):</strong> phá <strong>Cổng Lâu Đài</strong> rồi tiêu diệt <strong>Tượng Pha Lê</strong> trước khi hết giờ.',
-                'bc_facts' => ['<strong>Vé:</strong> Invisibility Cloak (Áo tàng hình)', '<strong>Lịch:</strong> mỗi 2 giờ', '<strong>Thời gian:</strong> mở cửa 1 phút, chơi 20 phút', '<strong>Phí:</strong> miễn phí', '<strong>Thưởng:</strong> kinh nghiệm, zen, và <strong>Ngọc Hỗn Nguyên (Jewel of Chaos)</strong> 90% cho người thắng'],
+                'bc_goal' => '<strong>Mục tiêu (phối hợp):</strong> cả nhóm cùng phá <strong>Cổng Lâu Đài</strong> rồi tiêu diệt <strong>Tượng Pha Lê</strong> trước khi hết giờ.',
+                'bc_howto' => [
+                    'Mọi người vào <strong>cùng một phe</strong>, phối hợp làm nhiệm vụ trong 20 phút.',
+                    'Đánh quái canh (Spirit Sorcerer) đủ số để <strong>mở cầu</strong>, rồi phá <strong>Cổng Lâu Đài</strong>.',
+                    'Băng qua cầu vào trong, tấn công <strong>Tượng Pha Lê (Crystal Statue)</strong> để hoàn thành.',
+                    'Hoàn thành <strong>càng sớm, thưởng càng cao</strong> (có thưởng cộng theo thời gian còn lại).',
+                ],
+                'bc_facts' => ['<strong>Vé:</strong> Invisibility Cloak (Áo tàng hình)', '<strong>Lịch:</strong> mỗi 2 giờ', '<strong>Thời gian:</strong> mở cửa 1 phút, chơi 20 phút', '<strong>Phí:</strong> miễn phí'],
+                'bc_rewards' => [
+                    '<strong>Kinh nghiệm</strong> khi phá cổng và giết Tượng, cộng thưởng hoàn thành và thưởng theo giây còn lại.',
+                    '<strong>Zen</strong>: người thắng 20.000 – 250.000, người thua 10.000 – 120.000 (tuỳ cấp sự kiện).',
+                    '<strong>Ngọc Hỗn Nguyên (Jewel of Chaos)</strong>: rơi 90% cho người hoàn thành.',
+                ],
                 'ds_h' => 'Devil Square (Quảng Trường Quỷ)',
-                'ds_goal' => '<strong>Mục tiêu (xếp hạng):</strong> đánh quái qua <strong>4 đợt</strong> (đợt sau mạnh hơn, đợt cuối có boss). Diệt càng nhiều, hạng càng cao.',
-                'ds_facts' => ['<strong>Vé:</strong> Devil\'s Invitation (Lời mời của Quỷ)', '<strong>Lịch:</strong> mỗi 4 giờ', '<strong>Thời gian:</strong> mở cửa 1 phút, chơi 20 phút', '<strong>Phí:</strong> miễn phí', '<strong>Thưởng:</strong> kinh nghiệm và zen theo <strong>thứ hạng</strong> (hạng 1 nhiều nhất)'],
+                'ds_goal' => '<strong>Mục tiêu (xếp hạng):</strong> diệt thật nhiều quái để đạt thứ hạng cao nhất.',
+                'ds_howto' => [
+                    'Đây là sự kiện <strong>xếp hạng</strong>: diệt càng nhiều quái, hạng của bạn càng cao.',
+                    'Quái ra theo <strong>4 đợt</strong> tăng dần độ khó (đợt cuối có boss). Cày liên tục suốt 20 phút.',
+                    'Hết giờ, hệ thống xếp hạng người chơi và trao thưởng theo thứ hạng.',
+                ],
+                'ds_facts' => ['<strong>Vé:</strong> Devil\'s Invitation (Lời mời của Quỷ)', '<strong>Lịch:</strong> mỗi 4 giờ', '<strong>Thời gian:</strong> mở cửa 1 phút, chơi 20 phút', '<strong>Phí:</strong> miễn phí'],
+                'ds_rewards' => [
+                    'Thưởng theo <strong>thứ hạng (1 – 4)</strong>: hạng càng cao, kinh nghiệm và zen càng nhiều.',
+                    '<strong>Kinh nghiệm</strong> và <strong>zen</strong> (hạng 1 nhận nhiều nhất, zen tới ~150.000 ở cấp cao).',
+                ],
                 'cc_h' => 'Chaos Castle (Hỗn Nguyên Lâu)',
-                'cc_goal' => '<strong>Mục tiêu (sinh tồn PvP):</strong> người <strong>sống sót cuối cùng</strong> thắng. Vừa đánh quái vừa tránh (hoặc hạ) người chơi khác. <strong>Không đi tổ đội.</strong>',
-                'cc_facts' => ['<strong>Vé:</strong> Armor of Guardsman (Giáp Vệ Binh)', '<strong>Lịch:</strong> mỗi 1 giờ', '<strong>Thời gian:</strong> mở cửa 5 phút, chơi 10 phút', '<strong>Phí vào:</strong> tăng theo cấp, từ 25.000 zen (cấp 1) đến 1.000.000 zen (cấp 7)', '<strong>Thưởng:</strong> nhiều loại <strong>ngọc</strong> (Chaos, Bless, Soul, Creation, Life) và cơ hội <strong>đồ thần</strong> cho người thắng'],
+                'cc_goal' => '<strong>Mục tiêu (sinh tồn PvP):</strong> người <strong>sống sót cuối cùng</strong> là người thắng.',
+                'cc_howto' => [
+                    'Sự kiện <strong>sinh tồn PvP, không tổ đội</strong>: mọi người là đối thủ của nhau.',
+                    'Vừa đánh quái để mở khu vực (qua các giai đoạn), vừa <strong>hạ hoặc né</strong> người chơi khác.',
+                    '<strong>Địa hình thu hẹp dần</strong> qua từng giai đoạn, dồn mọi người lại gần nhau; cẩn thận bị đẩy rớt khỏi rìa.',
+                    'Người <strong>sống sót cuối cùng</strong> (hoặc điểm cao nhất) chiến thắng.',
+                ],
+                'cc_facts' => ['<strong>Vé:</strong> Armor of Guardsman (Giáp Vệ Binh)', '<strong>Lịch:</strong> mỗi 1 giờ', '<strong>Thời gian:</strong> mở cửa 5 phút, chơi 10 phút', '<strong>Phí vào:</strong> tăng theo cấp, từ 25.000 zen (cấp 1) đến 1.000.000 zen (cấp 7)'],
+                'cc_rewards' => [
+                    '<strong>Nhiều loại ngọc</strong> cho người thắng (90%): Ngọc Hỗn Nguyên (Chaos), Phúc (Bless), Tâm Linh (Soul), Sáng Tạo (Creation), Sự Sống (Life).',
+                    'Cơ hội nhận <strong>đồ thần (Ancient)</strong> ở các cấp sự kiện cao hơn.',
+                ],
             ] : [
                 'lead' => 'muss6 runs several scheduled events. See the <strong>exact times</strong> (in your timezone) on the '
                     . '<a href="/en/su-kien">Events</a> page. This guide explains the 3 common entry-based events.',
@@ -868,22 +905,61 @@ HTML;
                     '<strong>Right-click the ticket</strong> to list the levels, then pick the one matching your character.',
                 ],
                 'lvl_hdr' => 'Event level', 'range_hdr' => 'Character level',
+                'l_howto' => 'How to play', 'l_info' => 'Info', 'l_rewards' => 'Rewards',
                 'bc_h' => 'Blood Castle',
-                'bc_goal' => '<strong>Goal (cooperative):</strong> break the <strong>Castle Gate</strong> then destroy the <strong>Crystal Statue</strong> before time runs out.',
-                'bc_facts' => ['<strong>Ticket:</strong> Invisibility Cloak', '<strong>Schedule:</strong> every 2 hours', '<strong>Timing:</strong> 1-minute entry, 20-minute run', '<strong>Fee:</strong> free', '<strong>Rewards:</strong> experience, zen, and a <strong>Jewel of Chaos</strong> (90%) for winners'],
+                'bc_goal' => '<strong>Goal (cooperative):</strong> the whole group breaks the <strong>Castle Gate</strong> then destroys the <strong>Crystal Statue</strong> before time runs out.',
+                'bc_howto' => [
+                    'Everyone enters on the <strong>same side</strong> and works together within 20 minutes.',
+                    'Kill enough guard monsters (Spirit Sorcerers) to <strong>open the bridge</strong>, then break the <strong>Castle Gate</strong>.',
+                    'Cross the bridge and attack the <strong>Crystal Statue</strong> to finish.',
+                    'The <strong>faster you finish, the bigger the reward</strong> (there is a bonus for remaining time).',
+                ],
+                'bc_facts' => ['<strong>Ticket:</strong> Invisibility Cloak', '<strong>Schedule:</strong> every 2 hours', '<strong>Timing:</strong> 1-minute entry, 20-minute run', '<strong>Fee:</strong> free'],
+                'bc_rewards' => [
+                    '<strong>Experience</strong> for breaking the gate and killing the Statue, plus a completion bonus and a per-second bonus.',
+                    '<strong>Zen</strong>: winners 20,000 – 250,000, losers 10,000 – 120,000 (by event level).',
+                    '<strong>Jewel of Chaos</strong>: 90% drop for those who complete it.',
+                ],
                 'ds_h' => 'Devil Square',
-                'ds_goal' => '<strong>Goal (ranking):</strong> fight through <strong>4 waves</strong> (each stronger, the last with bosses). More kills means a higher rank.',
-                'ds_facts' => ['<strong>Ticket:</strong> Devil\'s Invitation', '<strong>Schedule:</strong> every 4 hours', '<strong>Timing:</strong> 1-minute entry, 20-minute run', '<strong>Fee:</strong> free', '<strong>Rewards:</strong> experience and zen by <strong>rank</strong> (rank 1 gets the most)'],
+                'ds_goal' => '<strong>Goal (ranking):</strong> kill as many monsters as possible to reach the highest rank.',
+                'ds_howto' => [
+                    'This is a <strong>ranking</strong> event: more kills means a higher rank.',
+                    'Monsters come in <strong>4 waves</strong> of rising difficulty (bosses in the last). Grind non-stop for 20 minutes.',
+                    'At the end, players are ranked and rewarded by rank.',
+                ],
+                'ds_facts' => ['<strong>Ticket:</strong> Devil\'s Invitation', '<strong>Schedule:</strong> every 4 hours', '<strong>Timing:</strong> 1-minute entry, 20-minute run', '<strong>Fee:</strong> free'],
+                'ds_rewards' => [
+                    'Rewards by <strong>rank (1 – 4)</strong>: the higher your rank, the more experience and zen.',
+                    '<strong>Experience</strong> and <strong>zen</strong> (rank 1 gets the most, zen up to ~150,000 at high levels).',
+                ],
                 'cc_h' => 'Chaos Castle',
-                'cc_goal' => '<strong>Goal (PvP survival):</strong> the <strong>last one standing</strong> wins. Fight monsters while avoiding (or killing) other players. <strong>No party allowed.</strong>',
-                'cc_facts' => ['<strong>Ticket:</strong> Armor of Guardsman', '<strong>Schedule:</strong> every hour', '<strong>Timing:</strong> 5-minute entry, 10-minute run', '<strong>Entry fee:</strong> scales with level, from 25,000 zen (level 1) to 1,000,000 zen (level 7)', '<strong>Rewards:</strong> various <strong>jewels</strong> (Chaos, Bless, Soul, Creation, Life) and a chance at <strong>ancient items</strong> for winners'],
+                'cc_goal' => '<strong>Goal (PvP survival):</strong> the <strong>last one standing</strong> wins.',
+                'cc_howto' => [
+                    'A <strong>PvP survival</strong> event with <strong>no party</strong>: everyone is an opponent.',
+                    'Kill monsters to open areas (through stages) while <strong>killing or dodging</strong> other players.',
+                    'The <strong>terrain shrinks</strong> each stage, pushing everyone together; watch out for being knocked off the edge.',
+                    'The <strong>last survivor</strong> (or highest score) wins.',
+                ],
+                'cc_facts' => ['<strong>Ticket:</strong> Armor of Guardsman', '<strong>Schedule:</strong> every hour', '<strong>Timing:</strong> 5-minute entry, 10-minute run', '<strong>Entry fee:</strong> scales with level, from 25,000 zen (level 1) to 1,000,000 zen (level 7)'],
+                'cc_rewards' => [
+                    '<strong>Various jewels</strong> for the winner (90%): Jewel of Chaos, Bless, Soul, Creation and Life.',
+                    'A chance at <strong>ancient items</strong> at higher event levels.',
+                ],
             ];
+
+            $section = function (string $h, string $goal, array $howto, array $facts, array $rewards, array $tiers) use ($x, $tierTable) {
+                return "<h2>{$h}</h2><p>{$goal}</p>"
+                    . "<h3>{$x['l_howto']}</h3>" . $this->olHtml($howto)
+                    . "<h3>{$x['l_info']}</h3>" . $this->ulHtml($facts)
+                    . "<h3>{$x['l_rewards']}</h3>" . $this->ulHtml($rewards)
+                    . $tierTable($tiers, $x['lvl_hdr'], $x['range_hdr']);
+            };
 
             return "<p>{$x['lead']}</p>"
                 . "<h2>{$x['h_common']}</h2>" . $this->ulHtml($x['common'])
-                . "<h2>{$x['bc_h']}</h2><p>{$x['bc_goal']}</p>" . $this->ulHtml($x['bc_facts']) . $tierTable($bloodTiers, $x['lvl_hdr'], $x['range_hdr'])
-                . "<h2>{$x['ds_h']}</h2><p>{$x['ds_goal']}</p>" . $this->ulHtml($x['ds_facts']) . $tierTable($devilTiers, $x['lvl_hdr'], $x['range_hdr'])
-                . "<h2>{$x['cc_h']}</h2><p>{$x['cc_goal']}</p>" . $this->ulHtml($x['cc_facts']) . $tierTable($chaosTiers, $x['lvl_hdr'], $x['range_hdr']);
+                . $section($x['bc_h'], $x['bc_goal'], $x['bc_howto'], $x['bc_facts'], $x['bc_rewards'], $bloodTiers)
+                . $section($x['ds_h'], $x['ds_goal'], $x['ds_howto'], $x['ds_facts'], $x['ds_rewards'], $devilTiers)
+                . $section($x['cc_h'], $x['cc_goal'], $x['cc_howto'], $x['cc_facts'], $x['cc_rewards'], $chaosTiers);
         };
 
         return [
