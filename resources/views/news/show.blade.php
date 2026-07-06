@@ -34,6 +34,14 @@
             <img src="{{ $news->cover_image }}" class="img-fluid rounded mb-4" alt="{{ $news->title() }}">
         @endif
 
-        <div class="news-body">{!! nl2br(e($news->body())) !!}</div>
+        {{-- GM-authored posts may be rich HTML (headings, lists, images) or plain text.
+             Render HTML as-is (trusted content); escape + line-break plain text. --}}
+        <div class="news-body guide-body">
+            @if(\Illuminate\Support\Str::contains($news->body(), '</'))
+                {!! $news->body() !!}
+            @else
+                {!! nl2br(e($news->body())) !!}
+            @endif
+        </div>
     </article>
 @endsection
