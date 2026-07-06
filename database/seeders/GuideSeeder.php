@@ -487,6 +487,14 @@ HTML;
                     'Khi server bảo trì hoặc khởi động lại, phiên offline sẽ dừng, bạn cần vào game bật lại.',
                     'Cần <strong>client mới nhất</strong>: chỉ cần mở game qua Launcher là tự cập nhật.',
                 ],
+                'cap_shop' => 'Mở cửa hàng cá nhân, đặt giá và đặt tên shop (ví dụ "Ban Ngoc Re") trước khi gõ lệnh.',
+                'cap_command' => 'Gõ /offstore: hiện dòng chữ xanh "Offline store started. You can log back in at any time to stop it."',
+                'h_buy' => 'Người khác mua hàng của bạn thế nào',
+                'buy_intro' => 'Sau khi bạn tắt game, nhân vật vẫn đứng trên map kèm biển shop. Người mua thao tác y như một shop bình thường:',
+                'cap_ghost' => 'Người mua vẫn thấy nhân vật bạn đứng bán, dù bạn đã thoát game.',
+                'cap_window' => 'Bấm vào shop để mở, xem danh sách món và giá.',
+                'cap_buy' => 'Bấm món cần mua rồi xác nhận ở hộp thoại "Do you want to buy an item?".',
+                'cap_soldout' => 'Bán hết hàng: shop tự đóng, nhân vật tự thoát, toàn bộ zen đã vào túi.',
                 'cols' => ['', '/offstore', '/offlevel'],
                 'rows' => [
                     ['Công dụng', 'Đứng bán hàng trong shop cá nhân', 'Tự đánh quái luyện cấp theo MU Helper'],
@@ -530,6 +538,14 @@ HTML;
                     'A server restart or maintenance stops the session, just log in and start it again.',
                     'Requires the <strong>latest client</strong>: simply start the game through the Launcher and it updates itself.',
                 ],
+                'cap_shop' => 'Open your personal store, set prices and a store name (e.g. "Ban Ngoc Re") before typing the command.',
+                'cap_command' => 'Type /offstore: the blue line "Offline store started. You can log back in at any time to stop it." appears.',
+                'h_buy' => 'How other players buy from you',
+                'buy_intro' => 'After you close the game, your character stays on the map with its store sign. Buyers use it like any normal store:',
+                'cap_ghost' => 'Buyers still see your character standing and selling, even though you left the game.',
+                'cap_window' => 'They click the store to open it and browse the items and prices.',
+                'cap_buy' => 'They click an item and confirm on the "Do you want to buy an item?" dialog.',
+                'cap_soldout' => 'Sold out: the store closes, the character logs out, and all zen is already in the bag.',
                 'cols' => ['', '/offstore', '/offlevel'],
                 'rows' => [
                     ['Purpose', 'Sell from your personal store', 'Grind monsters with MU Helper'],
@@ -557,6 +573,11 @@ HTML;
                 return '<ul>' . $li . '</ul>';
             };
 
+            $fig = function (string $file, string $caption) {
+                return '<figure class="guide-fig"><img src="/images/guides/' . $file . '" loading="lazy" alt="' . $caption . '">'
+                    . '<figcaption>' . $caption . '</figcaption></figure>';
+            };
+
             $rows = '';
             foreach ($x['rows'] as $r) {
                 $rows .= "<tr><td><strong>{$r[0]}</strong></td><td>{$r[1]}</td><td>{$r[2]}</td></tr>";
@@ -565,7 +586,15 @@ HTML;
                 . $x['cols'][1] . '</th><th>' . $x['cols'][2] . '</th></tr></thead><tbody>' . $rows . '</tbody></table></div>';
 
             return "<p>{$x['lead']}</p>"
-                . "<h2>{$x['h_store']}</h2>" . $ol($x['store_steps']) . $ul($x['store_notes'])
+                . "<h2>{$x['h_store']}</h2>" . $ol($x['store_steps'])
+                . $fig('offstore-1-shop.jpg', $x['cap_shop'])
+                . $fig('offstore-2-command.jpg', $x['cap_command'])
+                . $ul($x['store_notes'])
+                . "<h3>{$x['h_buy']}</h3><p>{$x['buy_intro']}</p>"
+                . $fig('offstore-3-ghost.jpg', $x['cap_ghost'])
+                . $fig('offstore-4-shopwindow.jpg', $x['cap_window'])
+                . $fig('offstore-5-buy.jpg', $x['cap_buy'])
+                . $fig('offstore-6-soldout.jpg', $x['cap_soldout'])
                 . "<h2>{$x['h_level']}</h2>" . $ol($x['level_steps']) . $ul($x['level_notes'])
                 . "<h2>{$x['h_common']}</h2>" . '<div class="guide-note">' . $ul($x['common']) . '</div>'
                 . $table;

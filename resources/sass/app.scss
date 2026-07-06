@@ -249,6 +249,24 @@ body {
     img { max-width: 100%; height: auto; }
     code { color: $mu-gold-bright; background: rgba($mu-gold, 0.08); padding: 0.1rem 0.35rem; border-radius: 4px; }
 
+    // Step-by-step screenshots: framed image with a caption underneath.
+    .guide-fig {
+        margin: 1rem 0 1.5rem;
+        img {
+            width: 100%;
+            border: 1px solid $mu-border;
+            border-radius: $border-radius;
+            display: block;
+        }
+        figcaption {
+            margin-top: 0.5rem;
+            color: $mu-text-muted;
+            font-size: 0.9rem;
+            font-style: italic;
+            text-align: center;
+        }
+    }
+
     // Item / recipe tables
     .table-responsive, table { margin: 1rem 0 1.5rem; }
     table {
