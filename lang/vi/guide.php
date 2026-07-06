@@ -2,7 +2,7 @@
 
 return [
     'title'    => 'Hướng dẫn',
-    'subtitle' => 'Cẩm nang chơi muss6: set đồ, wings, cách xoay wing và cách cộng điểm cho từng class.',
+    'subtitle' => 'Cẩm nang muss6: từ đăng ký, tính năng máy chủ, sự kiện đến class, set đồ, wings và cộng điểm.',
     'empty'    => 'Chưa có hướng dẫn nào.',
     'back'     => 'Quay lại hướng dẫn',
     'read'     => 'Xem hướng dẫn',
@@ -10,10 +10,13 @@ return [
     'updated_on' => 'Cập nhật :date',
 
     // categories (index sections)
+    'cat_start'   => 'Bắt đầu',
+    'cat_feature' => 'Tính năng máy chủ',
     'cat_class'   => 'Hướng dẫn theo class',
     'cat_gear'    => 'Set đồ & trang bị',
     'cat_wings'   => 'Wings & cách xoay',
     'cat_stats'   => 'Cộng điểm',
+    'cat_event'   => 'Sự kiện',
     'cat_general' => 'Tổng quan',
 
     // admin

@@ -2,7 +2,7 @@
 
 return [
     'title'    => 'Guides',
-    'subtitle' => 'The muss6 handbook: gear sets, wings, wing crafting and stat builds for every class.',
+    'subtitle' => 'The muss6 handbook: getting started, server features, events, classes, gear, wings and stat builds.',
     'empty'    => 'No guides yet.',
     'back'     => 'Back to guides',
     'read'     => 'Read guide',
@@ -10,10 +10,13 @@ return [
     'updated_on' => 'Updated :date',
 
     // categories (index sections)
+    'cat_start'   => 'Getting started',
+    'cat_feature' => 'Server features',
     'cat_class'   => 'Class guides',
     'cat_gear'    => 'Gear & sets',
     'cat_wings'   => 'Wings & crafting',
     'cat_stats'   => 'Stat builds',
+    'cat_event'   => 'Events',
     'cat_general' => 'Overview',
 
     // admin

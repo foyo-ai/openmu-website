@@ -10,7 +10,7 @@
 
         @php
             // Fixed display order of category sections.
-            $order = ['general', 'class', 'gear', 'wings', 'stats'];
+            $order = ['start', 'feature', 'class', 'stats', 'gear', 'wings', 'event'];
         @endphp
 
         @if($guides->isEmpty())

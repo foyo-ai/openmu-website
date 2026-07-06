@@ -26,7 +26,18 @@ class GuideSeeder extends Seeder
     private function guides(): array
     {
         return array_merge(
-            [$this->offlineCommands(), $this->wingsOverview(), $this->wingsCrafting(), $this->setDetails(), $this->weaponsPage(), $this->statBuilds()],
+            [
+                $this->gettingStartedGuide(),
+                $this->characterManagementGuide(),
+                $this->offstoreGuide(),
+                $this->offlevelGuide(),
+                $this->eventsGuide(),
+                $this->wingsOverview(),
+                $this->wingsCrafting(),
+                $this->setDetails(),
+                $this->weaponsPage(),
+                $this->statBuilds(),
+            ],
             $this->classGuides(),
         );
     }
@@ -448,15 +459,15 @@ HTML;
 
     // -------------------------------------------------------------- General --
 
-    /** Offline session commands: /offstore (offline shop) and /offlevel (offline leveling). */
-    private function offlineCommands(): array
+    /** /offstore: keep the personal store open while offline (illustrated walkthrough). */
+    private function offstoreGuide(): array
     {
         $build = function (string $loc) {
             $x = $loc === 'vi' ? [
-                'lead' => 'muss6 có 2 lệnh cho phép <strong>nhân vật ở lại trong game sau khi bạn tắt máy</strong>: '
-                    . '<code>/offstore</code> (đứng bán hàng offline) và <code>/offlevel</code> (treo máy luyện cấp offline). '
-                    . 'Gõ lệnh xong, game tự ngắt kết nối, bạn đóng game và nhân vật vẫn tiếp tục hoạt động trên server.',
-                'h_store' => 'Bán hàng offline: /offstore',
+                'lead' => '<code>/offstore</code> cho phép <strong>nhân vật đứng bán hàng ngay cả khi bạn tắt game</strong>. '
+                    . 'Đây là 1 trong 2 chế độ treo máy offline của muss6; chế độ còn lại là '
+                    . '<a href="/huong-dan/luyen-cap-offline">luyện cấp offline (/offlevel)</a>.',
+                'h_store' => 'Các bước treo shop',
                 'store_steps' => [
                     'Xếp đồ muốn bán vào <strong>cửa hàng cá nhân</strong>, đặt giá từng món, đặt tên shop rồi <strong>mở shop</strong> như bình thường.',
                     'Gõ <code>/offstore</code> vào khung chat. Thấy dòng thông báo xanh <em>"Offline store started. You can log back in at any time to stop it."</em> là thành công.',
@@ -480,7 +491,7 @@ HTML;
                     'Yêu cầu MU Helper đang chạy tại thời điểm gõ lệnh.',
                     'Nếu nhân vật <strong>bị chết</strong>, nhân vật sẽ hồi sinh rồi phiên offline tự dừng (tránh chết lặp tốn đồ).',
                 ],
-                'h_common' => 'Lưu ý chung cho cả 2 lệnh',
+                'h_common' => 'Lưu ý chung khi treo máy offline',
                 'common' => [
                     'Mỗi tài khoản chỉ chạy được <strong>1 phiên offline</strong> tại một thời điểm.',
                     '<strong>Đăng nhập lại</strong> tài khoản bất cứ lúc nào để dừng phiên offline, tiến độ (zen, exp, đồ) được giữ nguyên.',
@@ -504,10 +515,10 @@ HTML;
                     ['Dừng thủ công', 'Đăng nhập lại', 'Đăng nhập lại'],
                 ],
             ] : [
-                'lead' => 'muss6 has 2 commands that let your <strong>character stay in the game after you close the client</strong>: '
-                    . '<code>/offstore</code> (offline personal store) and <code>/offlevel</code> (offline leveling). '
-                    . 'After the command, the game disconnects on purpose; close the client and your character keeps going on the server.',
-                'h_store' => 'Offline store: /offstore',
+                'lead' => '<code>/offstore</code> lets your <strong>character keep selling even after you close the game</strong>. '
+                    . 'It is one of muss6\'s two offline modes; the other is '
+                    . '<a href="/en/huong-dan/luyen-cap-offline">offline leveling (/offlevel)</a>.',
+                'h_store' => 'Step by step',
                 'store_steps' => [
                     'Put the items into your <strong>personal store</strong>, set a price on each, name the store and <strong>open it</strong> as usual.',
                     'Type <code>/offstore</code> in chat. The blue message <em>"Offline store started. You can log back in at any time to stop it."</em> confirms it worked.',
@@ -531,7 +542,7 @@ HTML;
                     'MU Helper must be running when you type the command.',
                     'If the character <strong>dies</strong>, it respawns and the offline session stops (no repeated deaths).',
                 ],
-                'h_common' => 'Notes for both commands',
+                'h_common' => 'General offline-mode notes',
                 'common' => [
                     'Each account can run only <strong>one offline session</strong> at a time.',
                     '<strong>Log back in</strong> at any time to stop the session, all progress (zen, exp, items) is kept.',
@@ -595,17 +606,292 @@ HTML;
                 . $fig('offstore-4-shopwindow.jpg', $x['cap_window'])
                 . $fig('offstore-5-buy.jpg', $x['cap_buy'])
                 . $fig('offstore-6-soldout.jpg', $x['cap_soldout'])
-                . "<h2>{$x['h_level']}</h2>" . $ol($x['level_steps']) . $ul($x['level_notes'])
                 . "<h2>{$x['h_common']}</h2>" . '<div class="guide-note">' . $ul($x['common']) . '</div>'
                 . $table;
         };
 
         return [
-            'slug' => 'treo-may-offline', 'category' => 'general', 'class_key' => null, 'icon' => 'moon',
-            'title_vi' => 'Treo máy offline: bán hàng (/offstore) & luyện cấp (/offlevel)',
-            'title_en' => 'Offline mode: store (/offstore) & leveling (/offlevel)',
-            'excerpt_vi' => 'Tắt game mà nhân vật vẫn đứng bán hàng hoặc tự luyện cấp trên server.',
-            'excerpt_en' => 'Close the game while your character keeps selling or leveling on the server.',
+            'slug' => 'treo-may-offline', 'category' => 'feature', 'class_key' => null, 'icon' => 'store',
+            'title_vi' => 'Treo shop offline (/offstore)',
+            'title_en' => 'Offline store (/offstore)',
+            'excerpt_vi' => 'Tắt game mà nhân vật vẫn đứng bán hàng trong shop cá nhân, kèm ảnh từng bước.',
+            'excerpt_en' => 'Close the game while your character keeps selling from its personal store, step by step.',
+            'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 3, 'is_published' => true,
+        ];
+    }
+
+    /** /offlevel: keep grinding with the MU Helper while offline. */
+    private function offlevelGuide(): array
+    {
+        $build = function (string $loc) {
+            $vi = $loc === 'vi';
+            $lead = $vi
+                ? '<code>/offlevel</code> cho phép <strong>nhân vật tự đánh quái luyện cấp ngay cả khi bạn tắt game</strong>, '
+                    . 'theo đúng cấu hình MU Helper của bạn. Chế độ còn lại là '
+                    . '<a href="/huong-dan/treo-may-offline">treo shop offline (/offstore)</a>.'
+                : '<code>/offlevel</code> lets your <strong>character keep grinding monsters even after you close the game</strong>, '
+                    . 'using your MU Helper settings. The other offline mode is '
+                    . '<a href="/en/huong-dan/treo-may-offline">offline store (/offstore)</a>.';
+            $hSteps = $vi ? 'Các bước treo luyện cấp' : 'Step by step';
+            $steps = $vi ? [
+                'Bật <strong>MU Helper</strong> (phím <strong>Home</strong>), chỉnh cấu hình đánh quái / nhặt đồ / buff và để nhân vật train ổn định một lúc.',
+                'Gõ <code>/offlevel</code> vào khung chat. Nhân vật chuyển sang chế độ offline và tiếp tục tự đánh quái theo đúng cấu hình MU Helper.',
+                'Đóng game. Nhân vật vẫn luyện cấp, nhặt đồ, dùng buff và tự hồi máu trên server.',
+            ] : [
+                'Start <strong>MU Helper</strong> (<strong>Home</strong> key), tune its attack / loot / buff settings and let it grind stably for a bit.',
+                'Type <code>/offlevel</code> in chat. The character switches to offline mode and keeps fighting with your MU Helper settings.',
+                'Close the client. The character keeps leveling, looting, buffing and healing on the server.',
+            ];
+            $hNotes = $vi ? 'Lưu ý' : 'Notes';
+            $notes = $vi ? [
+                '<strong>Có phí zen</strong>: thu một khoản khi kích hoạt (tăng theo cấp nhân vật) và trừ dần trong lúc treo, giống phí MU Helper thông thường.',
+                'Yêu cầu MU Helper đang chạy tại thời điểm gõ lệnh.',
+                'Nếu nhân vật <strong>bị chết</strong>, nhân vật sẽ hồi sinh rồi phiên offline tự dừng (tránh chết lặp tốn đồ).',
+                'Chọn bãi quái vừa sức để không chết, và còn đủ zen để trả phí treo.',
+            ] : [
+                '<strong>Costs zen</strong>: an activation fee (scales with character level) plus the usual ongoing MU Helper zen drain.',
+                'MU Helper must be running when you type the command.',
+                'If the character <strong>dies</strong>, it respawns and the offline session stops (no repeated deaths).',
+                'Pick a spot your character can survive, and keep enough zen for the ongoing fee.',
+            ];
+            $hCommon = $vi ? 'Lưu ý chung cho treo máy offline' : 'General offline-mode notes';
+            $common = $vi ? [
+                'Mỗi tài khoản chỉ chạy được <strong>1 phiên offline</strong> tại một thời điểm.',
+                '<strong>Đăng nhập lại</strong> tài khoản bất cứ lúc nào để dừng, tiến độ (exp, zen, đồ) được giữ nguyên.',
+                'Khi server bảo trì hoặc khởi động lại, phiên offline sẽ dừng, bạn cần vào game bật lại.',
+                'Cần <strong>client mới nhất</strong>: chỉ cần mở game qua Launcher là tự cập nhật.',
+            ] : [
+                'Each account can run only <strong>one offline session</strong> at a time.',
+                '<strong>Log back in</strong> at any time to stop it, all progress (exp, zen, items) is kept.',
+                'A server restart or maintenance stops the session, just log in and start it again.',
+                'Requires the <strong>latest client</strong>: simply start the game through the Launcher and it updates itself.',
+            ];
+
+            return "<p>{$lead}</p><h2>{$hSteps}</h2>" . $this->olHtml($steps) . $this->ulHtml($notes)
+                . "<h2>{$hCommon}</h2>" . $this->noteBox($this->ulHtml($common));
+        };
+
+        return [
+            'slug' => 'luyen-cap-offline', 'category' => 'feature', 'class_key' => null, 'icon' => 'moon',
+            'title_vi' => 'Luyện cấp offline (/offlevel)',
+            'title_en' => 'Offline leveling (/offlevel)',
+            'excerpt_vi' => 'Tắt game mà nhân vật vẫn tự đánh quái luyện cấp theo MU Helper.',
+            'excerpt_en' => 'Close the game while your character keeps grinding with the MU Helper.',
+            'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 4, 'is_published' => true,
+        ];
+    }
+
+    // ----------------------------------------------------- Content helpers --
+
+    private function olHtml(array $items): string
+    {
+        return '<ol>' . implode('', array_map(static fn ($i) => "<li>$i</li>", $items)) . '</ol>';
+    }
+
+    private function ulHtml(array $items): string
+    {
+        return '<ul>' . implode('', array_map(static fn ($i) => "<li>$i</li>", $items)) . '</ul>';
+    }
+
+    private function noteBox(string $inner): string
+    {
+        return '<div class="guide-note">' . $inner . '</div>';
+    }
+
+    // ------------------------------------------------------ Getting started --
+
+    private function gettingStartedGuide(): array
+    {
+        $build = function (string $loc) {
+            $vi = $loc === 'vi';
+            $x = $vi ? [
+                'lead' => 'Chào mừng đến với muss6! Chỉ cần 3 bước để bắt đầu chơi.',
+                'h1' => 'Bước 1: Đăng ký tài khoản',
+                's1' => 'Bấm nút <strong>Đăng ký</strong> ở góc trên bên phải trang web. Điền <strong>Tên đăng nhập</strong>, '
+                    . '<strong>Email</strong>, <strong>Mật khẩu</strong> và <strong>Mã bảo mật</strong>. '
+                    . 'Hãy nhớ kỹ Mã bảo mật: nó dùng để xác nhận khi xoá nhân vật sau này.',
+                'h2' => 'Bước 2: Tải và cài game',
+                's2' => 'Vào trang <a href="/tai-game">Tải game</a>, tải bộ cài 1-Click (<code>muss6-setup.exe</code>), chạy file, '
+                    . 'chọn thư mục rồi bấm cài. Bộ cài đã <strong>thiết lập sẵn máy chủ</strong>, bạn không cần chỉnh IP hay file cấu hình.',
+                'h3' => 'Bước 3: Vào game',
+                's3' => 'Mở game bằng <strong>Launcher (muss6)</strong>. Lần đầu, Launcher sẽ tự tải và cập nhật dữ liệu game '
+                    . '(khoảng 1&nbsp;GB, chỉ 1 lần). Sau đó đăng nhập bằng tài khoản vừa tạo, tạo nhân vật và bắt đầu chơi.',
+                'req_h' => 'Yêu cầu hệ thống',
+                'req' => [
+                    'Windows 10 hoặc 11 (64-bit)',
+                    'Khoảng 2&nbsp;GB dung lượng trống',
+                    'Kết nối internet (cho lần cập nhật dữ liệu đầu tiên)',
+                ],
+                'next' => 'Tiếp theo: <a href="/huong-dan/quan-ly-nhan-vat">Quản lý nhân vật (reset, gỡ kẹt, đổi tên)</a> '
+                    . 'và <a href="/huong-dan/cong-diem-cac-class">Cách cộng điểm</a>.',
+            ] : [
+                'lead' => 'Welcome to muss6! Just 3 steps to start playing.',
+                'h1' => 'Step 1: Register an account',
+                's1' => 'Click <strong>Register</strong> at the top-right of the site. Fill in your <strong>login name</strong>, '
+                    . '<strong>email</strong>, <strong>password</strong> and a <strong>security code</strong>. '
+                    . 'Remember the security code: it is required to confirm character deletion later.',
+                'h2' => 'Step 2: Download and install',
+                's2' => 'Go to the <a href="/en/tai-game">Download</a> page, get the 1-Click installer (<code>muss6-setup.exe</code>), '
+                    . 'run it, pick a folder and install. The installer is <strong>pre-configured for the server</strong>, no IP or config editing.',
+                'h3' => 'Step 3: Launch the game',
+                's3' => 'Open the game with the <strong>Launcher (muss6)</strong>. On first run it auto-downloads and updates the game '
+                    . 'data (about 1&nbsp;GB, once). Then log in with your new account, create a character and start playing.',
+                'req_h' => 'System requirements',
+                'req' => [
+                    'Windows 10 or 11 (64-bit)',
+                    'About 2&nbsp;GB of free space',
+                    'Internet connection (for the first data update)',
+                ],
+                'next' => 'Next: <a href="/en/huong-dan/quan-ly-nhan-vat">Character management (reset, unstick, rename)</a> '
+                    . 'and <a href="/en/huong-dan/cong-diem-cac-class">Stat builds</a>.',
+            ];
+
+            return "<p>{$x['lead']}</p>"
+                . "<h2>{$x['h1']}</h2><p>{$x['s1']}</p>"
+                . "<h2>{$x['h2']}</h2><p>{$x['s2']}</p>"
+                . "<h2>{$x['h3']}</h2><p>{$x['s3']}</p>"
+                . "<h2>{$x['req_h']}</h2>" . $this->ulHtml($x['req'])
+                . "<p>{$x['next']}</p>";
+        };
+
+        return [
+            'slug' => 'dang-ky-cai-dat', 'category' => 'start', 'class_key' => null, 'icon' => 'flag-checkered',
+            'title_vi' => 'Đăng ký & cài đặt game', 'title_en' => 'Register & install the game',
+            'excerpt_vi' => '3 bước để có tài khoản, cài game và vào chơi muss6.',
+            'excerpt_en' => 'Three steps to register, install and start playing muss6.',
+            'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 1, 'is_published' => true,
+        ];
+    }
+
+    private function characterManagementGuide(): array
+    {
+        $build = function (string $loc) {
+            $vi = $loc === 'vi';
+            $x = $vi ? [
+                'lead' => 'Sau khi đăng nhập website, vào mục <strong>Nhân vật</strong> để quản lý nhân vật của bạn.',
+                'note' => '<strong>Quan trọng:</strong> mọi thao tác dưới đây yêu cầu nhân vật đang <strong>offline</strong> (đã thoát game). '
+                    . 'Nếu nhân vật còn online, hệ thống sẽ báo lỗi.',
+                'items' => [
+                    ['Reset nhân vật', 'Khi đạt <strong>cấp 400</strong> (cấp tối đa), bạn có thể Reset: nhân vật về <strong>cấp 1</strong> nhưng '
+                        . '<strong>giữ nguyên trang bị và điểm đã cộng</strong>. Reset <strong>không giới hạn số lần</strong>; số lần reset '
+                        . 'hiển thị trên <a href="/xep-hang">bảng xếp hạng</a>.'],
+                    ['Xoá PK', 'Nếu nhân vật giết người chơi khác nhiều lần sẽ thành <strong>Player Killer (PK)</strong> và bị hạn chế '
+                        . '(một số NPC/sự kiện không cho vào, dễ bị lính canh và người chơi khác tấn công). Dùng <strong>Xoá PK</strong> để về trạng thái bình thường.'],
+                    ['Về thị trấn', 'Nếu nhân vật bị kẹt hoặc không vào được game, dùng <strong>Về thị trấn</strong> để đưa nhân vật về Lorencia an toàn.'],
+                    ['Đổi tên', 'Đổi tên nhân vật, tối đa <strong>10 ký tự</strong> (chữ và số).'],
+                    ['Xoá nhân vật', 'Cần nhập <strong>Mã bảo mật</strong> (đã đặt khi đăng ký). Thao tác này <strong>không hoàn tác được</strong>, hãy cân nhắc kỹ.'],
+                ],
+            ] : [
+                'lead' => 'After logging into the website, open the <strong>Characters</strong> section to manage your characters.',
+                'note' => '<strong>Important:</strong> every action below requires the character to be <strong>offline</strong> (logged out of the game). '
+                    . 'If the character is still online, the action is rejected.',
+                'items' => [
+                    ['Reset character', 'Once you reach <strong>level 400</strong> (max level) you can reset: the character goes back to '
+                        . '<strong>level 1</strong> but <strong>keeps its gear and added stat points</strong>. Resets are <strong>unlimited</strong>; '
+                        . 'your reset count shows on the <a href="/en/xep-hang">rankings</a>.'],
+                    ['Clear PK', 'Killing other players repeatedly turns your character into a <strong>Player Killer (PK)</strong>, which is restricted '
+                        . '(barred from some NPCs/events, attacked by guards and players). Use <strong>Clear PK</strong> to return to normal.'],
+                    ['Move to town', 'If your character gets stuck or cannot enter the game, use <strong>Move to town</strong> to warp it back to safe Lorencia.'],
+                    ['Rename', 'Rename the character, up to <strong>10 characters</strong> (letters and digits).'],
+                    ['Delete character', 'Requires your <strong>security code</strong> (set at registration). This <strong>cannot be undone</strong>, so be careful.'],
+                ],
+            ];
+
+            $sections = '';
+            foreach ($x['items'] as $it) {
+                $sections .= "<h2>{$it[0]}</h2><p>{$it[1]}</p>";
+            }
+
+            return "<p>{$x['lead']}</p>" . $this->noteBox($x['note']) . $sections;
+        };
+
+        return [
+            'slug' => 'quan-ly-nhan-vat', 'category' => 'start', 'class_key' => null, 'icon' => 'user-gear',
+            'title_vi' => 'Quản lý nhân vật: reset, xoá PK, gỡ kẹt, đổi tên',
+            'title_en' => 'Character management: reset, clear PK, unstick, rename',
+            'excerpt_vi' => 'Reset, xoá PK, về thị trấn, đổi tên và xoá nhân vật ngay trên website.',
+            'excerpt_en' => 'Reset, clear PK, move to town, rename and delete your character on the website.',
+            'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 2, 'is_published' => true,
+        ];
+    }
+
+    // -------------------------------------------------------------- Events --
+
+    private function eventsGuide(): array
+    {
+        // [level, characterLevelRange] per event, from the server's Season 6 config.
+        $bloodTiers = [[1, '15 – 80'], [2, '81 – 130'], [3, '131 – 180'], [4, '181 – 230'], [5, '231 – 280'], [6, '281 – 330'], [7, '331 – 400']];
+        $devilTiers = [[1, '15 – 130'], [2, '131 – 180'], [3, '181 – 230'], [4, '231 – 280'], [5, '281 – 330'], [6, '331 – 400']];
+        $chaosTiers = [[1, '15 – 49'], [2, '50 – 119'], [3, '120 – 179'], [4, '180 – 239'], [5, '240 – 299'], [6, '300 – 400']];
+
+        $build = function (string $loc) use ($bloodTiers, $devilTiers, $chaosTiers) {
+            $vi = $loc === 'vi';
+
+            $tierTable = function (array $tiers, string $lvlHdr, string $rangeHdr) {
+                $rows = '';
+                foreach ($tiers as $t) {
+                    $rows .= "<tr><td>{$t[0]}</td><td>{$t[1]}</td></tr>";
+                }
+
+                return '<div class="table-responsive"><table><thead><tr><th>' . $lvlHdr . '</th><th>' . $rangeHdr
+                    . '</th></tr></thead><tbody>' . $rows . '</tbody></table></div>';
+            };
+
+            $x = $vi ? [
+                'lead' => 'muss6 có nhiều sự kiện chạy tự động theo lịch. Xem <strong>giờ chính xác</strong> (theo múi giờ của bạn) ở trang '
+                    . '<a href="/su-kien">Sự kiện</a>. Bài này giải thích cách chơi 3 sự kiện vào-cửa phổ biến.',
+                'h_common' => 'Cách vào sự kiện (chung)',
+                'common' => [
+                    'Cần có <strong>vé</strong> tương ứng của sự kiện trong túi đồ (mua ở NPC hoặc rơi từ quái).',
+                    'Nhân vật phải <strong>đúng khoảng cấp</strong> của cấp độ sự kiện bạn muốn vào (xem bảng bên dưới).',
+                    'Chỉ vào được <strong>trong khung giờ mở cửa</strong>. Quá giờ sẽ báo "đã hết giờ vào".',
+                    '<strong>Chuột phải vào vé</strong> để hiện danh sách cấp độ, rồi chọn cấp phù hợp với nhân vật.',
+                ],
+                'lvl_hdr' => 'Cấp sự kiện', 'range_hdr' => 'Cấp nhân vật',
+                'bc_h' => 'Blood Castle (Quỷ Thành)',
+                'bc_goal' => '<strong>Mục tiêu (phối hợp):</strong> phá <strong>Cổng Lâu Đài</strong> rồi tiêu diệt <strong>Tượng Pha Lê</strong> trước khi hết giờ.',
+                'bc_facts' => ['<strong>Vé:</strong> Invisibility Cloak (Áo tàng hình)', '<strong>Lịch:</strong> mỗi 2 giờ', '<strong>Thời gian:</strong> mở cửa 1 phút, chơi 20 phút', '<strong>Phí:</strong> miễn phí', '<strong>Thưởng:</strong> kinh nghiệm, zen, và <strong>Ngọc Hỗn Nguyên (Jewel of Chaos)</strong> 90% cho người thắng'],
+                'ds_h' => 'Devil Square (Quảng Trường Quỷ)',
+                'ds_goal' => '<strong>Mục tiêu (xếp hạng):</strong> đánh quái qua <strong>4 đợt</strong> (đợt sau mạnh hơn, đợt cuối có boss). Diệt càng nhiều, hạng càng cao.',
+                'ds_facts' => ['<strong>Vé:</strong> Devil\'s Invitation (Lời mời của Quỷ)', '<strong>Lịch:</strong> mỗi 4 giờ', '<strong>Thời gian:</strong> mở cửa 1 phút, chơi 20 phút', '<strong>Phí:</strong> miễn phí', '<strong>Thưởng:</strong> kinh nghiệm và zen theo <strong>thứ hạng</strong> (hạng 1 nhiều nhất)'],
+                'cc_h' => 'Chaos Castle (Hỗn Nguyên Lâu)',
+                'cc_goal' => '<strong>Mục tiêu (sinh tồn PvP):</strong> người <strong>sống sót cuối cùng</strong> thắng. Vừa đánh quái vừa tránh (hoặc hạ) người chơi khác. <strong>Không đi tổ đội.</strong>',
+                'cc_facts' => ['<strong>Vé:</strong> Armor of Guardsman (Giáp Vệ Binh)', '<strong>Lịch:</strong> mỗi 1 giờ', '<strong>Thời gian:</strong> mở cửa 5 phút, chơi 10 phút', '<strong>Phí vào:</strong> tăng theo cấp, từ 25.000 zen (cấp 1) đến 1.000.000 zen (cấp 7)', '<strong>Thưởng:</strong> nhiều loại <strong>ngọc</strong> (Chaos, Bless, Soul, Creation, Life) và cơ hội <strong>đồ thần</strong> cho người thắng'],
+            ] : [
+                'lead' => 'muss6 runs several scheduled events. See the <strong>exact times</strong> (in your timezone) on the '
+                    . '<a href="/en/su-kien">Events</a> page. This guide explains the 3 common entry-based events.',
+                'h_common' => 'How to enter an event (general)',
+                'common' => [
+                    'You need the event\'s <strong>ticket</strong> in your inventory (bought from an NPC or dropped by monsters).',
+                    'Your character must be in the <strong>right level range</strong> for the event level you want (see tables below).',
+                    'You can only enter <strong>during the open window</strong>. After that it says "the time to enter has passed".',
+                    '<strong>Right-click the ticket</strong> to list the levels, then pick the one matching your character.',
+                ],
+                'lvl_hdr' => 'Event level', 'range_hdr' => 'Character level',
+                'bc_h' => 'Blood Castle',
+                'bc_goal' => '<strong>Goal (cooperative):</strong> break the <strong>Castle Gate</strong> then destroy the <strong>Crystal Statue</strong> before time runs out.',
+                'bc_facts' => ['<strong>Ticket:</strong> Invisibility Cloak', '<strong>Schedule:</strong> every 2 hours', '<strong>Timing:</strong> 1-minute entry, 20-minute run', '<strong>Fee:</strong> free', '<strong>Rewards:</strong> experience, zen, and a <strong>Jewel of Chaos</strong> (90%) for winners'],
+                'ds_h' => 'Devil Square',
+                'ds_goal' => '<strong>Goal (ranking):</strong> fight through <strong>4 waves</strong> (each stronger, the last with bosses). More kills means a higher rank.',
+                'ds_facts' => ['<strong>Ticket:</strong> Devil\'s Invitation', '<strong>Schedule:</strong> every 4 hours', '<strong>Timing:</strong> 1-minute entry, 20-minute run', '<strong>Fee:</strong> free', '<strong>Rewards:</strong> experience and zen by <strong>rank</strong> (rank 1 gets the most)'],
+                'cc_h' => 'Chaos Castle',
+                'cc_goal' => '<strong>Goal (PvP survival):</strong> the <strong>last one standing</strong> wins. Fight monsters while avoiding (or killing) other players. <strong>No party allowed.</strong>',
+                'cc_facts' => ['<strong>Ticket:</strong> Armor of Guardsman', '<strong>Schedule:</strong> every hour', '<strong>Timing:</strong> 5-minute entry, 10-minute run', '<strong>Entry fee:</strong> scales with level, from 25,000 zen (level 1) to 1,000,000 zen (level 7)', '<strong>Rewards:</strong> various <strong>jewels</strong> (Chaos, Bless, Soul, Creation, Life) and a chance at <strong>ancient items</strong> for winners'],
+            ];
+
+            return "<p>{$x['lead']}</p>"
+                . "<h2>{$x['h_common']}</h2>" . $this->ulHtml($x['common'])
+                . "<h2>{$x['bc_h']}</h2><p>{$x['bc_goal']}</p>" . $this->ulHtml($x['bc_facts']) . $tierTable($bloodTiers, $x['lvl_hdr'], $x['range_hdr'])
+                . "<h2>{$x['ds_h']}</h2><p>{$x['ds_goal']}</p>" . $this->ulHtml($x['ds_facts']) . $tierTable($devilTiers, $x['lvl_hdr'], $x['range_hdr'])
+                . "<h2>{$x['cc_h']}</h2><p>{$x['cc_goal']}</p>" . $this->ulHtml($x['cc_facts']) . $tierTable($chaosTiers, $x['lvl_hdr'], $x['range_hdr']);
+        };
+
+        return [
+            'slug' => 'huong-dan-su-kien', 'category' => 'event', 'class_key' => null, 'icon' => 'calendar-star',
+            'title_vi' => 'Hướng dẫn sự kiện: Blood Castle, Devil Square, Chaos Castle',
+            'title_en' => 'Events guide: Blood Castle, Devil Square, Chaos Castle',
+            'excerpt_vi' => 'Cách vào, mục tiêu, vé, khung cấp và phần thưởng của 3 sự kiện vào-cửa.',
+            'excerpt_en' => 'How to enter, goals, tickets, level tiers and rewards of the 3 entry-based events.',
             'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 1, 'is_published' => true,
         ];
     }
