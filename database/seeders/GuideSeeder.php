@@ -388,7 +388,18 @@ class GuideSeeder extends Seeder
                 'tiph' => 'Tips', 'tips' => '<li>Add extra jewels / items to push the chance as high as possible before combining.</li><li>Packed Jewel = 10 normal jewels bundled at the packing NPC.</li><li>Level-3 wings have a low chance (under 40%), keep spare materials.</li>',
             ];
 
+            $fig = static fn ($file, $cap) => '<figure class="guide-fig"><img src="/images/guides/' . $file . '" loading="lazy" alt="' . $cap . '"><figcaption>' . $cap . '</figcaption></figure>';
+            $hUse = $vi ? 'Mở khung chế ở Noria' : 'Open the Chaos Machine in Noria';
+            $useIntro = $vi
+                ? 'Tới thành <strong>Noria</strong>, tìm <strong>Chaos Goblin</strong> (cỗ máy phát sáng xanh, quanh có mấy con goblin tím) rồi bấm vào để mở khung chế.'
+                : 'Go to <strong>Noria</strong>, find the <strong>Chaos Goblin</strong> (the blue-glowing machine surrounded by purple goblins) and click it to open the combination window.';
+            $useMachine = "<h2>{$hUse}</h2><p>{$useIntro}</p>"
+                . $fig('wings-1-machine.jpg', $vi ? 'Chaos Goblin Machine ở Noria (gần toạ độ 180,103).' : 'The Chaos Goblin Machine in Noria (near 180,103).')
+                . $fig('wings-2-menu.jpg', $vi ? 'Menu chọn kiểu ghép: "Regular Combination" dùng để chế Wings (7 loại), ngoài ra còn ghép vũ khí Chaos và cộng option +380.' : 'The method menu: "Regular Combination" is used for Wings (7 types), plus Chaos weapons and +380 item options.')
+                . $fig('wings-3-grid.jpg', $vi ? 'Lưới ghép: bỏ đủ nguyên liệu vào đây, xem tỉ lệ thành công và phí zen rồi bấm ghép.' : 'The combination grid: put the materials here, check the success rate and zen cost, then combine.');
+
             return "<p>{$x['lead']}</p><div class=\"guide-note\">{$x['note']}</div>"
+                . $useMachine
                 . "<h2>{$x['l1']}</h2>{$tbl1}<p>{$x['l1p']}</p>"
                 . "<h2>{$x['l2']}</h2>{$tbl2}<p>{$x['l2p']}</p>"
                 . "<h2>{$x['l3']}</h2><p>{$x['l3p']}</p>"
