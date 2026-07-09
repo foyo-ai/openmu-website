@@ -31,6 +31,7 @@ class GuideSeeder extends Seeder
                 $this->characterManagementGuide(),
                 $this->offstoreGuide(),
                 $this->offlevelGuide(),
+                $this->jewelBankGuide(),
                 $this->eventsGuide(),
                 $this->wingsOverview(),
                 $this->wingsCrafting(),
@@ -698,6 +699,104 @@ HTML;
             'excerpt_vi' => 'Tắt game mà nhân vật vẫn tự đánh quái luyện cấp theo MU Helper.',
             'excerpt_en' => 'Close the game while your character keeps grinding with the MU Helper.',
             'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 4, 'is_published' => true,
+        ];
+    }
+
+    /** Ngan hang Ngoc + ban gia Ngoc: account-wide jewel storage and jewel-priced personal stores. */
+    private function jewelBankGuide(): array
+    {
+        $fig = static function (string $file, string $caption): string {
+            return '<figure class="guide-fig"><img src="/images/guides/' . $file . '" loading="lazy" alt="' . $caption . '">'
+                . '<figcaption>' . $caption . '</figcaption></figure>';
+        };
+
+        $build = function (string $loc) use ($fig) {
+            $x = $loc === 'vi' ? [
+                'lead' => 'Ngân hàng Ngọc giúp bạn cất giữ Ngọc dùng chung cho cả tài khoản, gọn túi đồ và an toàn. '
+                    . 'Ngoài ra bạn có thể rao bán vật phẩm tính giá bằng Ngọc thay vì Zen.',
+                'h_bank' => 'Ngân hàng Ngọc: mở bằng phím J',
+                'bank_steps' => [
+                    'Vào game, bấm phím <strong>J</strong> để mở cửa sổ Ngân hàng Ngọc. Kho này <strong>dùng chung cho mọi nhân vật</strong> trong cùng tài khoản.',
+                    '<strong>Gửi Ngọc:</strong> giữ <strong>Ctrl</strong> rồi <strong>bấm chuột phải</strong> vào một viên Ngọc trong túi. Toàn bộ Ngọc cùng loại sẽ được cất vào ngân hàng.',
+                    '<strong>Rút Ngọc:</strong> mỗi dòng Ngọc có các nút <code>-1</code> / <code>-10</code> / <code>-30</code> / <code>All</code>. Bấm để rút số lượng tương ứng ra túi.',
+                ],
+                'cap_bank' => 'Cửa sổ Ngân hàng Ngọc (phím J): mỗi loại Ngọc có nút rút -1 / -10 / -30 / All.',
+                'bank_notes' => [
+                    'Dùng chung cho cả tài khoản: gửi bằng nhân vật này, rút bằng nhân vật khác đều được.',
+                    'Miễn phí, không tốn Zen.',
+                    'Ngọc trong ngân hàng an toàn, không rơi khi chết hay bị PK.',
+                    'Rút Ngọc cần còn ô trống trong túi; nếu túi gần đầy, hệ thống chỉ rút vừa số ô trống.',
+                ],
+                'h_store' => 'Bán hàng tính giá bằng Ngọc',
+                'store_intro' => 'Bạn có thể đặt cửa hàng cá nhân bán theo Ngọc thay vì Zen: người mua trả bằng Ngọc, bạn nhận về Ngọc.',
+                'store_steps' => [
+                    'Mở <strong>cửa hàng cá nhân</strong>, xếp đồ và đặt giá từng món như bình thường.',
+                    'Trong cửa hàng, ở dải <strong>"Sell in"</strong> chọn loại tiền: <strong>Zen</strong> hoặc một loại <strong>Ngọc</strong>. Con số giá của các món giờ được tính theo loại tiền đó.',
+                    'Mở shop. Người mua sẽ trả đúng loại Ngọc bạn đã chọn.',
+                ],
+                'h_buy' => 'Khi có người mua',
+                'buy_notes' => [
+                    'Người mua trả Ngọc: <strong>trừ trong túi trước</strong>, thiếu thì trừ tiếp trong <strong>Ngân hàng Ngọc</strong> của họ.',
+                    'Bạn (người bán) nhận Ngọc <strong>thẳng vào Ngân hàng Ngọc</strong>, kèm một thư <em>"Item sold"</em> trong hộp thư báo ai đã mua món gì.',
+                    'Kết hợp được với <a href="/huong-dan/treo-may-offline">treo shop offline (/offstore)</a>: tắt game mà vẫn bán hàng giá Ngọc.',
+                ],
+                'h_note' => 'Lưu ý',
+                'notes' => [
+                    'Cần <strong>client mới nhất</strong>: chỉ cần mở game qua Launcher là tự cập nhật.',
+                    'Các loại Ngọc hỗ trợ: <strong>Bless, Soul, Life, Chaos</strong>.',
+                ],
+            ] : [
+                'lead' => 'The Jewel Bank lets you store jewels account-wide, freeing up your bag and keeping them safe. '
+                    . 'You can also price your personal store in jewels instead of Zen.',
+                'h_bank' => 'Jewel Bank: press J',
+                'bank_steps' => [
+                    'In game, press <strong>J</strong> to open the Jewel Bank. This storage is <strong>shared across every character</strong> on the account.',
+                    '<strong>Deposit:</strong> hold <strong>Ctrl</strong> and <strong>right-click</strong> a jewel in your bag. All jewels of that type go into the bank.',
+                    '<strong>Withdraw:</strong> each jewel row has <code>-1</code> / <code>-10</code> / <code>-30</code> / <code>All</code> buttons. Click to withdraw that many to your bag.',
+                ],
+                'cap_bank' => 'The Jewel Bank window (press J): each jewel has -1 / -10 / -30 / All withdraw buttons.',
+                'bank_notes' => [
+                    'Shared account-wide: deposit on one character, withdraw on another.',
+                    'Free, costs no Zen.',
+                    'Jewels in the bank are safe: never dropped on death or from PK.',
+                    'Withdrawing needs free bag slots; if the bag is nearly full it only withdraws as many as fit.',
+                ],
+                'h_store' => 'Selling priced in jewels',
+                'store_intro' => 'You can set your personal store to sell in a jewel instead of Zen: buyers pay in that jewel and you receive jewels.',
+                'store_steps' => [
+                    'Open your <strong>personal store</strong>, arrange the items and set a price on each as usual.',
+                    'In the store, use the <strong>"Sell in"</strong> strip to pick the currency: <strong>Zen</strong> or a <strong>jewel</strong>. Each item price is now counted in that currency.',
+                    'Open the store. Buyers pay in the exact jewel you chose.',
+                ],
+                'h_buy' => 'When someone buys',
+                'buy_notes' => [
+                    'The buyer pays jewels: <strong>from their bag first</strong>, then from their <strong>Jewel Bank</strong> if short.',
+                    'You (the seller) receive the jewels <strong>straight into your Jewel Bank</strong>, plus an <em>"Item sold"</em> letter telling you who bought what.',
+                    'Works with <a href="/en/huong-dan/treo-may-offline">offline store (/offstore)</a>: keep selling in jewels while the game is closed.',
+                ],
+                'h_note' => 'Notes',
+                'notes' => [
+                    'Requires the <strong>latest client</strong>: just start the game through the Launcher and it updates itself.',
+                    'Supported jewels: <strong>Bless, Soul, Life, Chaos</strong>.',
+                ],
+            ];
+
+            return "<p>{$x['lead']}</p>"
+                . "<h2>{$x['h_bank']}</h2>" . $this->olHtml($x['bank_steps'])
+                . $fig('jewelbank-1-window.jpg', $x['cap_bank'])
+                . $this->ulHtml($x['bank_notes'])
+                . "<h2>{$x['h_store']}</h2><p>{$x['store_intro']}</p>" . $this->olHtml($x['store_steps'])
+                . "<h3>{$x['h_buy']}</h3>" . $this->ulHtml($x['buy_notes'])
+                . "<h2>{$x['h_note']}</h2>" . $this->noteBox($this->ulHtml($x['notes']));
+        };
+
+        return [
+            'slug' => 'ngan-hang-ngoc', 'category' => 'feature', 'class_key' => null, 'icon' => 'gem',
+            'title_vi' => 'Ngân hàng Ngọc & bán giá Ngọc',
+            'title_en' => 'Jewel Bank & jewel-priced stores',
+            'excerpt_vi' => 'Cất Ngọc dùng chung cho cả tài khoản (phím J) và rao bán vật phẩm tính giá bằng Ngọc.',
+            'excerpt_en' => 'Store jewels account-wide (press J) and sell items priced in jewels instead of Zen.',
+            'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 5, 'is_published' => true,
         ];
     }
 
