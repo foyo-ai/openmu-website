@@ -36,6 +36,7 @@ class GuideSeeder extends Seeder
                 $this->wingsOverview(),
                 $this->wingsCrafting(),
                 $this->setDetails(),
+                $this->dwSetGuide(),
                 $this->weaponsPage(),
                 $this->statBuilds(),
             ],
@@ -1191,6 +1192,130 @@ HTML;
             'excerpt_vi' => 'Toàn bộ set giáp: ảnh 5 món, class, phòng thủ và chỉ số yêu cầu.',
             'excerpt_en' => 'All armor sets: 5-piece art, class fit, defense and requirements.',
             'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 1, 'is_published' => true,
+        ];
+    }
+
+    /** Per-class detailed set guide: Dark Wizard (pilot). Normal sets (reused) + ancient (đồ thần) sets. */
+    private function dwSetGuide(): array
+    {
+        $dwSets = array_values(array_filter($this->setData(), static fn ($s) => str_contains($s[7], 'Dark Wizard')));
+
+        // DW ancient sets, transcribed from the muss6 config (VersionSeasonSix/Items/AncientSets.cs).
+        // Bonuses unlock progressively from 2 worn pieces (MinimumItemCount = 2); a full set grants all.
+        $ancients = [
+            [
+                'name' => 'Heras', 'base' => 7,
+                'items' => ['vi' => 'Khiên Skull + Mũ, Áo, Quần, Găng, Giày Sphinx (6 món)', 'en' => 'Skull Shield + Sphinx Helm, Armor, Pants, Gloves, Boots (6 pieces)'],
+                'bonus' => [
+                    'vi' => ['+15 Sức mạnh', '+10% sát thương phép', '+5% phòng thủ khi cầm khiên', '+15 Năng lượng', '+50 chính xác đánh quái', '+10% tỉ lệ chí mạng (Critical)', '+10% tỉ lệ xuất sắc (Excellent)', '+50 HP', '+50 Mana'],
+                    'en' => ['+15 Strength', '+10% wizardry damage', '+5% defense with a shield', '+15 Energy', '+50 attack rate vs monsters', '+10% critical damage chance', '+10% excellent damage chance', '+50 HP', '+50 Mana'],
+                ],
+                'tip' => ['vi' => 'Set cổ sớm (nền Sphinx, cấp 38), nhiều dòng crit / excellent / phép: rất đáng farm ở đầu tới giữa game.', 'en' => 'An early ancient (Sphinx, level 38) loaded with crit / excellent / wizardry lines: well worth farming early to mid game.'],
+            ],
+            [
+                'name' => 'Minet', 'base' => 7,
+                'items' => ['vi' => 'Áo, Quần, Giày Sphinx (3 món)', 'en' => 'Sphinx Armor, Pants, Boots (3 pieces)'],
+                'bonus' => [
+                    'vi' => ['+30 Năng lượng', '+30 Phòng thủ', '+100 Mana', '+15 sát thương kỹ năng'],
+                    'en' => ['+30 Energy', '+30 defense', '+100 Mana', '+15 skill damage'],
+                ],
+                'tip' => ['vi' => 'Chỉ cần 3 món, dễ gom: cộng Năng lượng + Mana + sát thương kỹ năng, hợp DW thuần phép.', 'en' => 'Only 3 pieces, easy to complete: Energy + Mana + skill damage, great for a pure caster.'],
+            ],
+            [
+                'name' => 'Anubis', 'base' => 3,
+                'items' => ['vi' => 'Áo, Mũ, Găng Legendary + Nhẫn Lửa (Ring of Fire)', 'en' => 'Legendary Armor, Helm, Gloves + Ring of Fire'],
+                'bonus' => [
+                    'vi' => ['+10% tỉ lệ sát thương gấp đôi', '+50 Mana', '+10% sát thương phép', '+15% tỉ lệ chí mạng (Critical)', '+15% tỉ lệ xuất sắc (Excellent)', '+20 sát thương chí mạng', '+20 sát thương xuất sắc'],
+                    'en' => ['+10% double damage chance', '+50 Mana', '+10% wizardry damage', '+15% critical damage chance', '+15% excellent damage chance', '+20 critical damage', '+20 excellent damage'],
+                ],
+                'tip' => ['vi' => 'Nghiêng về sát thương: crit + excellent + double damage. Ưu tiên nếu bạn đánh theo hướng bùng nổ sát thương.', 'en' => 'Damage-focused: crit + excellent + double damage. Prioritise for a burst-damage build.'],
+            ],
+            [
+                'name' => 'Enis', 'base' => 3,
+                'items' => ['vi' => 'Áo, Mũ, Quần, Giày Legendary (4 món)', 'en' => 'Legendary Armor, Helm, Pants, Boots (4 pieces)'],
+                'bonus' => [
+                    'vi' => ['+10 sát thương kỹ năng', '+10% tỉ lệ sát thương gấp đôi', '+30 Năng lượng', '+10% sát thương phép', '+5% bỏ qua phòng thủ đối phương'],
+                    'en' => ['+10 skill damage', '+10% double damage chance', '+30 Energy', '+10% wizardry damage', '+5% ignore enemy defense'],
+                ],
+                'tip' => ['vi' => 'Có +bỏ qua phòng thủ đối phương: rất mạnh khi PvP. Set cổ Legendary đáng nhắm tới ở giữa game.', 'en' => 'Has ignore-enemy-defense: strong in PvP. A Legendary ancient worth aiming for mid game.'],
+            ],
+        ];
+
+        $build = function (string $loc) use ($dwSets, $ancients) {
+            $vi = $loc === 'vi';
+            $t = $this->t($loc);
+
+            $rows = '';
+            foreach ($dwSets as $s) {
+                $rows .= $this->setRow($s, $loc);
+            }
+            $cols = $t['setcols'];
+            $th = "<thead><tr><th>{$cols[0]}</th><th>{$cols[1]}</th><th>{$cols[2]}</th><th>{$cols[3]}</th><th>{$cols[4]}</th></tr></thead>";
+            $normalTable = '<div class="table-responsive"><table class="mu-itemtable">' . $th . "<tbody>{$rows}</tbody></table></div>";
+
+            $itemsLabel = $vi ? 'Các món' : 'Pieces';
+            $bonusLabel = $vi ? 'Bonus khi đủ set (mở dần từ 2 món)' : 'Set bonus (unlocks from 2 pieces up)';
+            $tipLabel = $vi ? 'Gợi ý' : 'Tip';
+            $ancHtml = '';
+            foreach ($ancients as $a) {
+                $art = '';
+                foreach ([7, 8, 9, 10, 11] as $g) {
+                    $art .= $this->img($g . '_' . $a['base'], $a['name']);
+                }
+                $blist = '';
+                foreach ($a['bonus'][$loc] as $b) {
+                    $blist .= "<li>{$b}</li>";
+                }
+                $ancHtml .= '<h3>' . $a['name'] . '</h3>'
+                    . '<div class="mu-set-pieces">' . $art . '</div>'
+                    . '<p><strong>' . $itemsLabel . ':</strong> ' . $a['items'][$loc] . '</p>'
+                    . '<p><strong>' . $bonusLabel . ':</strong></p><ul>' . $blist . '</ul>'
+                    . '<div class="guide-note">' . $tipLabel . ': ' . $a['tip'][$loc] . '</div>';
+            }
+
+            $x = $vi ? [
+                'lead' => 'Dark Wizard là class đánh phép, ưu tiên <strong>Năng lượng</strong> (sức mạnh phép) và đủ <strong>Sức mạnh</strong> để mặc đồ. Giáp DW nhẹ, phòng thủ thấp hơn class cận chiến, nên dòng <strong>Excellent</strong> và <strong>set đồ thần (Ancient)</strong> mới là thứ tạo nên sức mạnh thật sự.',
+                'h_normal' => 'Set thường của Dark Wizard',
+                'p_normal' => 'Set thường chỉ cho <strong>phòng thủ</strong> và yêu cầu chỉ số để mặc. Các bộ ở muss6 <strong>không có set bonus riêng</strong> khi mặc đủ bộ thường; chỉ số cộng thêm đến từ dòng <strong>Excellent</strong> và từ việc nâng bộ lên <strong>đồ thần</strong> (mục bên dưới). Chọn bộ theo cấp nhân vật rồi farm ở map có quái cấp phù hợp.',
+                'h_anc' => 'Set đồ thần (Ancient) cho Dark Wizard',
+                'p_anc' => 'Đồ thần (đồ cổ / Ancient) là phiên bản "cổ" của từng món: dùng chung ảnh với đồ thường nhưng có thêm <strong>chỉ số cổ</strong> và <strong>bonus theo set</strong>. Mặc từ <strong>2 món</strong> cùng một set cổ là bắt đầu có bonus, càng đủ món càng mở thêm dòng. Ngoài ra mỗi món cổ còn cộng riêng một chỉ số (thường là +Sinh lực) và có thể có thêm một dòng Ancient Option.',
+                'p_obtain' => '<strong>Cách kiếm:</strong> đồ cổ rơi từ quái cấp cao và các event (Blood Castle, Devil Square, Chaos Castle ở mốc cấp cao) với tỉ lệ thấp. Gom đủ các món cùng một set cổ để nhận bonus.',
+                'h_tip' => 'Nên ưu tiên set nào',
+                'tips' => [
+                    '<strong>Đầu tới giữa game:</strong> nhắm <strong>Heras</strong> hoặc <strong>Minet</strong> (nền Sphinx, cấp 38) để có sát thương phép + crit/excellent sớm.',
+                    '<strong>Giữa tới cuối game:</strong> chuyển sang <strong>Anubis / Enis</strong> (nền Legendary, cấp 56) để tăng mạnh sát thương phép, crit và excellent; Enis thêm bỏ qua phòng thủ rất tốt khi PvP.',
+                    'Luôn ưu tiên các món có thêm dòng <strong>Excellent</strong> (sát thương phép, giảm sát thương nhận vào, tăng Mana/HP) song song với việc gom đồ thần.',
+                ],
+                'note_gm' => 'Gợi ý ưu tiên mang tính định hướng; số liệu bonus lấy trực tiếp từ config muss6.',
+            ] : [
+                'lead' => 'The Dark Wizard is a caster, prioritising <strong>Energy</strong> (spell power) plus enough <strong>Strength</strong> to wear gear. DW armor is light with lower defense than melee classes, so <strong>Excellent</strong> options and <strong>ancient sets (đồ thần)</strong> are what really make it strong.',
+                'h_normal' => 'Dark Wizard normal sets',
+                'p_normal' => 'Normal sets give only <strong>defense</strong> and the stats required to wear them. On muss6 the plain sets have <strong>no separate set bonus</strong> for wearing all pieces; extra stats come from <strong>Excellent</strong> options and from upgrading a set to <strong>ancient</strong> (below). Pick a set by your level and farm a map with the right monster level.',
+                'h_anc' => 'Ancient sets (đồ thần) for the Dark Wizard',
+                'p_anc' => 'An ancient item is the "ancient" version of a piece: same art as the normal one but with extra <strong>ancient stats</strong> and a <strong>set bonus</strong>. Wearing <strong>2 pieces</strong> of the same ancient set starts the bonus, and more pieces unlock more lines. Each ancient piece also grants its own stat (usually +Vitality) and may carry an extra Ancient Option line.',
+                'p_obtain' => '<strong>How to obtain:</strong> ancient items drop from high-level monsters and events (Blood Castle, Devil Square, Chaos Castle at higher levels) at a low rate. Collect pieces of the same ancient set to trigger the bonus.',
+                'h_tip' => 'Which set to aim for',
+                'tips' => [
+                    '<strong>Early to mid game:</strong> aim for <strong>Heras</strong> or <strong>Minet</strong> (Sphinx-based, level 38) for early wizardry damage + crit/excellent.',
+                    '<strong>Mid to late game:</strong> move to <strong>Anubis / Enis</strong> (Legendary-based, level 56) for much stronger wizardry damage, crit and excellent; Enis adds ignore-defense, great for PvP.',
+                    'Always prefer pieces that also roll <strong>Excellent</strong> options (wizardry damage, damage reduction, extra Mana/HP) while collecting ancient pieces.',
+                ],
+                'note_gm' => 'Priority tips are directional; the bonus values are taken straight from the muss6 config.',
+            ];
+
+            return "<p>{$x['lead']}</p>"
+                . "<h2>{$x['h_normal']}</h2><p>{$x['p_normal']}</p>" . $normalTable
+                . "<h2>{$x['h_anc']}</h2><p>{$x['p_anc']}</p><p>{$x['p_obtain']}</p>" . $ancHtml
+                . "<h2>{$x['h_tip']}</h2>" . $this->noteBox($this->ulHtml($x['tips']) . '<p><em>' . $x['note_gm'] . '</em></p>');
+        };
+
+        return [
+            'slug' => 'set-do-dark-wizard', 'category' => 'gear', 'class_key' => 'dark-wizard', 'icon' => 'hat-wizard',
+            'title_vi' => 'Set đồ Dark Wizard (chi tiết)',
+            'title_en' => 'Dark Wizard armor sets (detailed)',
+            'excerpt_vi' => 'Set thường + set đồ thần (Ancient) cho Dark Wizard: bonus, cách kiếm và gợi ý ưu tiên.',
+            'excerpt_en' => 'Normal + ancient (đồ thần) sets for the Dark Wizard: bonuses, how to obtain and priority tips.',
+            'body_vi' => $build('vi'), 'body_en' => $build('en'), 'sort_order' => 3, 'is_published' => true,
         ];
     }
 
