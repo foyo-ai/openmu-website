@@ -210,6 +210,41 @@ class GuideSeeder extends Seeder
         return $pair[$loc];
     }
 
+    /**
+     * Shared: the complete-set bonus that applies to EVERY class, from the server config
+     * (Items/ArmorInitializerBase.cs BuildSets): wearing the whole set gives +10% defense rate,
+     * and a full set all at the same +level (10..15) adds +5% defense per level above +9.
+     */
+    private function setBonusBlock(string $loc): string
+    {
+        $vi = $loc === 'vi';
+        $rows = '';
+        foreach (['+10' => '+5%', '+11' => '+10%', '+12' => '+15%', '+13' => '+20%', '+14' => '+25%', '+15' => '+30%'] as $lv => $pct) {
+            $rows .= "<tr><td><strong>{$lv}</strong></td><td>{$pct}</td></tr>";
+        }
+        if ($vi) {
+            $h = 'Set bonus khi mặc đủ bộ';
+            $intro = 'Mặc <strong>đủ 5 món cùng một bộ</strong> được cộng thêm bonus set (áp dụng cho mọi class, không chỉ đồ thần):';
+            $b1 = '<strong>Đủ bộ (bất kỳ +mấy):</strong> +10% tỉ lệ phòng thủ khi đánh quái (tăng khả năng đỡ/né đòn).';
+            $b2 = '<strong>Đủ bộ và cả 5 món cùng +cấp (từ +10 trở lên):</strong> thêm % phòng thủ tăng dần theo cấp thấp nhất trong bộ:';
+            $th0 = 'Cấp bộ (cả 5 món cùng +)';
+            $th1 = 'Cộng thêm phòng thủ';
+            $tip = 'Nên nâng đều cả 5 món lên cùng một cấp (+11, +13, +15) thay vì dồn một món lên cao: bonus tính theo món có +cấp thấp nhất trong bộ.';
+        } else {
+            $h = 'Complete set bonus';
+            $intro = 'Wearing <strong>all 5 pieces of the same set</strong> grants a set bonus (for every class, not just ancient):';
+            $b1 = '<strong>Full set (any level):</strong> +10% defense rate vs monsters (better chance to block or dodge hits).';
+            $b2 = '<strong>Full set with all 5 pieces at the same +level (from +10):</strong> extra defense that scales with the lowest +level in the set:';
+            $th0 = 'Set level (all 5 at +)';
+            $th1 = 'Extra defense';
+            $tip = 'Level all 5 pieces evenly to the same + (+11, +13, +15) rather than one high piece: the bonus counts the lowest +level in the set.';
+        }
+        $table = '<div class="table-responsive"><table class="mu-itemtable"><thead><tr><th>' . $th0 . '</th><th>' . $th1 . '</th></tr></thead><tbody>' . $rows . '</tbody></table></div>';
+
+        return '<h3>' . $h . '</h3><p>' . $intro . '</p><ul><li>' . $b1 . '</li><li>' . $b2 . '</li></ul>' . $table
+            . '<div class="guide-note">' . $tip . '</div>';
+    }
+
     // ---------------------------------------------------------------- Wings --
 
     private function wingsOverview(): array
@@ -1276,7 +1311,7 @@ HTML;
             $x = $vi ? [
                 'lead' => 'Dark Wizard là class đánh phép, ưu tiên <strong>Năng lượng</strong> (sức mạnh phép) và đủ <strong>Sức mạnh</strong> để mặc đồ. Giáp DW nhẹ, phòng thủ thấp hơn class cận chiến, nên dòng <strong>Excellent</strong> và <strong>set đồ thần (Ancient)</strong> mới là thứ tạo nên sức mạnh thật sự.',
                 'h_normal' => 'Set thường của Dark Wizard',
-                'p_normal' => 'Set thường chỉ cho <strong>phòng thủ</strong> và yêu cầu chỉ số để mặc. Các bộ ở muss6 <strong>không có set bonus riêng</strong> khi mặc đủ bộ thường; chỉ số cộng thêm đến từ dòng <strong>Excellent</strong> và từ việc nâng bộ lên <strong>đồ thần</strong> (mục bên dưới). Chọn bộ theo cấp nhân vật rồi farm ở map có quái cấp phù hợp.',
+                'p_normal' => 'Set thường cho <strong>phòng thủ</strong> và yêu cầu chỉ số để mặc. Mặc đủ cả bộ còn nhận thêm <strong>set bonus</strong> (bảng ngay dưới). Chọn bộ theo cấp nhân vật rồi farm ở map có quái cấp phù hợp; sức mạnh cộng thêm còn đến từ dòng <strong>Excellent</strong> và từ việc nâng bộ lên <strong>đồ thần</strong>.',
                 'h_anc' => 'Set đồ thần (Ancient) cho Dark Wizard',
                 'p_anc' => 'Đồ thần (đồ cổ / Ancient) là phiên bản "cổ" của từng món: dùng chung ảnh với đồ thường nhưng có thêm <strong>chỉ số cổ</strong> và <strong>bonus theo set</strong>. Mặc từ <strong>2 món</strong> cùng một set cổ là bắt đầu có bonus, càng đủ món càng mở thêm dòng. Ngoài ra mỗi món cổ còn cộng riêng một chỉ số (thường là +Sinh lực) và có thể có thêm một dòng Ancient Option.',
                 'p_obtain' => '<strong>Cách kiếm:</strong> đồ cổ rơi từ quái cấp cao và các event (Blood Castle, Devil Square, Chaos Castle ở mốc cấp cao) với tỉ lệ thấp. Gom đủ các món cùng một set cổ để nhận bonus.',
@@ -1290,7 +1325,7 @@ HTML;
             ] : [
                 'lead' => 'The Dark Wizard is a caster, prioritising <strong>Energy</strong> (spell power) plus enough <strong>Strength</strong> to wear gear. DW armor is light with lower defense than melee classes, so <strong>Excellent</strong> options and <strong>ancient sets (đồ thần)</strong> are what really make it strong.',
                 'h_normal' => 'Dark Wizard normal sets',
-                'p_normal' => 'Normal sets give only <strong>defense</strong> and the stats required to wear them. On muss6 the plain sets have <strong>no separate set bonus</strong> for wearing all pieces; extra stats come from <strong>Excellent</strong> options and from upgrading a set to <strong>ancient</strong> (below). Pick a set by your level and farm a map with the right monster level.',
+                'p_normal' => 'Normal sets give <strong>defense</strong> plus the stats required to wear them. Wearing the full set also grants a <strong>set bonus</strong> (table just below). Pick a set by your level and farm a map with the right monster level; extra power also comes from <strong>Excellent</strong> options and from upgrading to <strong>ancient</strong>.',
                 'h_anc' => 'Ancient sets (đồ thần) for the Dark Wizard',
                 'p_anc' => 'An ancient item is the "ancient" version of a piece: same art as the normal one but with extra <strong>ancient stats</strong> and a <strong>set bonus</strong>. Wearing <strong>2 pieces</strong> of the same ancient set starts the bonus, and more pieces unlock more lines. Each ancient piece also grants its own stat (usually +Vitality) and may carry an extra Ancient Option line.',
                 'p_obtain' => '<strong>How to obtain:</strong> ancient items drop from high-level monsters and events (Blood Castle, Devil Square, Chaos Castle at higher levels) at a low rate. Collect pieces of the same ancient set to trigger the bonus.',
@@ -1304,7 +1339,7 @@ HTML;
             ];
 
             return "<p>{$x['lead']}</p>"
-                . "<h2>{$x['h_normal']}</h2><p>{$x['p_normal']}</p>" . $normalTable
+                . "<h2>{$x['h_normal']}</h2><p>{$x['p_normal']}</p>" . $normalTable . $this->setBonusBlock($loc)
                 . "<h2>{$x['h_anc']}</h2><p>{$x['p_anc']}</p><p>{$x['p_obtain']}</p>" . $ancHtml
                 . "<h2>{$x['h_tip']}</h2>" . $this->noteBox($this->ulHtml($x['tips']) . '<p><em>' . $x['note_gm'] . '</em></p>');
         };
